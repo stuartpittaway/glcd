@@ -123,10 +123,10 @@
  * Only select one of the following:
  */
 
-#include "config/Modagm1264f_Config-bill.h"
+//#include "config/Modagm1264f_Config-bill.h"
 //#include "config/Modvk5121_Config-bill.h"
 
-//#include "config/ks0108_Config.h"
+#include "config/ks0108_Config.h"
 //#include "config/Modagm1264f_Config.h"
 //#include "config/sed1520_Config.h"
 //#include "config/Mod4glm12232_Config.h"
