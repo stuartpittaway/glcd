@@ -35,7 +35,7 @@
 #define glcdDI				17
 #define glcdEN				18
 // Reset Bit  - uncomment the next line if reset is connected to an output pin
-//#define glcdRES		    19	// Reset Bit 
+#define glcdRES		    19	// Reset Bit 
 
 // Data pin definitions
 #define glcdData0Pin		8
