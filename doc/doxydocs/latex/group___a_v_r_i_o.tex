@@ -1,0 +1,52 @@
+\hypertarget{group___a_v_r_i_o}{
+\section{AVR i/o primitives}
+\label{group___a_v_r_i_o}\index{AVR i/o primitives@{AVR i/o primitives}}
+}
+
+
+\subsection{Detailed Description}
+AVRIO defines a set of i/o primitives that work on AVR pins.
+
+These primitives are for setting/reading digital levels on the pins.
+
+It introduces a new AVR s/w i/o concept. It is wrapped around the concept of an \char`\"{}avrpin\char`\"{}. An avrpin is a compile-\/time token that can be used to locate a particular avrpin. It is different than the simple integer scheme as currently used by Arduino. avrpin has encoded into it: the port, A, B, C, etc, as well as the bit information within that port.
+
+What is intentionally not encoded in it is the actual register type of choice: DDR, PIN, or PORT. Therefore, the register type of choice must be indicated to the primitives using the correspending values: AVRIO\_\-DDRREG, AVRIO\_\-PINREG, AVRIO\_\-PORTREG
+
+Special Note: While avrpin format is very different from arduino pin::s, in arduino environments, avrio will map arduino pin::s to avrpins on the fly so arduino users can use arduino pin::s with the primitives. This capability requires the use a mapping macro digitalPinToPortReg() which should be provided by an inluding an arduino header file. That header file $\ast$MUST$\ast$ be included before including this header.
+
+Primitives:
+
+bitval = avrio\_\-ReadBit(regtyp, pin) byteval = avrio\_\-Read8Bits(regtyp, pin0, pin1, pin2, pin3, pin4, pin5, pin6, pin7) byteval = avrio\_\-ReadReg(regtyp, avrport)
+
+avrio\_\-WriteBit(regtyp, pin, bitval) avrio\_\-Write8Bits(regtyp, pin0, pin1, pin2, pin3, pin4, pin5, pin6, pin7, data) avrio\_\-WriteReg(regtyp, avrport, byteval)
+
+-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/
+
+The following avrio primitives are convenience macros: They simply call the above primitives with an implied register type. PinMode writes to DDR dir 1 = output, dir 0 = input ReadPin reads from PIN WritePin writes to PORT
+
+avrio\_\-PinMode(pin, dir) avrio\_\-PinMode8Pins(pin0, pin1, pin2, pin3, pin4, pin5, pin6, pin7, dir)
+
+bitval = avrio\_\-ReadPin(pin) byteval = avrio\_\-Read8Pins(pin0, pin1, pin2, pin3, pin4, pin5, pin6, pin7)
+
+avrio\_\-WritePin(pin, bitval) avrio\_\-Write8Pins(pin0, pin1, pin2, pin3, pin4, pin5, pin6, pin7, byteval)
+
+-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/
+
+The following primitives are provideed as \char`\"{}convenience\char`\"{} to be similar to the Arduino pin primitives:
+
+avrio\_\-pinMode(pin, dir) avrio\_\-pinMode8Pins(pin0, pin1, pin2, pin3, pin4, pin5, pin6, pin7, dir)
+
+avrio\_\-digitalWrite(pin, pinval) avrio\_\-digitalWritepin(pin, pinval) avrio\_\-digitalWrite8Pins(pin0, pin1, pin2, pin3, pin4, pin5, pin6, pin7, byteval)
+
+pinval = avrio\_\-digitalRead(pin) pinval = avrio\_\-digitalReadPin(pin) byteval = avrio\_\-digitalRead8Pins(pin0, pin1, pin2, pin3, pin4, pin5, pin6, pin7) -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/ NOTE: For a full description of the calling sequence for each primitive see the comments below for each primitive.
+
+-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/
+
+WARNING:
+
+These routines are based on gcc inline functions and are currently designed for arguments that are constants. If non constants are used, terrible code will be generated. However, with constants, the code will generate the smallest possible code including using using CBI/SBI instructions when possible.
+
+These primitives do not do any type of handholding or altering of the of the port configuration bits. Bits are written to the desired registers. No more, no less.
+
+To support the arduino environment, a mapping from arduino pin::s is automatically performed. This will be done if the macro digitalPinToPortReg() exists. 

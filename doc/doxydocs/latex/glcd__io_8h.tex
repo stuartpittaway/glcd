@@ -1,0 +1,113 @@
+\hypertarget{glcd__io_8h}{
+\section{C:/Users/bill/Documents/000-\/NewHomeDir/My-\/Documents/Scuba-\/Stuff/Aeris/Download-\/Protocol/devel/windows/arduino-\/0017/hardware/libraries/glcd/glcd\_\-io.h File Reference}
+\label{glcd__io_8h}\index{C:/Users/bill/Documents/000-\/NewHomeDir/My-\/Documents/Scuba-\/Stuff/Aeris/Download-\/Protocol/devel/windows/arduino-\/0017/hardware/libraries/glcd/glcd\_\-io.h@{C:/Users/bill/Documents/000-\/NewHomeDir/My-\/Documents/Scuba-\/Stuff/Aeris/Download-\/Protocol/devel/windows/arduino-\/0017/hardware/libraries/glcd/glcd\_\-io.h}}
+}
+{\ttfamily \#include \char`\"{}arduino\_\-io.h\char`\"{}}\par
+{\ttfamily \#include \char`\"{}avrio.h\char`\"{}}\par
+\subsection*{Defines}
+\begin{DoxyCompactItemize}
+\item 
+\#define \hyperlink{glcd__io_8h_ac01a37ec664c69139737f9cf1785e47e}{lcdfastWrite}(pin, pinval)~avrio\_\-WritePin(pin, pinval)
+\item 
+\#define \hyperlink{glcd__io_8h_a5cefa03481bee8df84d1b6045709b3a3}{lcd\_\-avrWriteByte}(data)
+\item 
+\#define \hyperlink{glcd__io_8h_aeacbe6b22e37d562c7b7f26900e7fba2}{lcd\_\-avrReadByte}()
+\item 
+\#define \hyperlink{glcd__io_8h_a2d1e69008a6b0a8e8bb7bd42ed227f30}{lcdDataDir}(dirbits)
+\item 
+\#define \hyperlink{glcd__io_8h_a047af19767540d8afcf4c01ed0722c8d}{lcdDataOut}(data)~lcd\_\-avrWriteByte(data)
+\item 
+\#define \hyperlink{glcd__io_8h_a2dc9c0631c02187feab0dbcff20bf46f}{lcdDataIn}()~lcd\_\-avrReadByte()
+\item 
+\#define \hyperlink{glcd__io_8h_afa0f303dbf1d1c21f8bf0a5e58304c9a}{xGLCD\_\-STATUS\_\-BIT2PIN}(bit)~glcdData \#\# bit  \#\# Pin
+\item 
+\#define \hyperlink{glcd__io_8h_a6bbddf9927c5ec2798ed5411c428c6d9}{GLCD\_\-STATUS\_\-BIT2PIN}(bit)~xGLCD\_\-STATUS\_\-BIT2PIN(bit)
+\item 
+\#define \hyperlink{glcd__io_8h_af5b07e1ba6375393696be4f2931c77f4}{lcdIsBusy}()~(avrio\_\-ReadPin(GLCD\_\-STATUS\_\-BIT2PIN(LCD\_\-BUSY\_\-BIT)))
+\item 
+\#define \hyperlink{glcd__io_8h_a0ab91d8e06c09a3dccc8fc21957609a1}{lcdReset}()~avrio\_\-WritePin(glcdRES, 0)
+\item 
+\#define \hyperlink{glcd__io_8h_a9321a9d72bd04d9d851fb7f557bdef73}{lcdUnReset}()~avrio\_\-WritePin(glcdRES, 1)
+\end{DoxyCompactItemize}
+
+
+\subsection{Define Documentation}
+\hypertarget{glcd__io_8h_a6bbddf9927c5ec2798ed5411c428c6d9}{
+\index{glcd\_\-io.h@{glcd\_\-io.h}!GLCD\_\-STATUS\_\-BIT2PIN@{GLCD\_\-STATUS\_\-BIT2PIN}}
+\index{GLCD\_\-STATUS\_\-BIT2PIN@{GLCD\_\-STATUS\_\-BIT2PIN}!glcd_io.h@{glcd\_\-io.h}}
+\subsubsection[{GLCD\_\-STATUS\_\-BIT2PIN}]{\setlength{\rightskip}{0pt plus 5cm}\#define GLCD\_\-STATUS\_\-BIT2PIN(bit)~xGLCD\_\-STATUS\_\-BIT2PIN(bit)}}
+\label{glcd__io_8h_a6bbddf9927c5ec2798ed5411c428c6d9}
+\hypertarget{glcd__io_8h_aeacbe6b22e37d562c7b7f26900e7fba2}{
+\index{glcd\_\-io.h@{glcd\_\-io.h}!lcd\_\-avrReadByte@{lcd\_\-avrReadByte}}
+\index{lcd\_\-avrReadByte@{lcd\_\-avrReadByte}!glcd_io.h@{glcd\_\-io.h}}
+\subsubsection[{lcd\_\-avrReadByte}]{\setlength{\rightskip}{0pt plus 5cm}\#define lcd\_\-avrReadByte()}}
+\label{glcd__io_8h_aeacbe6b22e37d562c7b7f26900e7fba2}
+{\bfseries Value:}
+\begin{DoxyCode}
+avrio_Read8Bits(AVRIO_PINREG,                           \
+                        glcdData0Pin, glcdData1Pin,             \
+                        glcdData2Pin, glcdData3Pin,             \
+                        glcdData4Pin, glcdData5Pin,             \
+                        glcdData6Pin, glcdData7Pin)
+\end{DoxyCode}
+\hypertarget{glcd__io_8h_a5cefa03481bee8df84d1b6045709b3a3}{
+\index{glcd\_\-io.h@{glcd\_\-io.h}!lcd\_\-avrWriteByte@{lcd\_\-avrWriteByte}}
+\index{lcd\_\-avrWriteByte@{lcd\_\-avrWriteByte}!glcd_io.h@{glcd\_\-io.h}}
+\subsubsection[{lcd\_\-avrWriteByte}]{\setlength{\rightskip}{0pt plus 5cm}\#define lcd\_\-avrWriteByte(data)}}
+\label{glcd__io_8h_a5cefa03481bee8df84d1b6045709b3a3}
+{\bfseries Value:}
+\begin{DoxyCode}
+avrio_Write8Bits(AVRIO_PORTREG,                         \
+                        glcdData0Pin, glcdData1Pin,             \
+                        glcdData2Pin, glcdData3Pin,             \
+                        glcdData4Pin, glcdData5Pin,             \
+                        glcdData6Pin, glcdData7Pin, data)
+\end{DoxyCode}
+\hypertarget{glcd__io_8h_a2d1e69008a6b0a8e8bb7bd42ed227f30}{
+\index{glcd\_\-io.h@{glcd\_\-io.h}!lcdDataDir@{lcdDataDir}}
+\index{lcdDataDir@{lcdDataDir}!glcd_io.h@{glcd\_\-io.h}}
+\subsubsection[{lcdDataDir}]{\setlength{\rightskip}{0pt plus 5cm}\#define lcdDataDir(dirbits)}}
+\label{glcd__io_8h_a2d1e69008a6b0a8e8bb7bd42ed227f30}
+{\bfseries Value:}
+\begin{DoxyCode}
+avrio_Write8Bits(AVRIO_DDRREG,                          \
+                        glcdData0Pin, glcdData1Pin,             \
+                        glcdData2Pin, glcdData3Pin,             \
+                        glcdData4Pin, glcdData5Pin,             \
+                        glcdData6Pin, glcdData7Pin, dirbits)
+\end{DoxyCode}
+\hypertarget{glcd__io_8h_a2dc9c0631c02187feab0dbcff20bf46f}{
+\index{glcd\_\-io.h@{glcd\_\-io.h}!lcdDataIn@{lcdDataIn}}
+\index{lcdDataIn@{lcdDataIn}!glcd_io.h@{glcd\_\-io.h}}
+\subsubsection[{lcdDataIn}]{\setlength{\rightskip}{0pt plus 5cm}\#define lcdDataIn()~lcd\_\-avrReadByte()}}
+\label{glcd__io_8h_a2dc9c0631c02187feab0dbcff20bf46f}
+\hypertarget{glcd__io_8h_a047af19767540d8afcf4c01ed0722c8d}{
+\index{glcd\_\-io.h@{glcd\_\-io.h}!lcdDataOut@{lcdDataOut}}
+\index{lcdDataOut@{lcdDataOut}!glcd_io.h@{glcd\_\-io.h}}
+\subsubsection[{lcdDataOut}]{\setlength{\rightskip}{0pt plus 5cm}\#define lcdDataOut(data)~lcd\_\-avrWriteByte(data)}}
+\label{glcd__io_8h_a047af19767540d8afcf4c01ed0722c8d}
+\hypertarget{glcd__io_8h_ac01a37ec664c69139737f9cf1785e47e}{
+\index{glcd\_\-io.h@{glcd\_\-io.h}!lcdfastWrite@{lcdfastWrite}}
+\index{lcdfastWrite@{lcdfastWrite}!glcd_io.h@{glcd\_\-io.h}}
+\subsubsection[{lcdfastWrite}]{\setlength{\rightskip}{0pt plus 5cm}\#define lcdfastWrite(pin, \/  pinval)~avrio\_\-WritePin(pin, pinval)}}
+\label{glcd__io_8h_ac01a37ec664c69139737f9cf1785e47e}
+\hypertarget{glcd__io_8h_af5b07e1ba6375393696be4f2931c77f4}{
+\index{glcd\_\-io.h@{glcd\_\-io.h}!lcdIsBusy@{lcdIsBusy}}
+\index{lcdIsBusy@{lcdIsBusy}!glcd_io.h@{glcd\_\-io.h}}
+\subsubsection[{lcdIsBusy}]{\setlength{\rightskip}{0pt plus 5cm}\#define lcdIsBusy()~(avrio\_\-ReadPin(GLCD\_\-STATUS\_\-BIT2PIN(LCD\_\-BUSY\_\-BIT)))}}
+\label{glcd__io_8h_af5b07e1ba6375393696be4f2931c77f4}
+\hypertarget{glcd__io_8h_a0ab91d8e06c09a3dccc8fc21957609a1}{
+\index{glcd\_\-io.h@{glcd\_\-io.h}!lcdReset@{lcdReset}}
+\index{lcdReset@{lcdReset}!glcd_io.h@{glcd\_\-io.h}}
+\subsubsection[{lcdReset}]{\setlength{\rightskip}{0pt plus 5cm}\#define lcdReset()~avrio\_\-WritePin(glcdRES, 0)}}
+\label{glcd__io_8h_a0ab91d8e06c09a3dccc8fc21957609a1}
+\hypertarget{glcd__io_8h_a9321a9d72bd04d9d851fb7f557bdef73}{
+\index{glcd\_\-io.h@{glcd\_\-io.h}!lcdUnReset@{lcdUnReset}}
+\index{lcdUnReset@{lcdUnReset}!glcd_io.h@{glcd\_\-io.h}}
+\subsubsection[{lcdUnReset}]{\setlength{\rightskip}{0pt plus 5cm}\#define lcdUnReset()~avrio\_\-WritePin(glcdRES, 1)}}
+\label{glcd__io_8h_a9321a9d72bd04d9d851fb7f557bdef73}
+\hypertarget{glcd__io_8h_afa0f303dbf1d1c21f8bf0a5e58304c9a}{
+\index{glcd\_\-io.h@{glcd\_\-io.h}!xGLCD\_\-STATUS\_\-BIT2PIN@{xGLCD\_\-STATUS\_\-BIT2PIN}}
+\index{xGLCD\_\-STATUS\_\-BIT2PIN@{xGLCD\_\-STATUS\_\-BIT2PIN}!glcd_io.h@{glcd\_\-io.h}}
+\subsubsection[{xGLCD\_\-STATUS\_\-BIT2PIN}]{\setlength{\rightskip}{0pt plus 5cm}\#define xGLCD\_\-STATUS\_\-BIT2PIN(bit)~glcdData \#\# bit  \#\# Pin}}
+\label{glcd__io_8h_afa0f303dbf1d1c21f8bf0a5e58304c9a}

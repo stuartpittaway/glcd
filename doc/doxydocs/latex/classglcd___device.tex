@@ -1,0 +1,140 @@
+\hypertarget{classglcd___device}{
+\section{glcd\_\-Device Class Reference}
+\label{classglcd___device}\index{glcd\_\-Device@{glcd\_\-Device}}
+}
+Inheritance diagram for glcd\_\-Device::\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2cm]{classglcd___device}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \hyperlink{classglcd___device_a15bd97b27644f9962f2e50a442b4cdcc}{Init} (uint8\_\-t invert)
+\item 
+void \hyperlink{classglcd___device_ad5fd910ef008e2d04e8d9b4fd8cac543}{GotoXY} (uint8\_\-t x, uint8\_\-t y)
+\item 
+void \hyperlink{classglcd___device_a1916258e850cd839172ce318a0b903fd}{SetDot} (uint8\_\-t x, uint8\_\-t y, uint8\_\-t color)
+\item 
+void \hyperlink{classglcd___device_a4950fe109b27cb1cdcdbabe367d02c80}{SetPixels} (uint8\_\-t x, uint8\_\-t y, uint8\_\-t x1, uint8\_\-t y1, uint8\_\-t color)
+\item 
+uint8\_\-t \hyperlink{classglcd___device_a2ec1756ae0c7787fad676d6398c73de3}{ReadData} (void)
+\item 
+void \hyperlink{classglcd___device_a209d1ba245e7e02eb65e07c15ce0461d}{WriteData} (uint8\_\-t data)
+\end{DoxyCompactItemize}
+\subsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{classglcd___device_a553e9a639bfbf4f971d90ea0846f2882}{
+uint8\_\-t {\bfseries Inverted}}
+\label{classglcd___device_a553e9a639bfbf4f971d90ea0846f2882}
+
+\item 
+\hypertarget{classglcd___device_a72748fb53a38a2d471ed46bf3a22e698}{
+\hyperlink{structlcd_coord}{lcdCoord} {\bfseries Coord}}
+\label{classglcd___device_a72748fb53a38a2d471ed46bf3a22e698}
+
+\end{DoxyCompactItemize}
+
+
+\subsection{Member Function Documentation}
+\hypertarget{classglcd___device_ad5fd910ef008e2d04e8d9b4fd8cac543}{
+\index{glcd\_\-Device@{glcd\_\-Device}!GotoXY@{GotoXY}}
+\index{GotoXY@{GotoXY}!glcd_Device@{glcd\_\-Device}}
+\subsubsection[{GotoXY}]{\setlength{\rightskip}{0pt plus 5cm}void glcd\_\-Device::GotoXY (uint8\_\-t {\em x}, \/  uint8\_\-t {\em y})}}
+\label{classglcd___device_ad5fd910ef008e2d04e8d9b4fd8cac543}
+set current x,y coordinate on display device
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]X coordinate \item[{\em y}]Y coordinate\end{DoxyParams}
+Sets the current pixel location to x,y. x and y are relative to the 0,0 origin of the display which is the upper left most pixel on the display. \hypertarget{classglcd___device_a15bd97b27644f9962f2e50a442b4cdcc}{
+\index{glcd\_\-Device@{glcd\_\-Device}!Init@{Init}}
+\index{Init@{Init}!glcd_Device@{glcd\_\-Device}}
+\subsubsection[{Init}]{\setlength{\rightskip}{0pt plus 5cm}void glcd\_\-Device::Init (uint8\_\-t {\em invert})}}
+\label{classglcd___device_a15bd97b27644f9962f2e50a442b4cdcc}
+Low level h/w initialization of display and AVR pins
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em invert}]specifices whether display is in normal mode or inverted mode.\end{DoxyParams}
+This should only be called prior by other library code.
+
+It does all the low level hardware initalization of the display device.
+
+The optional invert parameter specifies if the display should be run in a normal mode, dark pixels on light background or inverted, light pixels on a dark background.
+
+To specify dark pixels use the define {\bfseries NON-\/INVERTED} and to use light pixels use the define {\bfseries INVERTED} 
+
+Upon completion of the initialization, then entire display will be cleared. 
+
+Reimplemented in \hyperlink{classglcd_aba75fe511781243aeb06df806bb4782a}{glcd}.\hypertarget{classglcd___device_a2ec1756ae0c7787fad676d6398c73de3}{
+\index{glcd\_\-Device@{glcd\_\-Device}!ReadData@{ReadData}}
+\index{ReadData@{ReadData}!glcd_Device@{glcd\_\-Device}}
+\subsubsection[{ReadData}]{\setlength{\rightskip}{0pt plus 5cm}uint8\_\-t glcd\_\-Device::ReadData (void)\hspace{0.3cm}{\ttfamily  \mbox{[}inline\mbox{]}}}}
+\label{classglcd___device_a2ec1756ae0c7787fad676d6398c73de3}
+read a data byte from display device memory
+
+\begin{DoxyReturn}{Returns}
+the data byte at the current x,y position
+\end{DoxyReturn}
+\begin{DoxyNote}{Note}
+the current x,y location is not modified by the routine. This allows a read/modify/write operation. Code can call \hyperlink{classglcd___device_a2ec1756ae0c7787fad676d6398c73de3}{ReadData()} modify the data then call \hyperlink{classglcd___device_a209d1ba245e7e02eb65e07c15ce0461d}{WriteData()} and update the same location.
+\end{DoxyNote}
+\begin{DoxySeeAlso}{See also}
+\hyperlink{classglcd___device_a209d1ba245e7e02eb65e07c15ce0461d}{WriteData()} 
+\end{DoxySeeAlso}
+\hypertarget{classglcd___device_a1916258e850cd839172ce318a0b903fd}{
+\index{glcd\_\-Device@{glcd\_\-Device}!SetDot@{SetDot}}
+\index{SetDot@{SetDot}!glcd_Device@{glcd\_\-Device}}
+\subsubsection[{SetDot}]{\setlength{\rightskip}{0pt plus 5cm}void glcd\_\-Device::SetDot (uint8\_\-t {\em x}, \/  uint8\_\-t {\em y}, \/  uint8\_\-t {\em color})}}
+\label{classglcd___device_a1916258e850cd839172ce318a0b903fd}
+set pixel at x,y to the given color
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]X coordinate \item[{\em y}]Y coordinate \item[{\em color}]WHITE or BLACK\end{DoxyParams}
+Sets the pixel at location x,y to the specified color. x and y are relative to the 0,0 origin of the display which is the upper left corner.
+
+\begin{DoxyNote}{Note}
+If the display has been set to INVERTED mode then the colors will be automically reversed. 
+\end{DoxyNote}
+\hypertarget{classglcd___device_a4950fe109b27cb1cdcdbabe367d02c80}{
+\index{glcd\_\-Device@{glcd\_\-Device}!SetPixels@{SetPixels}}
+\index{SetPixels@{SetPixels}!glcd_Device@{glcd\_\-Device}}
+\subsubsection[{SetPixels}]{\setlength{\rightskip}{0pt plus 5cm}void glcd\_\-Device::SetPixels (uint8\_\-t {\em x}, \/  uint8\_\-t {\em y}, \/  uint8\_\-t {\em x2}, \/  uint8\_\-t {\em y2}, \/  uint8\_\-t {\em color})}}
+\label{classglcd___device_a4950fe109b27cb1cdcdbabe367d02c80}
+set an area of pixels
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]X coordinate of upper left corner \item[{\em y}]Y coordinate of upper left corner \item[{\em x2}]X coordinate of lower right corner \item[{\em y2}]Y coordinate of lower right corner\end{DoxyParams}
+sets the pixels an area bounded by x,y to x2,y2 inclusive to the specified color.
+
+The width of the area is x2-\/x + 1. The height of the area is y2-\/y+1 \hypertarget{classglcd___device_a209d1ba245e7e02eb65e07c15ce0461d}{
+\index{glcd\_\-Device@{glcd\_\-Device}!WriteData@{WriteData}}
+\index{WriteData@{WriteData}!glcd_Device@{glcd\_\-Device}}
+\subsubsection[{WriteData}]{\setlength{\rightskip}{0pt plus 5cm}void glcd\_\-Device::WriteData (uint8\_\-t {\em data})}}
+\label{classglcd___device_a209d1ba245e7e02eb65e07c15ce0461d}
+Write a byte to display device memory
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em data}]date byte to write to memory\end{DoxyParams}
+The data specified is written to glcd memory at the current x,y position. If the y location is not on a byte boundary, the write is fragemented up into multiple writes.
+
+\begin{DoxyNote}{Note}
+the full behavior of this during split byte writes currently varies depending on a compile time define. The code can be configured to either OR in 1 data bits or set all the data bits. {\bfseries TRUE\_\-WRITE} controls this behavior.
+
+the x,y address will not be the same as it was prior to this call. The y address will remain the aame but the x address will advance by one. This allows back to writes to write sequentially through memory without having to do additional x,y positioning.
+\end{DoxyNote}
+\begin{DoxySeeAlso}{See also}
+\hyperlink{classglcd___device_a2ec1756ae0c7787fad676d6398c73de3}{ReadData()} 
+\end{DoxySeeAlso}
+
+
+The documentation for this class was generated from the following files:\begin{DoxyCompactItemize}
+\item 
+C:/Users/bill/Documents/000-\/NewHomeDir/My-\/Documents/Scuba-\/Stuff/Aeris/Download-\/Protocol/devel/windows/arduino-\/0017/hardware/libraries/glcd/glcd\_\-Device.h\item 
+C:/Users/bill/Documents/000-\/NewHomeDir/My-\/Documents/Scuba-\/Stuff/Aeris/Download-\/Protocol/devel/windows/arduino-\/0017/hardware/libraries/glcd/glcd\_\-Device.cpp\end{DoxyCompactItemize}

@@ -1,0 +1,104 @@
+\hypertarget{g_text_8h}{
+\section{C:/Users/bill/Documents/000-\/NewHomeDir/My-\/Documents/Scuba-\/Stuff/Aeris/Download-\/Protocol/devel/windows/arduino-\/0017/hardware/libraries/glcd/gText.h File Reference}
+\label{g_text_8h}\index{C:/Users/bill/Documents/000-\/NewHomeDir/My-\/Documents/Scuba-\/Stuff/Aeris/Download-\/Protocol/devel/windows/arduino-\/0017/hardware/libraries/glcd/gText.h@{C:/Users/bill/Documents/000-\/NewHomeDir/My-\/Documents/Scuba-\/Stuff/Aeris/Download-\/Protocol/devel/windows/arduino-\/0017/hardware/libraries/glcd/gText.h}}
+}
+{\ttfamily \#include $<$inttypes.h$>$}\par
+{\ttfamily \#include $<$avr/pgmspace.h$>$}\par
+{\ttfamily \#include \char`\"{}glcd\_\-Device.h\char`\"{}}\par
+\subsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \hyperlink{structtwin}{twin}
+\item 
+struct \hyperlink{structtwincntxt}{twincntxt}
+\item 
+class \hyperlink{classg_text}{gText}
+\end{DoxyCompactItemize}
+\subsection*{Defines}
+\begin{DoxyCompactItemize}
+\item 
+\#define \hyperlink{g_text_8h_abc8b7a6d70f9533c94c8bf3e9291412a}{GTEXT\_\-VERSION}~1
+\item 
+\#define \hyperlink{g_text_8h_ae06dc7b9804bb102859f0e32754e79a5}{FONT\_\-LENGTH}~0
+\item 
+\#define \hyperlink{g_text_8h_afc65866121cd2eba3caa85d2946eeec0}{FONT\_\-FIXED\_\-WIDTH}~2
+\item 
+\#define \hyperlink{g_text_8h_a33f4fac49f2a5e27e2857eb27f054510}{FONT\_\-HEIGHT}~3
+\item 
+\#define \hyperlink{g_text_8h_abf840ca631179d25994d5f1dc3594646}{FONT\_\-FIRST\_\-CHAR}~4
+\item 
+\#define \hyperlink{g_text_8h_a4546cd12e3ae03bca0659ed77eeb872e}{FONT\_\-CHAR\_\-COUNT}~5
+\item 
+\#define \hyperlink{g_text_8h_ae6bf0901cff58e47324da9487d0ee938}{FONT\_\-WIDTH\_\-TABLE}~6
+\item 
+\#define \hyperlink{g_text_8h_ae32f2f70c6fb954fc54e063f26cc634e}{isFixedWidtFont}(font)~(this-\/$>$FontRead(font+FONT\_\-LENGTH) == 0 \&\& this-\/$>$FontRead(font+FONT\_\-LENGTH+1) == 0))
+\end{DoxyCompactItemize}
+\subsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+typedef uint8\_\-t($\ast$ \hyperlink{g_text_8h_ae36b3e52a6e5d20201ff5edf725c0fbd}{FontCallback} )(const uint8\_\-t $\ast$)
+\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+uint8\_\-t \hyperlink{g_text_8h_a64d487f987b8914d5eb283e3a56e13ca}{ReadPgmData} (const uint8\_\-t $\ast$ptr)
+\end{DoxyCompactItemize}
+
+
+\subsection{Define Documentation}
+\hypertarget{g_text_8h_a4546cd12e3ae03bca0659ed77eeb872e}{
+\index{gText.h@{gText.h}!FONT\_\-CHAR\_\-COUNT@{FONT\_\-CHAR\_\-COUNT}}
+\index{FONT\_\-CHAR\_\-COUNT@{FONT\_\-CHAR\_\-COUNT}!gText.h@{gText.h}}
+\subsubsection[{FONT\_\-CHAR\_\-COUNT}]{\setlength{\rightskip}{0pt plus 5cm}\#define FONT\_\-CHAR\_\-COUNT~5}}
+\label{g_text_8h_a4546cd12e3ae03bca0659ed77eeb872e}
+\hypertarget{g_text_8h_abf840ca631179d25994d5f1dc3594646}{
+\index{gText.h@{gText.h}!FONT\_\-FIRST\_\-CHAR@{FONT\_\-FIRST\_\-CHAR}}
+\index{FONT\_\-FIRST\_\-CHAR@{FONT\_\-FIRST\_\-CHAR}!gText.h@{gText.h}}
+\subsubsection[{FONT\_\-FIRST\_\-CHAR}]{\setlength{\rightskip}{0pt plus 5cm}\#define FONT\_\-FIRST\_\-CHAR~4}}
+\label{g_text_8h_abf840ca631179d25994d5f1dc3594646}
+\hypertarget{g_text_8h_afc65866121cd2eba3caa85d2946eeec0}{
+\index{gText.h@{gText.h}!FONT\_\-FIXED\_\-WIDTH@{FONT\_\-FIXED\_\-WIDTH}}
+\index{FONT\_\-FIXED\_\-WIDTH@{FONT\_\-FIXED\_\-WIDTH}!gText.h@{gText.h}}
+\subsubsection[{FONT\_\-FIXED\_\-WIDTH}]{\setlength{\rightskip}{0pt plus 5cm}\#define FONT\_\-FIXED\_\-WIDTH~2}}
+\label{g_text_8h_afc65866121cd2eba3caa85d2946eeec0}
+\hypertarget{g_text_8h_a33f4fac49f2a5e27e2857eb27f054510}{
+\index{gText.h@{gText.h}!FONT\_\-HEIGHT@{FONT\_\-HEIGHT}}
+\index{FONT\_\-HEIGHT@{FONT\_\-HEIGHT}!gText.h@{gText.h}}
+\subsubsection[{FONT\_\-HEIGHT}]{\setlength{\rightskip}{0pt plus 5cm}\#define FONT\_\-HEIGHT~3}}
+\label{g_text_8h_a33f4fac49f2a5e27e2857eb27f054510}
+\hypertarget{g_text_8h_ae06dc7b9804bb102859f0e32754e79a5}{
+\index{gText.h@{gText.h}!FONT\_\-LENGTH@{FONT\_\-LENGTH}}
+\index{FONT\_\-LENGTH@{FONT\_\-LENGTH}!gText.h@{gText.h}}
+\subsubsection[{FONT\_\-LENGTH}]{\setlength{\rightskip}{0pt plus 5cm}\#define FONT\_\-LENGTH~0}}
+\label{g_text_8h_ae06dc7b9804bb102859f0e32754e79a5}
+\hypertarget{g_text_8h_ae6bf0901cff58e47324da9487d0ee938}{
+\index{gText.h@{gText.h}!FONT\_\-WIDTH\_\-TABLE@{FONT\_\-WIDTH\_\-TABLE}}
+\index{FONT\_\-WIDTH\_\-TABLE@{FONT\_\-WIDTH\_\-TABLE}!gText.h@{gText.h}}
+\subsubsection[{FONT\_\-WIDTH\_\-TABLE}]{\setlength{\rightskip}{0pt plus 5cm}\#define FONT\_\-WIDTH\_\-TABLE~6}}
+\label{g_text_8h_ae6bf0901cff58e47324da9487d0ee938}
+\hypertarget{g_text_8h_abc8b7a6d70f9533c94c8bf3e9291412a}{
+\index{gText.h@{gText.h}!GTEXT\_\-VERSION@{GTEXT\_\-VERSION}}
+\index{GTEXT\_\-VERSION@{GTEXT\_\-VERSION}!gText.h@{gText.h}}
+\subsubsection[{GTEXT\_\-VERSION}]{\setlength{\rightskip}{0pt plus 5cm}\#define GTEXT\_\-VERSION~1}}
+\label{g_text_8h_abc8b7a6d70f9533c94c8bf3e9291412a}
+\hypertarget{g_text_8h_ae32f2f70c6fb954fc54e063f26cc634e}{
+\index{gText.h@{gText.h}!isFixedWidtFont@{isFixedWidtFont}}
+\index{isFixedWidtFont@{isFixedWidtFont}!gText.h@{gText.h}}
+\subsubsection[{isFixedWidtFont}]{\setlength{\rightskip}{0pt plus 5cm}\#define isFixedWidtFont(font)~(this-\/$>$FontRead(font+FONT\_\-LENGTH) == 0 \&\& this-\/$>$FontRead(font+FONT\_\-LENGTH+1) == 0))}}
+\label{g_text_8h_ae32f2f70c6fb954fc54e063f26cc634e}
+
+
+\subsection{Typedef Documentation}
+\hypertarget{g_text_8h_ae36b3e52a6e5d20201ff5edf725c0fbd}{
+\index{gText.h@{gText.h}!FontCallback@{FontCallback}}
+\index{FontCallback@{FontCallback}!gText.h@{gText.h}}
+\subsubsection[{FontCallback}]{\setlength{\rightskip}{0pt plus 5cm}typedef uint8\_\-t($\ast$ {\bf FontCallback})(const uint8\_\-t $\ast$)}}
+\label{g_text_8h_ae36b3e52a6e5d20201ff5edf725c0fbd}
+
+
+\subsection{Function Documentation}
+\hypertarget{g_text_8h_a64d487f987b8914d5eb283e3a56e13ca}{
+\index{gText.h@{gText.h}!ReadPgmData@{ReadPgmData}}
+\index{ReadPgmData@{ReadPgmData}!gText.h@{gText.h}}
+\subsubsection[{ReadPgmData}]{\setlength{\rightskip}{0pt plus 5cm}uint8\_\-t ReadPgmData (const uint8\_\-t $\ast$ {\em ptr})}}
+\label{g_text_8h_a64d487f987b8914d5eb283e3a56e13ca}
