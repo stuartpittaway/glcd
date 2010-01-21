@@ -350,6 +350,53 @@ gText::DefineArea(uint8_t area, uint8_t x1, uint8_t y1, uint8_t x2, uint8_t y2, 
 	return(area);
 }
 
+/**
+ * Define a preselected generic text area
+ *
+ * @param area the desired text area (0 to GLCD.Text.AreaCount)
+ * @param preSelectedArea one of: textAreaFULL, textAreaTOP,  textAreaBOTTOM, textAreaLEFT, textAreaRIGHT
+ * @param	scrolldir	<0 it scrolls down/reverse, >0 up/normal
+ *
+ * Defines a pre-selected text area
+ *
+ * The area within the newly defined text area is intentionally not cleared.
+ *
+ * scrolldir is an optional parameter and defaults to normal/up
+ *
+ * @return returns @em area if successful.
+ *
+ *
+ * @note
+ * Upon creation of the text area, the cursor position for the text area will be set to 
+ * the upper left coordinate of the given preselected area
+ *
+ * @see ClearArea()
+ * @see SelectArea()
+ *
+ */
+
+uint8_t
+gText::DefineArea(uint8_t area, predefinedArea selection, int8_t scrolldir)
+{
+	switch(selection)
+	{
+		case 1: /* top half	*/
+				return DefineArea(area, 0, 0, DISPLAY_WIDTH -1, DISPLAY_HEIGHT/2 -1);					
+
+		case 2: /* bottom half	*/
+				return DefineArea(area, 0, DISPLAY_HEIGHT/2, DISPLAY_WIDTH -1, DISPLAY_HEIGHT -1);
+				break;
+
+		case 3:	/* left	half	*/
+				return DefineArea(area, 0, 0, DISPLAY_WIDTH/2 -1, DISPLAY_HEIGHT -1);					
+
+		case 4:	/* right half	*/
+				return DefineArea(area, DISPLAY_WIDTH/2, 0, DISPLAY_WIDTH/2 -1, DISPLAY_HEIGHT -1);					
+
+		default : return (area | 0x80); /* return something other than area */
+	}	
+}
+
 /*
  * Scroll a pixel region up.
  * 	Area scrolled is defined by x1,y1 through x2,y2 inclusive.
