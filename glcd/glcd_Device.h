@@ -16,7 +16,7 @@
 #if defined WIRING
 #include <WPrint.h> // used when deriving this class in Wiring
 #else
-#include "print.h" // used when deriving this class in Arduino 
+#include "Print.h" // used when deriving this class in Arduino 
 #endif
 
 #define GLCD_Device 1 // software version of this class
