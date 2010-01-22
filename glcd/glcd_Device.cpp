@@ -592,3 +592,22 @@ void glcd_Device::write(uint8_t) // for Print base class
 
 }
 
+#ifndef USE_ARDUINO_FLASHSTR
+// functions to store and print strings in Progmem
+// these should be removed when Arduino supports FLASH strings in the base print class
+void glcd_Device::printFlash(FLASHSTRING str)
+{
+  char c;
+  const prog_char *p = (const prog_char *)str;
+
+  while (c = pgm_read_byte(p++))
+    write(c);
+}
+
+void glcd_Device::printFlashln(FLASHSTRING str)
+{
+  printFlash(str);
+  write('\n');
+}
+#endif
+
