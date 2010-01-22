@@ -56,6 +56,8 @@ void glcd::Init(uint8_t invert){
 	this->Text.Init((glcd_Device *)this); 
 }	
 	
+// Note that the ClearPage functions are now private and probably no longer be necessary - mem 21 Jan
+// if ClearScreen coding is modifed to do the clear page	
 /**
  * Clear a full row of LCD memory pages
  *
@@ -582,7 +584,7 @@ uint8_t ReadPgmData(const uint8_t* ptr) {  // note this is a static function
 
 void glcd::write(uint8_t c)  // method needed for Print base class
 {
-	PutChar(c);
+  Text.PutChar(c);
 } 
 
 
@@ -590,18 +592,6 @@ void glcd::write(uint8_t c)  // method needed for Print base class
 void glcd::SelectFont(const uint8_t* font, uint8_t color)
 {
    Text.SelectFont(font, color);
-}
- 
-int glcd::PutChar(char c)
-{
-   return Text.PutChar(c); // change to Print??
-}
-
-void glcd::Puts(char* str) {
-	while(*str) {
-		Text.PutChar(*str);
-		str++;
-	}
 }
 
 void glcd::Puts_P(PGM_P str) {
@@ -619,11 +609,6 @@ void glcd::CursorTo( uint8_t column, uint8_t row)    // 0 based coordinates for 
 	 * Text position is relative to current text window.
 	 */
 	Text.CursorTo(column, row); 
-}
-
-void glcd::PrintNumber(long n) // on Arduino the print method is more capable
-{
-   this->print(n);
 }
 
 
@@ -647,6 +632,26 @@ uint16_t glcd::StringWidth_P(PGM_P str)
 {
   return Text.StringWidth_P(str);
 }
+ 
+
+#ifdef NOT_NEEDED
+int glcd::PutChar(char c)
+{
+   return Text.PutChar(c); // change to Print??
+}
+
+void glcd::Puts(char* str) {
+	while(*str) {
+		Text.PutChar(*str);
+		str++;
+	}
+}
+
+void glcd::PrintNumber(long n) // on Arduino the print method is more capable
+{
+   this->print(n);
+}
+#endif
 
 // Make one instance for the user
 glcd GLCD = glcd();
