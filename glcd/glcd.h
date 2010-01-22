@@ -34,11 +34,11 @@
 #define NON_INVERTED false
 #define INVERTED     true
 
-
 class glcd : public glcd_Device  // glcd_Device has low level device access routines
 {
   private:
-	
+	void ClearPage(uint8_t page, uint8_t color = WHITE);
+	void ClearPage(uint8_t page, uint8_t startX, uint8_t length, uint8_t color = WHITE);
   public:
     glcd();
 	
@@ -46,8 +46,6 @@ class glcd : public glcd_Device  // glcd_Device has low level device access rout
 	void Init(uint8_t invert = NON_INVERTED);
 	
 	// Graphic Functions
-	void ClearPage(uint8_t page, uint8_t color = WHITE);
-	void ClearPage(uint8_t page, uint8_t startX, uint8_t length, uint8_t color = WHITE);
 	void ClearScreen(uint8_t color = WHITE);
 	void DrawVLine(uint8_t x, uint8_t y, uint8_t height, uint8_t color= BLACK);
 	void DrawHLine(uint8_t x, uint8_t y, uint8_t width, uint8_t color= BLACK);
@@ -65,11 +63,7 @@ class glcd : public glcd_Device  // glcd_Device has low level device access rout
 	
     // Font Functions - this is public API for functionality in the Text class:
     void SelectFont(const uint8_t* font, uint8_t color=BLACK); // default arguments added, callback removed from public method
-    void Puts_P(PGM_P str); 
-    // the following deprecated functions are replaced by arduino style print methods
-	int PutChar(char c)  __attribute__ ((deprecated));
-    void Puts(char* str); __attribute__ ((deprecated));
-	void PrintNumber(long n); __attribute__ ((deprecated));
+    void Puts_P(PGM_P str);  // this prints a string defined explicitly as a constant in program memory
 	
 	// functions for use with system (fixed width 5x7) font
 	void ClearSysTextLine( uint8_t row); 
@@ -79,12 +73,11 @@ class glcd : public glcd_Device  // glcd_Device has low level device access rout
     uint16_t StringWidth(const char* str);
     uint16_t StringWidth_P(PGM_P str);
 
-	//Device Properties - these are read only constants
-	 
+	//Device Properties - these are read only constants	 
 	static const uint8_t Width = DISPLAY_WIDTH;
 	static const uint8_t Height = DISPLAY_HEIGHT;
 	
 };
 
-extern glcd GLCD;    
+extern glcd GLCD;   
 #endif
