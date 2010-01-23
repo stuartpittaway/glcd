@@ -184,13 +184,13 @@ void scrollingDemo()
 
   GLCD.ClearScreen();  
   GLCD.Text.SelectArea(0);
-//  GLCD.Text.DefineArea(0, 0,0, GLCD.Width/2 -1,GLCD.Height/2 -1, 1);
-  GLCD.Text.DefineArea(0,textAreaLEFT,1); 
+  GLCD.Text.DefineArea(0, 0,0, GLCD.Width/2 -1,GLCD.Height/2 -1, 1);
+//  GLCD.Text.DefineArea(0,textAreaLEFT,1); 
   GLCD.SelectFont(System5x7, WHITE);
   GLCD.CursorTo(0,0);
   GLCD.Text.SelectArea(1);
-//  GLCD.Text.DefineArea(1, GLCD.Width/2,0, GLCD.Width-1,GLCD.Height/2-1, -1);
-  GLCD.Text.DefineArea(1,textAreaRIGHT,-1); 
+  GLCD.Text.DefineArea(1, GLCD.Width/2,0, GLCD.Width-1,GLCD.Height/2-1, -1);
+//  GLCD.Text.DefineArea(1,textAreaRIGHT,-1); 
   GLCD.SelectFont(System5x7, BLACK);
   GLCD.CursorTo(0,0);
   GLCD.Text.SelectArea(2);
