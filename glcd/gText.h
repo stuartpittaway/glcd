@@ -36,7 +36,11 @@
 
 
 typedef uint8_t (*FontCallback)(const uint8_t*);
-typedef enum  {textAreaFULL, textAreaTOP,  textAreaBOTTOM, textAreaLEFT, textAreaRIGHT} predefinedArea;
+
+// enum for predefined areas, new areas should be added immediatly BEFORE the textAreaOfNbrAreas value
+typedef enum  {textAreaFULL, textAreaTOP,  textAreaBOTTOM, textAreaLEFT, textAreaRIGHT,
+               textAreaTOPLEFT, textAreaTOPRIGHT, textAreaBOTTOMLEFT, textAreaBOTTOMRIGHT, textAreaNbrOfAreas} predefinedArea;
+
 
 uint8_t ReadPgmData(const uint8_t* ptr);	//Standard Read Callback
 
@@ -88,7 +92,7 @@ class gText
 
 	uint8_t DefineArea(uint8_t area_num, uint8_t x1, uint8_t y1, uint8_t x2, uint8_t y2, int8_t scrolldir=1);
 	uint8_t DefineArea(uint8_t area_num, uint8_t x1, uint8_t y1, uint8_t columns, uint8_t rows, const uint8_t* font, int8_t scrolldir=1);
-	uint8_t DefineArea(uint8_t area, predefinedArea selection, int8_t scrolldir);
+	uint8_t DefineArea(uint8_t area, predefinedArea selection, int8_t scrolldir=1);
 	void ClearArea(void);
 
 #if GLCD_TAREA_CNT > 0
