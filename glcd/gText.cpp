@@ -354,7 +354,8 @@ gText::DefineArea(uint8_t area, uint8_t x1, uint8_t y1, uint8_t x2, uint8_t y2, 
  * Define a preselected generic text area
  *
  * @param area the desired text area (0 to GLCD.Text.AreaCount)
- * @param preSelectedArea one of: textAreaFULL, textAreaTOP,  textAreaBOTTOM, textAreaLEFT, textAreaRIGHT
+ * @param preSelectedArea one of: textAreaFULL, textAreaTOP,  textAreaBOTTOM, textAreaLEFT, textAreaRIGHT,
+ *                                textAreaTOPLEFT,textAreaTOPRIGHT,textAreaBOTTOMLEFT,textAreaBOTTOMRIGHT
  * @param	scrolldir	<0 it scrolls down/reverse, >0 up/normal
  *
  * Defines a pre-selected text area
@@ -375,26 +376,40 @@ gText::DefineArea(uint8_t area, uint8_t x1, uint8_t y1, uint8_t x2, uint8_t y2, 
  *
  */
 
+ /* 
+  * Array of coordinates for preselected areas stored in Progmem
+  * More areas can be added by adding initilizer here (each new area consumes 4 bytes of Progmem)
+  * and adding an enumerator to the  predefinedArea typedef in gText.h
+  * note that no progmem is will be used if DefineArea is not called in the application
+  */
+static uint8_t predefAreas[][4] PROGMEM = {                                                      
+ { 0,               0,                DISPLAY_WIDTH -1,   DISPLAY_HEIGHT -1   }, // textAreaFULL  
+ { 0,               0,                DISPLAY_WIDTH -1,   DISPLAY_HEIGHT/2 -1 }, // textAreaTOP       		                                              
+ { 0,               DISPLAY_HEIGHT/2, DISPLAY_WIDTH -1,   DISPLAY_HEIGHT -1   }, // textAreaBOTTOM    		                                              
+ { 0,               0,                DISPLAY_WIDTH/2 -1, DISPLAY_HEIGHT -1   }, // textAreaLEFT      
+ { DISPLAY_WIDTH/2, 0,                DISPLAY_WIDTH -1,   DISPLAY_HEIGHT -1   }, // textAreaRIGHT  
+ { 0,               0,                DISPLAY_WIDTH/2 -1, DISPLAY_HEIGHT/2 -1 }, // textAreaTOPLEFT  
+ { DISPLAY_WIDTH/2, 0,                DISPLAY_WIDTH -1,   DISPLAY_HEIGHT/2 -1 }, // textAreaTOPRIGHT  
+ { 0,               DISPLAY_HEIGHT/2, DISPLAY_WIDTH/2 -1, DISPLAY_HEIGHT -1   }, // textAreaBOTTOMLEFT
+ { DISPLAY_WIDTH/2, DISPLAY_HEIGHT/2, DISPLAY_WIDTH -1,   DISPLAY_HEIGHT -1   }  // textAreaBOTTOMRIGHT
+};		 
+
+		 
 uint8_t
 gText::DefineArea(uint8_t area, predefinedArea selection, int8_t scrolldir)
 {
-	switch(selection)
-	{
-		case 1: /* top half	*/
-				return DefineArea(area, 0, 0, DISPLAY_WIDTH -1, DISPLAY_HEIGHT/2 -1);					
-
-		case 2: /* bottom half	*/
-				return DefineArea(area, 0, DISPLAY_HEIGHT/2, DISPLAY_WIDTH -1, DISPLAY_HEIGHT -1);
-				break;
-
-		case 3:	/* left	half	*/
-				return DefineArea(area, 0, 0, DISPLAY_WIDTH/2 -1, DISPLAY_HEIGHT -1);					
-
-		case 4:	/* right half	*/
-				return DefineArea(area, DISPLAY_WIDTH/2, 0, DISPLAY_WIDTH/2 -1, DISPLAY_HEIGHT -1);					
-
-		default : return (area | 0x80); /* return something other than area */
-	}	
+uint8_t x1,y1,x2,y2;
+    if( selection < textAreaNbrOfAreas) {
+	   uint8_t *predefPtr = &predefAreas[selection][0];
+       x1 =  pgm_read_byte(predefPtr++);	   
+	   y1 =  pgm_read_byte(predefPtr++);	
+	   x2 =  pgm_read_byte(predefPtr++);	
+	   y2 =  pgm_read_byte(predefPtr);	
+	   //printf("area=%d, sel=%d (%s) :%d,%d,%d,%d\n",area,selection, areaStr[selection], x1,y1,x2,y2); 
+	   return DefineArea(area,x1,y1,x2,y2, scrolldir);
+	}
+	else
+	   return (area | 0x80); // invalid selection, return something other than area
 }
 
 /*
