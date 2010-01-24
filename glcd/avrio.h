@@ -12,8 +12,8 @@
  *  AVRIO is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *  You should have received a copy of the GNU General Public License
+ *  GNU Lesser General Public License for more details.
+ *  You should have received a copy of the GNU Lesser General Public License
  *  along with AVRIO.  If not, see:
  *	http://www.gnu.org/licenses/lgpl-3.0-standalone.html
  *	http://www.gnu.org/licenses/lgpl-3.0.txt
@@ -24,10 +24,14 @@
  *
  *	These primitives are for setting/reading digital levels on the pins.
  *
+ *	The final code generated will be the smallest amount of AVR instructions
+ *	to set/clear or read the bits possible.
+ *
  *	It introduces a new AVR s/w i/o concept.
  *	It is wrapped around the concept of an "avrpin".
  *	An avrpin is a compile-time token that can be used to locate a particular avrpin.
- *	It is different than the simple integer scheme as currently used by Arduino.
+ *	It is different than the bitmask scheme used by the standard AVR C headers or
+ *	the simple integer scheme as currently used by Arduino.
  *	avrpin has encoded into it: the port, A, B, C, etc, as well as the bit information
  *	within that port.
  *
@@ -43,6 +47,21 @@
  *					This capability requires the use a mapping macro digitalPinToPortReg()
  *					which should be provided by an inluding an arduino header file.
  *					That header file *MUST* be included before including this header.
+ *
+ *	The pin parameter used in all the primitives will automaticaly adapt to different environments and
+ *	suports multiple different style defintions.
+ *
+ *	In native AVR (non arduino) enviroments, the pin parameter should be specified using the
+ *	pin defintions near the end of this header file.
+ *  These pin definitions allow directly specifying a specific AVR pin using a PIN_Pb syntax.
+ *	where Pb represents a PORT and a pin#.
+ *	This means to specify port D bit 3 would be PIN_D3
+ *
+ *	For the time being, naked constants can also be used for pins on AVR ports A-F.
+ *	So PORTD pin 3 could also be specified by avr pin 0xd3
+ *
+ *	Arduino users may use either arduino pin#s, or the raw PIN_Pb style naming.
+ *
  *
  *	Primitives:
  *
@@ -317,7 +336,6 @@ avrio_arduino_pin2avrpin(uint8_t pin)
  *
  *	Arduino users may use either arduino pin#s, or the PIN_Pb style naming.
  *	
- *
  *
  * RETURN VALUE:
  *		(none)
@@ -723,11 +741,11 @@ avrio_ReadReg(uint8_t regtyp, uint8_t avrport)
         if (avrport == AVRIO_PORTC)
 	{
 		if(regtyp == AVRIO_DDRREG)
-			return(DDRB);
+			return(DDRC);
 		else if ( regtyp == AVRIO_PINREG)
-			return(PINB);
+			return(PINC);
 		else if ( regtyp == AVRIO_PORTREG)
-			return(PORTB);
+			return(PORTC);
 	}
 #endif
 #ifdef PORTD
@@ -1513,8 +1531,8 @@ do										\
 /*
  * Pin defines for all the ports/bits.
  *
- * These defines are for specifying a bit withing a port.
- * They fully define an "avrpin". And as discussed above they
+ * These defines are for specifying a bit within a port.
+ * They fully define an "avrpin". And as discussed earlier they
  * do not specify a type of register (PORT, PIN, DDR) they merely
  * specify the bit within the "port". See the avrio primitives above
  * to see how to specify the type of register (PORT, PIN, DDR)
