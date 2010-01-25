@@ -1,11 +1,13 @@
 /*
-  glcd_depricated.h - GLCD functions supported for backward compatability only
+  glcd_deprecated.h - GLCD functions supported for backward compatibility only
+  Include this file if you are migrating from the ks0108 library and want to use the old style function names
+  See the documentation for more information on migrating from the old library
   vi:ts=4
 
 */	
 
-#ifndef	GLCD_DEPRICATED_H
-#define GLCD_DEPRICATED_H
+#ifndef	GLCD_DEPRECATED_H
+#define GLCD_DEPRECATED_H
 
 // the following line drawing functions have been renamed
 // the new function will use the default color if the color parameter is omitted
@@ -15,7 +17,7 @@
 // ClearPage is replaced by ClearSysTextLine
 #define ClearPage(page, color)   ClearSysTextLine(page)  // note that color is ignored !!!
 	
-// the following deprecated functions are replaced by arduino style print methods
+// the following deprecated functions are replaced by Arduino style print methods
 #define PutChar(c)       print(c)
 #define Puts(str)        print(str)
 #define PrintNumber(n)   print(n)
