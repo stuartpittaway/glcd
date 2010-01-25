@@ -90,8 +90,8 @@ class gText
 
 	// Text area functions
 
-	uint8_t DefineArea(uint8_t area_num, uint8_t x1, uint8_t y1, uint8_t x2, uint8_t y2, int8_t scrolldir=1);
-	uint8_t DefineArea(uint8_t area_num, uint8_t x1, uint8_t y1, uint8_t columns, uint8_t rows, const uint8_t* font, int8_t scrolldir=1);
+	uint8_t DefineArea(uint8_t area, uint8_t x1, uint8_t y1, uint8_t x2, uint8_t y2, int8_t scrolldir=1);
+	uint8_t DefineArea(uint8_t area, uint8_t x1, uint8_t y1, uint8_t columns, uint8_t rows, const uint8_t* font, int8_t scrolldir=1);
 	uint8_t DefineArea(uint8_t area, predefinedArea selection, int8_t scrolldir=1);
 	void ClearArea(void);
 

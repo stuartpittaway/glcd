@@ -285,7 +285,7 @@ void glcd::DrawRect(uint8_t x, uint8_t y, uint8_t width, uint8_t height, uint8_t
  * @param y the y coordinate of the upper left corner of the rectangle
  * @param width width of the rectangle
  * @param height height of the rectangle
- * @radius ????
+ * @param radius ????
  * @param color BLACK or WHITE
  *
  * Draws a rectangle the same as DrawRect() but with rounded corners.
@@ -453,11 +453,13 @@ void glcd::SetInverted(uint8_t invert) {
 /**
  * Draw a bitmap image
  *
+ * @param bitmap a ponter to the bitmap data
  * @param x the x coordinate of the upper left corner of the bitmap
  * @param y the y coordinate of the upper left corner of the bitmap
  * @param color BLACK or WHITE
  *
  * Draws a bitmap image with the upper left corner at location x,y
+ * The bitmap data is assumed to be in program memory.
  *
  * Color is optional and defaults to WHITE.
  *
@@ -507,8 +509,9 @@ uint8_t i, j;
  * @param x a value from 0 to GLCD.Width-1
  * @param y a value from 0 to GLCD.Height-1
  * @param height a value from 1 to GLCD.Height-y-1
+ * @param color color of line
  *
- * BLACK or WHITE is an optional parameter indicating pixel color, default is BLACK
+ * color of BLACK or WHITE is an optional parameter indicating pixel color, default is BLACK
  *
  * The line drawn will be height+1 pixels.
  *

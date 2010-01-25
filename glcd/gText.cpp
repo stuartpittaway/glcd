@@ -186,7 +186,7 @@ void gText::ClearArea(void)
  * @param area the desired text area (0 to GLCD.Text.AreaCount)
  * @param x X coordinate of upper left corner
  * @param y Y coordinate of upper left corner
- * @param colums number of text columns
+ * @param columns number of text columns
  * @param rows number of text rows
  * @param font a pointer defined in a font defintion file
  * @param scrolldir	<0 it scrolls down/reverse, >0 up/normal
@@ -245,7 +245,7 @@ uint8_t x2,y2;
 }
 
 /**
- * Define a text area by abolute coordinates
+ * Define a text area by absolute coordinates
  *
  * @param area the desired text area (0 to GLCD.Text.AreaCount)
  * @param x1 X coordinate of upper left corner
@@ -254,7 +254,7 @@ uint8_t x2,y2;
  * @param y2 Y coordinate of lower right corner
  * @param	scrolldir	<0 it scrolls down/reverse, >0 up/normal
  *
- * Defines a text area based on abolute coordinates.
+ * Defines a text area based on absolute coordinates.
  * The pixel coordinates for the text area are inclusive so x2,y2 is the lower right
  * pixel of the text area.
  *
@@ -350,6 +350,26 @@ gText::DefineArea(uint8_t area, uint8_t x1, uint8_t y1, uint8_t x2, uint8_t y2, 
 	return(area);
 }
 
+ /* 
+  * Array of coordinates for preselected areas stored in Progmem
+  * More areas can be added by adding initilizer here (each new area consumes 4 bytes of Progmem)
+  * and adding an enumerator to the  predefinedArea typedef in gText.h
+  * note that no progmem is will be used if DefineArea is not called in the application
+  */
+static uint8_t predefAreas[][4] PROGMEM = {                                                      
+ { 0,               0,                DISPLAY_WIDTH -1,   DISPLAY_HEIGHT -1   }, // textAreaFULL  
+ { 0,               0,                DISPLAY_WIDTH -1,   DISPLAY_HEIGHT/2 -1 }, // textAreaTOP       		                                              
+ { 0,               DISPLAY_HEIGHT/2, DISPLAY_WIDTH -1,   DISPLAY_HEIGHT -1   }, // textAreaBOTTOM    		                                              
+ { 0,               0,                DISPLAY_WIDTH/2 -1, DISPLAY_HEIGHT -1   }, // textAreaLEFT      
+ { DISPLAY_WIDTH/2, 0,                DISPLAY_WIDTH -1,   DISPLAY_HEIGHT -1   }, // textAreaRIGHT  
+ { 0,               0,                DISPLAY_WIDTH/2 -1, DISPLAY_HEIGHT/2 -1 }, // textAreaTOPLEFT  
+ { DISPLAY_WIDTH/2, 0,                DISPLAY_WIDTH -1,   DISPLAY_HEIGHT/2 -1 }, // textAreaTOPRIGHT  
+ { 0,               DISPLAY_HEIGHT/2, DISPLAY_WIDTH/2 -1, DISPLAY_HEIGHT -1   }, // textAreaBOTTOMLEFT
+ { DISPLAY_WIDTH/2, DISPLAY_HEIGHT/2, DISPLAY_WIDTH -1,   DISPLAY_HEIGHT -1   }  // textAreaBOTTOMRIGHT
+};		 
+
+		 
+
 /**
  * Define a preselected generic text area
  *
@@ -376,25 +396,6 @@ gText::DefineArea(uint8_t area, uint8_t x1, uint8_t y1, uint8_t x2, uint8_t y2, 
  *
  */
 
- /* 
-  * Array of coordinates for preselected areas stored in Progmem
-  * More areas can be added by adding initilizer here (each new area consumes 4 bytes of Progmem)
-  * and adding an enumerator to the  predefinedArea typedef in gText.h
-  * note that no progmem is will be used if DefineArea is not called in the application
-  */
-static uint8_t predefAreas[][4] PROGMEM = {                                                      
- { 0,               0,                DISPLAY_WIDTH -1,   DISPLAY_HEIGHT -1   }, // textAreaFULL  
- { 0,               0,                DISPLAY_WIDTH -1,   DISPLAY_HEIGHT/2 -1 }, // textAreaTOP       		                                              
- { 0,               DISPLAY_HEIGHT/2, DISPLAY_WIDTH -1,   DISPLAY_HEIGHT -1   }, // textAreaBOTTOM    		                                              
- { 0,               0,                DISPLAY_WIDTH/2 -1, DISPLAY_HEIGHT -1   }, // textAreaLEFT      
- { DISPLAY_WIDTH/2, 0,                DISPLAY_WIDTH -1,   DISPLAY_HEIGHT -1   }, // textAreaRIGHT  
- { 0,               0,                DISPLAY_WIDTH/2 -1, DISPLAY_HEIGHT/2 -1 }, // textAreaTOPLEFT  
- { DISPLAY_WIDTH/2, 0,                DISPLAY_WIDTH -1,   DISPLAY_HEIGHT/2 -1 }, // textAreaTOPRIGHT  
- { 0,               DISPLAY_HEIGHT/2, DISPLAY_WIDTH/2 -1, DISPLAY_HEIGHT -1   }, // textAreaBOTTOMLEFT
- { DISPLAY_WIDTH/2, DISPLAY_HEIGHT/2, DISPLAY_WIDTH -1,   DISPLAY_HEIGHT -1   }  // textAreaBOTTOMRIGHT
-};		 
-
-		 
 uint8_t
 gText::DefineArea(uint8_t area, predefinedArea selection, int8_t scrolldir)
 {
@@ -815,7 +816,7 @@ void gText::SpecialChar(char c)
 /**
  * output a character to the currently selected text area
  *
- * @param char the character to output
+ * @param c the character to output
  *
  * If the character will not fit on the current text line
  * inside the currently selected text area,
@@ -1251,7 +1252,7 @@ int gText::PutChar(char c)
  *
  * Outputs all the characters in the string to the currently
  * selected text area. 
- * See @em Putchar() for a full description of how characters are
+ * See PutChar() for a full description of how characters are
  * written to the text area.
  *
  * @see PutChar()
@@ -1277,7 +1278,7 @@ void gText::Puts(char* str)
  *
  * Outputs all the characters in the string to the currently
  * selected text area. 
- * See @em Putchar() for a full description of how characters are
+ * See PutChar() for a full description of how characters are
  * written to the text area.
  *
  * @see PutChar()
@@ -1330,7 +1331,7 @@ void gText::DrawString(char *str, uint8_t x, uint8_t y)
  *
  * @param str pointer to a null terminated character string stored in program memory
  * @param x X coordinate of first character position
- * @param x Y coordinate of first character position
+ * @param y Y coordinate of first character position
  *
  * The program memory based character string is drawn in the currently selected
  * text area at position x,y.
@@ -1572,7 +1573,7 @@ uint16_t gText::StringWidth_P(PGM_P str)
 }
 /**
  * output a character to the currently selected text area
- * @param char the character to output
+ * @param c the character to output
  *
  * This method is needed for the Print base class
  */
