@@ -157,7 +157,7 @@
 #define GLCD_tAS	140	/* Address setup time (ctrl line changes to E high)	*/
 #define GLCD_tDSW	200	/* Data setup time (data lines setup to dropping E)	*/
 #define GLCD_tWH    450	/* E hi level width (minimum E hi pulse width)		*/
-#define GLCD_tTWL	450	/* E lo level width (minimum E lo pulse width)		*/
+#define GLCD_tWL	450	/* E lo level width (minimum E lo pulse width)		*/
 
 
 #include "device/ks0108_Device.h"
