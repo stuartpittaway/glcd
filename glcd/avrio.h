@@ -24,8 +24,8 @@
  *
  *	These primitives are for setting/reading digital levels on the pins.
  *
- *	The final code generated will be the smallest amount of AVR instructions
- *	to set/clear or read the bits possible.
+ *	When used with the GCC optimization, the final code generated will be the 
+ *	smallest amount of AVR instructions possible to set/clear or read the desired i/o bits.
  *
  *	It introduces a new AVR s/w i/o concept.
  *	It is wrapped around the concept of an "avrpin".
@@ -150,7 +150,6 @@
 #define AVRIO_PORTK	0x14
 #define AVRIO_PORTL	0x15
 
-
 #define AVRIO_DDRREG		1
 #define AVRIO_PORTREG		2
 #define AVRIO_PINREG		3
@@ -159,13 +158,29 @@ typedef uint16_t avrpin_t;	/* This must be uint16_t to support ports larger than
 
 /*
  * Generates an avrpin #
- *	The current encoding allows the use of naked constants for
+ *
+ * The avrpin port values start at 0xa for port A and go up.
+ * The port value is in the upper 12 bits of the 16 bit avrpin value.
+ * The bit value is encoded into the lower 4 bits.
+ * 
+ * But because the port numbers start at 0xa, there 160 avrpin #s
+ * below the first valid encoded avrpin value. These numbers are
+ * used/reserved for private numbering spaces. 
+ * This is wheter the arduino numbers reside.
+ * So when a pin number less than lowest valid avrpin# is used, avrio will
+ * need a private mapping function to mapp from that private numbering space
+ * the the avrpin numbering space.
+ * 
+ * This is how mapping is done from the arduino pin #s to avrio avrpin#s.
+ * 
+ *
+ *	The current encoding also allows the use of naked constants for
  *	ports a-f.
  *
  *	So for talking to port D pin 2 the avrpin # would be 0xd2
  *	That said, it is recommended to use the PIN_Pb defines,
  *	for future compatibility should the encoding change.
- *	so rather than use 0xd2 use PIN_D2
+ *	so rather than use 0xd2, it is recommended to use PIN_D2
  */
 
 #define AVRIO_PIN(avrport, avrbit) ((avrport << 4) | avrbit)
@@ -179,14 +194,7 @@ typedef uint16_t avrpin_t;	/* This must be uint16_t to support ports larger than
 /*
  * Atomagically detect Arduino pin mapping macros.
  *	This allows automatic mapping of arduino pin#s to avrpin #s.
- *
- *	Because the mapping is automatic, either numbering space can be used or
- *	even both.
  */
-
-#ifdef ARDUINO_PIN2AVRPIN
-#define AVRIO_PIN2AVRPIN(pin)		((pin < AVRIO_PIN(AVRIO_PORTA, 0)) ? ARDUINO_PIN2AVRPIN(pin) : pin)
-#endif
 
 #ifdef digitalPinToPortReg
 static inline avrpin_t  avrio_arduino_pin2avrpin(uint8_t pin) __attribute__((always_inline));
@@ -250,8 +258,25 @@ avrio_arduino_pin2avrpin(uint8_t pin)
 #endif
 
 
+/*
+ * if there is no custom PIN2AVRPIN mapping macro, then define the default
+ * a mapping function which assumes pins are in avrpin # format.
+ *
+ * About errors with incorrect pin formats:
+ *
+ * Because the mapping is primarily done with the C preprocessor macros, there isn't much
+ * that can be done inside a function type macro when the parameter is out of range.
+ *
+ * Currently, if we receive an pin value that is not in avrpin format and cannot be mapped,
+ * no error is reported and no code is generated.
+ *
+ */
+
+
+
 #ifndef AVRIO_PIN2AVRPIN
 #define AVRIO_PIN2AVRPIN(pin)		pin
+
 #endif
 
 
@@ -1551,6 +1576,17 @@ do										\
  */
 
 #ifndef CORE_NUM_TOTAL_PINS
+/*
+ * If teensy files are defining PIN_Pb defines, then there must
+ * also be arduino mapping macros.
+ */
+
+#ifndef digitalPinToPortReg
+#error "AVRIO: Teensy environment is missing Arduino pin mapping macros (Please update Teensy s/w)"
+#endif
+
+#else
+
 
 #define PIN_A0	AVRIO_PIN(AVRIO_PORTA, 0)
 #define PIN_A1	AVRIO_PIN(AVRIO_PORTA, 1)
