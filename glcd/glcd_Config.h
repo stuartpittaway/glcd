@@ -116,7 +116,7 @@
 								// code room.
 
 
-#define NEW_FONTDRAW			// turn on to get new font rendering
+//#define NEW_FONTDRAW			// turn on to get new font rendering
 
 
 /*
@@ -124,9 +124,10 @@
  */
 
 //#include "config/Modagm1264f_Config-bill.h"
+#include "config/Modagm1264f_Config-teensy++.h"
 //#include "config/Modvk5121_Config-bill.h"
 
-#include "config/ks0108_Config.h"
+//#include "config/ks0108_Config.h"
 //#include "config/Modagm1264f_Config.h"
 //#include "config/sed1520_Config.h"
 //#include "config/Mod4glm12232_Config.h"

@@ -11,7 +11,7 @@
 */
 
 #include <avr/pgmspace.h>
-#include "gText.h"
+#include "include/gText.h"
 #include "glcd_Config.h" 
 
 #ifdef CANNED_TAREAS
@@ -723,6 +723,27 @@ void gText::SpecialChar(char c)
 		
 				/*
 				 * Scroll everything to make room
+				 * * NOTE: (FIXME, slight "bug")
+				 * When less than the full character height of pixels is scrolled,
+				 * There can be an issue with the newly created empty line.
+				 * This is because only the # of pixels scrolled will be colored.
+				 * What it means is that if the area starts off as white and the text
+				 * color is also white, the newly created empty text line after a scroll 
+				 * operation will not be colored BLACK for the full height of the character.
+				 * The only way to fix this would be alter the code use a "move pixels"
+				 * rather than a scroll pixels, and then do a clear to end line immediately
+				 * after the move and wrap.
+				 *
+				 * Currently this only shows up when
+				 * there are are less than 2xheight pixels below the current Y coordinate to
+				 * the bottom of the text area
+				 * and the current background of the pixels below the current text line
+				 * matches the text color
+				 * and  a wrap was just completed.
+				 *
+				 * After a full row of text is printed, the issue will resolve itself.
+				 * 
+				 * 
 				 */
 #ifdef SCROLL_WHITE
 				this->ScrollUp(this->tarea.x1, this->tarea.y1, 

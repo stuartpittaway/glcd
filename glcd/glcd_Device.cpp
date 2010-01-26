@@ -15,10 +15,10 @@
 
 #include <avr/io.h>
 #include <wiring.h> // needed for arduino io methods
-#include "delay.h"  /* for _delayNanoseconds() functionality */
+#include "include/delay.h"  /* for _delayNanoseconds() functionality */
 
-#include "glcd_Device.h"
-#include "glcd_io.h"
+#include "include/glcd_Device.h"
+#include "include/glcd_io.h"
 
 
 #ifdef glcd_CHIP1

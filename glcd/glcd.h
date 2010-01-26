@@ -36,8 +36,8 @@
 #include <inttypes.h>
 #include <avr/pgmspace.h>
 
-#include "glcd_Device.h"
-#include "gText.h"
+#include "include/glcd_Device.h"
+#include "include/gText.h"
 
 #ifndef	GLCD_H
 #define GLCD_H
