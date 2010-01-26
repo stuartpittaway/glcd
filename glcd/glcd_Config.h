@@ -108,7 +108,7 @@
  * i.e. If ORIG_PUTCHAR is turned on, they are ignored.
  */
 
-#define GLCD_TAREA_CNT	5 		// number of text areas, each text area costs ~12 bytes of RAM.
+#define GLCD_TAREA_CNT	3 		// number of text areas, each text area costs ~12 bytes of RAM.
 
 
 //#define GLCD_NO_SCROLLDOWN	// disable reverse scrolling (saves ~600 bytes of code)
@@ -123,15 +123,13 @@
  * Only select one of the following:
  */
 
-//#include "config/Modagm1264f_Config-bill.h"
-#include "config/Modagm1264f_Config-teensy++.h"
-//#include "config/Modvk5121_Config-bill.h"
-
+ /*
+  * the following list are the files to be included in the release 
+  * all other display specific files are in config/dev_Config.h
+  * /
+#include "config/dev_Config.h"  // temporary file that used to select actual config file
 //#include "config/ks0108_Config.h"
-//#include "config/Modagm1264f_Config.h"
 //#include "config/sed1520_Config.h"
-//#include "config/Mod4glm12232_Config.h"
-//#include "config/Modvk5121_Config.h"
-//#include "config/ks0713_Config.h"
+
 
 #endif
