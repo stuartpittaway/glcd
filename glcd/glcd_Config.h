@@ -126,8 +126,8 @@
  /*
   * the following list are the files to be included in the release 
   * all other display specific files are in config/dev_Config.h
-  * /
-#include "config/dev_Config.h"  // temporary file that used to select actual config file
+  */
+#include "dev_Config.h"  // temporary file that used to select actual config file
 //#include "config/ks0108_Config.h"
 //#include "config/sed1520_Config.h"
 
