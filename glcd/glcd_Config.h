@@ -116,7 +116,7 @@
 								// code room.
 
 
-//#define NEW_FONTDRAW			// turn on to get new font rendering
+#define NEW_FONTDRAW			// turn on to get new font rendering
 
 
 /*
