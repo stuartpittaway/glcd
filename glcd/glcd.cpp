@@ -623,7 +623,7 @@ uint8_t y = radius;
 	/*
 	 * Fill in the center between the two halves
 	 */
-	DrawLine(x0, y0-radius, x0, y0+radius);
+	DrawLine(x0, y0-radius, x0, y0+radius, color);
  
 	while(x < y)
 	{
