@@ -1,6 +1,6 @@
 /*
   glcd.cpp - Arduino library support for graphic LCDs 
-  Copyright (c)2008 Michael Margolis All right reserved
+  Copyright (c)2008, 2009, 2010 Michael Margolis & Bill Perry All right reserved
 
   vi:ts=4
     
@@ -129,6 +129,30 @@ void glcd::ClearScreen(uint8_t color){
  }
 }
 
+/*
+ * Drawline code is based on Bresenham's line algorithm
+ * http://en.wikipedia.org/wiki/Bresenham%27s_line_algorithm
+ *
+ * This routine replaces the Teiele's DrawLine() routine which was
+ * much larger and much slower.
+ *	-- bperrybap
+ */
+ 
+/*
+ * First, define a few macros to make the DrawLine code below read more like
+ * the wikipedia example code.
+ */
+
+#define _GLCD_absDiff(x,y) ((x>y) ?  (x-y) : (y-x))
+#define _GLCD_swap(a,b) \
+do\
+{\
+uint8_t t;\
+	t=a;\
+	a=b;\
+	b=t;\
+} while(0)
+
 /**
  * Draw a line
  *
@@ -147,106 +171,51 @@ void glcd::ClearScreen(uint8_t color){
  *
  */
 
-void glcd::DrawLine(uint8_t x1, uint8_t y1, uint8_t x2, uint8_t y2, uint8_t color) {
-	uint8_t length, i, y, yAlt, xTmp, yTmp;
-	int16_t m;
-	//
-	// vertical line
-	//
-	if(x1 == x2) {
-		// x1|y1 must be the upper point
-		if(y1 > y2) {
-			yTmp = y1;
-			y1 = y2;
-			y2 = yTmp;
-		}
-		this->DrawVLine(x1, y1, y2-y1, color);
-	
-	//
-	// horizontal line
-	//
-	} else if(y1 == y2) {	
-		// x1|y1 must be the left point
-		if(x1 > x2) {
-			xTmp = x1;
-			x1 = x2;
-			x2 = xTmp;
-		}
-		this->DrawHLine(x1, y1, x2-x1, color);
-	
-	//
-	// angled line :)
-	//
-	} else {
-		// angle >= 45°
-		if((y2-y1) >= (x2-x1) || (y1-y2) >= (x2-x1)) {
-			// x1 must be smaller than x2
-			if(x1 > x2) {
-				xTmp = x1;
-				yTmp = y1;
-				x1 = x2;
-				y1 = y2;
-				x2 = xTmp;
-				y2 = yTmp;
-			}
-		
-			length = x2-x1;		// not really the length :)
-			m = ((y2-y1)*200)/length;
-			yAlt = y1;
-			
-			for(i=0; i<=length; i++) {
-				y = ((m*i)/200)+y1;
-				
-				if((m*i)%200 >= 100)
-					y++;
-				else if((m*i)%200 <= -100)
-					y--;
-				
-				this->DrawLine(x1+i, yAlt, x1+i, y, color);
-				
-				if(length <= (y2-y1) && y1 < y2)
-					yAlt = y+1;
-				else if(length <= (y1-y2) && y1 > y2)
-					yAlt = y-1;
-				else
-					yAlt = y;
-			}
-		
-		// angle < 45°
-		} else {
-			// y1 must be smaller than y2
-			if(y1 > y2) {
-				xTmp = x1;
-				yTmp = y1;
-				x1 = x2;
-				y1 = y2;
-				x2 = xTmp;
-				y2 = yTmp;
-			}
-			
-			length = y2-y1;
-			m = ((x2-x1)*200)/length;
-			yAlt = x1;
-			
-			for(i=0; i<=length; i++) {
-				y = ((m*i)/200)+x1;
-				
-				if((m*i)%200 >= 100)
-					y++;
-				else if((m*i)%200 <= -100)
-					y--;
-				
-				this->DrawLine(yAlt, y1+i, y, y1+i, color);
-				if(length <= (x2-x1) && x1 < x2)
-					yAlt = y+1;
-				else if(length <= (x1-x2) && x1 > x2)
-					yAlt = y-1;
-				else
-					yAlt = y;
-			}
-		}
+void glcd::DrawLine(uint8_t x1, uint8_t y1, uint8_t x2, uint8_t y2, uint8_t color)
+{
+uint8_t deltax, deltay, x,y, steep;
+int8_t error, ystep;
+
+  /*
+   * Fudge up values of coordinate if out of range.
+   */
+	if(x1>=DISPLAY_WIDTH) x1=0;
+	if(x2>=DISPLAY_WIDTH) x2=0;
+	if(y1>=DISPLAY_HEIGHT) y1=0;
+	if(y2>=DISPLAY_HEIGHT) y2=0;
+
+	steep = _GLCD_absDiff(y1,y2) > _GLCD_absDiff(x1,x2);  
+
+	if ( steep )
+	{
+		_GLCD_swap(x1, y1);
+		_GLCD_swap(x2, y2);
+	}
+
+	if (x1 > x2)
+	{
+		_GLCD_swap(x1, x2);
+		_GLCD_swap(y1, y2);
+	}
+
+	deltax = x2 - x1;
+	deltay =_GLCD_absDiff(y2,y1);  
+	error = deltax / 2;
+	y = y1;
+	if(y1 < y2) ystep = 1;  else ystep = -1;
+
+	for(x = x1; x <= x2; x++)
+	{
+		if (steep) this->SetDot(y,x, color); else this->SetDot(x,y, color);
+   		error = error - deltay;
+		if (error < 0)
+		{
+			y = y + ystep;
+			error = error + deltax;
+    	}
 	}
 }
+
 /**
  * Draw a rectangle of given width and height
  *
@@ -297,7 +266,8 @@ void glcd::DrawRect(uint8_t x, uint8_t y, uint8_t width, uint8_t height, uint8_t
  */
 
 void glcd::DrawRoundRect(uint8_t x, uint8_t y, uint8_t width, uint8_t height, uint8_t radius, uint8_t color) {
-  	int16_t tSwitch, x1 = 0, y1 = radius;
+  	int16_t tSwitch; 
+	uint8_t x1 = 0, y1 = radius; //BAPTEST
   	tSwitch = 3 - 2 * radius;
 	
 	while (x1 <= y1) {
@@ -339,7 +309,7 @@ void glcd::DrawRoundRect(uint8_t x, uint8_t y, uint8_t width, uint8_t height, ui
  *
  * Fills a rectanglular area of the specified width and height.
  *
- * The resulting rectangle covers an area width pixels wide by height pixels 
+ * The resulting rectangle covers an area @em width pixels wide by @em height pixels 
  * tall starting from the pixel at x,y. 
  *
  * The upper left corner at x,y and the lower right corner at x+width-1,y+width-1.
@@ -355,7 +325,8 @@ void glcd::DrawRoundRect(uint8_t x, uint8_t y, uint8_t width, uint8_t height, ui
  *
  * @warning FillRect() behavior has changed from the previous versions of the ks0108 library.  
  *	The filled rectangle will be one pixel smaller in width and height than the old version. 
- *	This change was to make the functionality consistent with the way Java and C# create filled rectangles
+ *	This change was to make the functionality consistent with the way 
+ *	Java and C# create filled rectangles
  *
  * @see DrawRect()
  * @see InvertRect()
@@ -378,6 +349,8 @@ void glcd::FillRect(uint8_t x, uint8_t y, uint8_t width, uint8_t height, uint8_t
  * BLACK pixels becom WHITE and WHITE pixels become BLACK.
  *
  * See FillRect() for full the full details of the rectangular area.
+ *
+ * @note The width and height parameters work differently than DrawRect()
  *
  * @warning InvertRect() behavior has changed from the previous versions of the ks0108 library.  
  *	The inverted rectangle will be one pixel smaller in width and height than the old version. 
@@ -402,6 +375,9 @@ void glcd::InvertRect(uint8_t x, uint8_t y, uint8_t width, uint8_t height) {
 	}
 	mask <<= pageOffset;
 	
+	/*
+	 * First do the fractional pages at the top of the region
+	 */
 	this->GotoXY(x, y);
 	for(i=0; i<=width; i++) {
 		data = this->ReadData();
@@ -410,6 +386,9 @@ void glcd::InvertRect(uint8_t x, uint8_t y, uint8_t width, uint8_t height) {
 		this->WriteData(data);
 	}
 	
+	/*
+	 * Now do the full pages
+	 */
 	while(h+8 <= height) {
 		h += 8;
 		y += 8;
@@ -421,6 +400,9 @@ void glcd::InvertRect(uint8_t x, uint8_t y, uint8_t width, uint8_t height) {
 		}
 	}
 	
+	/*
+	 * Now do the fractional pages aat the bottom of the region
+	 */
 	if(h < height) {
 		mask = ~(0xFF << (height-h));
 		this->GotoXY(x, y+8);
@@ -438,7 +420,8 @@ void glcd::InvertRect(uint8_t x, uint8_t y, uint8_t width, uint8_t height) {
  *
  * @param invert Inverted mode
  *
- * Sets the graphical state mode to @b NON_INVERTED (BLACK colorerd pixeld are dark)
+ * Sets the graphical state mode for the entire LCD display 
+ * to @b NON_INVERTED (BLACK colorerd pixeld are dark)
  * or @b INVERTED (WHITE colored pixels are dark)
  *
  */
@@ -461,7 +444,7 @@ void glcd::SetInverted(uint8_t invert) {
  * Draws a bitmap image with the upper left corner at location x,y
  * The bitmap data is assumed to be in program memory.
  *
- * Color is optional and defaults to WHITE.
+ * Color is optional and defaults to BLACK.
  *
  */
 
@@ -474,11 +457,19 @@ uint8_t i, j;
 
 #ifdef BITMAP_FIX
   /*
+   * In the absence of a new/better/proper bitmap rendering routine,
+   * this routine will provide a temporary fix for drawing bitmaps that are
+   * are non multiples of 8 pixels in height and start on non LCD page Y addresses.
+   *
    * Note: nomally a routine like this should not have knowledge of how
    *	   how the lower level write routine works. But in this case it does.
    *
-   *	Currently, the low level writedata routine ORs in the pixels when data spans
+   *	Currently, the low level WriteData() routine ORs in the pixels when data spans
    *	a LCD memory page. So.....
+   *
+   * In order to ensure that the bitmap data is written to the pixels *exactly* as it
+   * it defined in the bitmap data, i.e every black pixels is black and every white
+   * pixel is white,...
    *
    * If height or y coordinate is not on a page boundary, clear the background first
    *	Techincally, this could be done all the time and it wouldn't hurt, it
@@ -556,24 +547,112 @@ void glcd::DrawHLine(uint8_t x, uint8_t y, uint8_t width, uint8_t color){
  * @param xCenter X coordinate of the center of the circle
  * @param yCenter Y coordinate of the center of the circle
  * @param radius radius of circle
- * @param color
+ * @param color BLACK or WHITE
  *
  * Draws a circle of the given radius extending out from
  * the center pixel.
- * The circle will fit inside the rectangle bounded by 
+ * The circle will fit inside a rectanglular area bounded by
  * x-radius,y-radius and x+radius,y+radius
  *
- * The radius will be radius+1 pixels
- * The diameter will be 2 * radius +3 pixels.
+ * Because the circle is drawn from the center pixel out,
+ * the diameter will be 2 * radius +1 pixels.
  *
- * NEED to fully Verify this....
+ * Color is optional and defaults to BLACK.
  *
- * Color is optional and defaults to WHITE.
- *
+ * @see FillCircle()
  */
 void glcd::DrawCircle(uint8_t xCenter, uint8_t yCenter, uint8_t radius, uint8_t color){
    this->DrawRoundRect(xCenter-radius, yCenter-radius, 2*radius, 2*radius, radius, color);
 }
+
+/**
+ * Draw a Filled in a Circle
+ *
+ * @param xCenter X coordinate of the center of the circle
+ * @param yCenter Y coordinate of the center of the circle
+ * @param radius radius of circle
+ * @param color
+ *
+ * Draws a filled in circle of the given radius extending out from
+ * the center pixel.
+ *
+ * See DrawCircle() for the full details on sizing.
+ *
+ * Color is optional and defaults to BLACK.
+ *
+ * @see DrawCircle()
+ *
+ */
+
+void glcd::FillCircle(uint8_t x0, uint8_t y0, uint8_t radius, uint8_t color)
+{
+/*
+ * Circle fill Code is merely a modification of the midpoint
+ * circle algorithem which is an adaption of Bresenham's line algorithm
+ * http://en.wikipedia.org/wiki/Midpoint_circle_algorithm
+ * http://en.wikipedia.org/wiki/Bresenham%27s_line_algorithm
+ *
+ * While it looks different it is the same calculation that is in
+ * DrawRoundRect()
+ *
+ * Note: FillCircle()
+ *		could be modified to work like DrawCircle() by using
+ *		a DrawRoundRect() function.
+ * 		DrawRoundRect() first plots the cicrular quadrants and then draws
+ *		the horizontal and verticl lines between them to create
+ *		a rounded rectangle.
+ *		
+ *		For fills of rounded rectangles, this type of circle fill algorithm
+ *		would fill the upper and lower quadrants on each side of the rounded
+ *		rectangle by connecting them vertically.
+ *		When that was done, a filled rectangle would be neded need to fill the 
+ *		space between them.
+ *		There really isn't an easy way to fill a rounded rectangle.
+ *
+ *		For now, it is limited to circles.
+ *
+ * 			--- bperrybap
+ */
+
+int f = 1 - radius;
+int ddF_x = 1;
+int ddF_y = -2 * radius;
+uint8_t x = 0;
+uint8_t y = radius;
+ 
+	/*
+	 * Fill in the center between the two halves
+	 */
+	DrawLine(x0, y0-radius, x0, y0+radius);
+ 
+	while(x < y)
+	{
+    // ddF_x == 2 * x + 1;
+    // ddF_y == -2 * y;
+    // f == x*x + y*y - radius*radius + 2*x - y + 1;
+		if(f >= 0) 
+		{
+			y--;
+			ddF_y += 2;
+			f += ddF_y;
+		}
+		x++;
+		ddF_x += 2;
+		f += ddF_x;    
+
+		/*
+		 * Now draw vertical lines between the points on the circle rather than
+		 * draw the points of the circle. This draws lines between the 
+		 * perimeter points on the upper and lower quadrants of the 2 halves of the circle.
+		 */
+
+		DrawLine(x0+x, y0+y, x0+x, y0-y, color);
+		DrawLine(x0-x, y0+y, x0-x, y0-y, color);
+		DrawLine(x0+y, y0+x, y+x0, y0-x, color);
+		DrawLine(x0-y, y0+x, x0-y, y0-x, color);
+  	}
+}
+
 	
 
 //

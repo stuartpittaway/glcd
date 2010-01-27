@@ -69,6 +69,7 @@ class glcd : public glcd_Device  // glcd_Device has low level device access rout
     void FillRect(uint8_t x, uint8_t y, uint8_t width, uint8_t height, uint8_t color= BLACK);
     void InvertRect(uint8_t x, uint8_t y, uint8_t width, uint8_t height);
 	void DrawCircle(uint8_t xCenter, uint8_t yCenter, uint8_t radius, uint8_t color= BLACK);	
+	void FillCircle(uint8_t xCenter, uint8_t yCenter, uint8_t radius, uint8_t color= BLACK);	
 	void SetInverted(uint8_t invert);
 	void DrawBitmap(const uint8_t * bitmap, uint8_t x, uint8_t y, uint8_t color= BLACK);
 	
