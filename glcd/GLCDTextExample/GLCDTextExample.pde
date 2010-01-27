@@ -99,7 +99,7 @@ void showCharacters(){
   GLCD.DrawRoundRect(GLCD.Width/2 + 2, 0, GLCD.Width/2 -3, GLCD.Height-1, 5);  // rounded rectangle around text area 
   GLCD.Text.SelectArea(1);
   GLCD.SelectFont(System5x7, BLACK);
-  GLCD.Text.DefineArea(1, GLCD.Width/2 + 5, 3, GLCD.Width -1-4, GLCD.Height -1-4, 1);
+  GLCD.Text.DefineArea(1, GLCD.Width/2 + 5, 3, GLCD.Width -1-2, GLCD.Height -1-4, 1);
   GLCD.CursorTo(0,0);
   for(byte c = 32; c <=127; c++){
     GLCD.print(c);  
