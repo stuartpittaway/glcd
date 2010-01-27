@@ -24,6 +24,8 @@
 #include "glcd_Config.h" 
 
 
+#define BITMAP_FIX // enables a bitmap rendering fix/patch
+
 
 glcd::glcd(){
   this->Inverted=0;
@@ -455,7 +457,9 @@ uint8_t i, j;
   width = ReadPgmData(bitmap++); 
   height = ReadPgmData(bitmap++);
 
-#ifdef BITMAP_FIX
+#ifdef BITMAP_FIX // temporary ifdef just to show what changes if a new 
+				// bit rendering routine is written.
+							
   /*
    * In the absence of a new/better/proper bitmap rendering routine,
    * this routine will provide a temporary fix for drawing bitmaps that are
