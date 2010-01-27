@@ -502,7 +502,6 @@ delay(500);
 #endif
 		// second page
 
-#ifdef LWRITE_FIX
 		/*
 		 * Make sure to goto y address of start of next page
 		 * and ensure that we don't fall off the bottom of the display.
@@ -515,11 +514,6 @@ delay(500);
 		}
 	
 		this->GotoXY(this->Coord.x, ((ysave+8) & ~7));
-#else
-
-		this->GotoXY(this->Coord.x, this->Coord.y+8);
-#endif
-
 
 		displayData = this->ReadData();
 		this->WaitReady(chip);
@@ -544,12 +538,7 @@ delay(500);
 		lcdDataOut(displayData);		// write data
 		_delayNanoseconds(GLCD_tWH);
 		glcd_DevENstrobeLo(chip);
-#ifdef LWRITE_FIX
 		this->GotoXY(this->Coord.x+1, ysave);
-#else
-		this->GotoXY(this->Coord.x+1, this->Coord.y-8);
-#endif
-
 	}else 
 	{
     	this->WaitReady(chip);
