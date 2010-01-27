@@ -14,9 +14,6 @@
 #include "include/gText.h"
 #include "glcd_Config.h" 
 
-#ifdef CANNED_TAREAS
-#include "fonts/systemfont5x7.h"
-#endif
 
 //    gText::gText(glcd_Device* _device){
 //      this->device = _device;
@@ -29,7 +26,6 @@ void gText::Init(glcd_Device* _device)
 {
     this->device = _device;
 
-#ifndef ORIG_PUTCHAR
 	/*
 	 * Set up default/active text area to be entire display.
 	 * with up/normal scrolling
@@ -49,48 +45,6 @@ void gText::Init(glcd_Device* _device)
 
 	this->tarea_active = 0;
 
-#ifdef CANNED_TAREAS
-	/*
-	 * Select system font for area #0
-	 */
-	SelectFont(System5x7);
-
-	/*
-	 * configure up to 4 additional default text areas
-	 * 
-	 * 1 text area for each half of the display
-	 * left, right, top, bottom
-	 */
-
-	for(uint8_t area = 1; area < GLCD_TAREA_CNT; area++)
-	{
-		SelectArea(area);
-		SelectFont(System5x7);
-		switch(area)
-		{
-			case 1: /* top half	*/
-					DefineArea(area, 0, 0, DISPLAY_WIDTH -1, DISPLAY_HEIGHT/2 -1);
-					break;
-
-			case 2: /* bottom half	*/
-					DefineArea(area, 0, DISPLAY_HEIGHT/2, DISPLAY_WIDTH -1, DISPLAY_HEIGHT -1);
-					break;
-
-			case 3:	/* left	half	*/
-					DefineArea(area, 0, 0, DISPLAY_WIDTH/2 -1, DISPLAY_HEIGHT -1);
-					break;
-
-			case 4:	/* right half	*/
-					DefineArea(area, DISPLAY_WIDTH/2, 0, DISPLAY_WIDTH/2 -1, DISPLAY_HEIGHT -1);
-					break;
-
-				break;
-		}
-
-	}
-#endif
-
-#endif
 #endif
 
 }
@@ -163,16 +117,9 @@ void gText::ClearArea(void)
 	 * fill the area with font background color
 	 */
 
-#ifdef SCROLL_WHITE
-	device->SetPixels(this->tarea.x1, this->tarea.y1, 
-		this->tarea.x2, this->tarea.y2, WHITE);
-
-#else
 	device->SetPixels(this->tarea.x1, this->tarea.y1, 
 		this->tarea.x2, this->tarea.y2, 
 			this->FontColor == BLACK ? WHITE : BLACK);
-#endif
-
 	/*
 	 * put cursor at home position of text area to ensure we are always inside area.
 	 */
@@ -745,13 +692,8 @@ void gText::SpecialChar(char c)
 				 * 
 				 * 
 				 */
-#ifdef SCROLL_WHITE
-				this->ScrollUp(this->tarea.x1, this->tarea.y1, 
-					this->tarea.x2, this->tarea.y2, pixels, WHITE);
-#else
 				this->ScrollUp(this->tarea.x1, this->tarea.y1, 
 					this->tarea.x2, this->tarea.y2, pixels, this->FontColor == BLACK ? WHITE : BLACK);
-#endif
 
 //printf("New XY: %d, %d\n", this->tarea.x1, this->tarea.y2 - height);
 				device->GotoXY(this->tarea.x1, this->tarea.y2 - height);
@@ -817,13 +759,8 @@ void gText::SpecialChar(char c)
 
 				uint8_t pixels = height+1 - (this->tarea.y1 - y);
 
-#ifdef SCROLL_WHITE
-				this->ScrollDown(this->tarea.x1, this->tarea.y1, 
-					this->tarea.x2, this->tarea.y2, pixels, WHITE);
-#else
 				this->ScrollDown(this->tarea.x1, this->tarea.y1, 
 					this->tarea.x2, this->tarea.y2, pixels, this->FontColor == BLACK ? WHITE : BLACK);
-#endif
 
 //printf("New XY: %d, %d\n", this->tarea.x1, this->tarea.y1);
 				device->GotoXY(this->tarea.x1, this->tarea.y1);
