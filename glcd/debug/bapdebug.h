@@ -6,7 +6,7 @@
 //#define BAPDEBUG_GOTO
 //#define BAPDEBUG_SELECT
 
-#define BAPDEBUG_BADVALUES
+//#define BAPDEBUG_BADVALUES
 
 
 
@@ -15,7 +15,15 @@ extern "C" {
 #include <stdio.h>      // BAPDEBUG
 }
 
+#if defined(__AVR_ATmega32U4__) ||defined(__AVR_AT90USB646__) || defined(__AVR_AT90USB1286__)
+#include "usb_api.h"
+
+#else
+
 #include "HardwareSerial.h"     // BAPDEBUG
+
+#endif
+
 static char buf[64];
 #define printf(...)                                             \
         do {                                                    \
