@@ -26,6 +26,24 @@
 static uint8_t chipSelect[glcd_CHIP_COUNT] ; //static array for sequencing chip selects
 #endif
 
+/*
+ * Experimental define
+ */
+
+//#define TRUE_WRITE	// does writes to glcd memory on page crossings vs ORs
+			// This option only affects writes that span LCD pages.
+			// None of the graphic rouintes nor the NEW_FONTDRAW rendering option do this.
+			// Only the old font rendering and bitmap rendering do unaligned PAGE writes.
+			// While this fixes a few issus for the old routines,
+			// it also creates new ones.
+			// The issue is routines like the bitmap rendering
+			// routine attempt to use a drawing method that does not work.
+			// when this is on, pixels are no longer ORd in but are written in.
+			// so all the good/desired pixels get set, but then so do some
+			// undesired pixels.
+			//
+			// current RECOMMENDED setting: OFF
+
 	
 glcd_Device::glcd_Device(){
   

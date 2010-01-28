@@ -8,18 +8,35 @@
  *  The physical io is handled by macros in avrio.h
  */
 
+#ifndef	GLCD_IO_H
+#define GLCD_IO_H
 
 #include "include/arduino_io.h"    // these macros map arduino pins
 #include "include/avrio.h"         // these macros do direct port io    
 
+ 
+/*
+ * Map a Busy status bit to a pin.
+ * In order to do this properly it takes concatenation
+ * to convert the LCD status bit value to a pin
+ */
+
+#define xGLCD_STATUS_BIT2PIN(bit)    glcdData ## bit  ## Pin
+#define GLCD_STATUS_BIT2PIN(bit)    xGLCD_STATUS_BIT2PIN(bit)    
+
+
+#ifdef  _AVRIO_AVRIO_
+
 // lcdfastWrite Macro may be replaced by Paul's new Arduino macro 
 #define lcdfastWrite(pin, pinval) avrio_WritePin(pin, pinval)
 
- 
-#ifdef  _AVRIO_AVRIO_
 #define OUTPUT 1
 #define lcdPinMode(pin, mode)  avrio_PinMode(pin, mode) 
+
+#ifdef GLCD_ATOMIC_IO
+#define AVRIO_NO4BIT // for now disable nibble mode
 #endif
+
 
 /*
  * Set up the configured LCD data lines 
@@ -65,15 +82,6 @@
  */
 #define lcdDataIn()		lcd_avrReadByte()
 
-/*
- * alias to read Busy status bit
- * In order to do this properly it takes concatenation
- * to convert the LCD status bit value to a pin
- */
-
-#define xGLCD_STATUS_BIT2PIN(bit)    glcdData ## bit  ## Pin
-#define GLCD_STATUS_BIT2PIN(bit)    xGLCD_STATUS_BIT2PIN(bit)    
-
 
 #define lcdIsBusy()		(avrio_ReadPin(GLCD_STATUS_BIT2PIN(LCD_BUSY_BIT)))
 
@@ -86,4 +94,6 @@
 #define lcdUnReset()		
 #endif
 
+#endif // _AVRIO_AVRIO_
 
+#endif // GLCD_IO_H

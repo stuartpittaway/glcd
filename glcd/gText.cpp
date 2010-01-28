@@ -872,7 +872,7 @@ int gText::PutChar(char c)
 
 	// last but not least, draw the character
 
-#ifndef NEW_FONTDRAW
+#ifndef GLCD_NEW_FONTDRAW
 /*================== OLD FONT DRAWING ============================*/
 	/*
 	 * Draw each column of the glyph (character) horizontally
