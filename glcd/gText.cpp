@@ -31,25 +31,16 @@ void gText::Init(glcd_Device* _device)
 	 * with up/normal scrolling
 	 * This is used for wrapping and scrolling.
 	 */
+
+	this->tarea_active = 0;
+
 	this->tarea.x1 = 0;
 	this->tarea.y1 = 0;
 	this->tarea.x2 = DISPLAY_WIDTH -1;
 	this->tarea.y2 = DISPLAY_HEIGHT -1;
 	this->tarea.scrolldir = 1;
-
-#if GLCD_TAREA_CNT > 0
-	/*
-	 * If we have more than one area, then we
-	 * have to keep track which one is "active"
-	 */
-
-	this->tarea_active = 0;
-
-#endif
-
 }
 
-#if GLCD_TAREA_CNT > 0
 /**
  * Select/Switch to desired text area
  *
@@ -101,8 +92,6 @@ uint8_t area_active = this->tarea_active;
 		this->tarea_active = area;
 	}
 }
-
-#endif
 
 /**
  * Clear the active text area with the current font background color

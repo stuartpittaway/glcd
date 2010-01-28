@@ -74,10 +74,8 @@ class gText
 	const uint8_t*	Font;
 	struct tarea tarea;
 
-#if GLCD_TAREA_CNT > 0   
 	uint8_t tarea_active;
 	struct tareacntxt tarea_cntxt[GLCD_TAREA_CNT];
-#endif
 	void SpecialChar(char c);
 
 	// Scroll routines are private for now
@@ -94,10 +92,7 @@ class gText
 	uint8_t DefineArea(uint8_t area, uint8_t x1, uint8_t y1, uint8_t columns, uint8_t rows, const uint8_t* font, int8_t scrolldir=1);
 	uint8_t DefineArea(uint8_t area, predefinedArea selection, int8_t scrolldir=1);
 	void ClearArea(void);
-
-#if GLCD_TAREA_CNT > 0
 	void SelectArea(uint8_t area);
-#endif
 
 	// Font Functions
 	void SelectFont(const uint8_t* font, uint8_t color=BLACK, FontCallback callback=ReadPgmData); // defualt arguments added, callback now last arg
