@@ -313,9 +313,21 @@ void glcd_Device::Init(uint8_t invert)
 
 	}
 #endif
-   // the screeen is cleared in the init method of the derived class 	
+	/*
+	 * All hardware initialization is complete.
+	 *
+	 * Now, clear the screen and home the cursor to ensure that the display always starts
+	 * in an identical state after being initialized.
+	 *
+	 * Note: the reason that SetPixels() below always uses WHITE, is that once the
+	 * the invert flag is in place, the lower level read/write code will invert data
+	 * as needed.
+	 * So clearing an areas to WHITE when the mode is INVERTED will set the area to BLACK
+	 * as is required.
+	 */
 
-
+	this->SetPixels(0,0, DISPLAY_WIDTH-1,DISPLAY_HEIGHT-1, WHITE);
+	this->GotoXY(0,0);
 }
 
 

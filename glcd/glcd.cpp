@@ -53,8 +53,6 @@ glcd::glcd(){
 
 void glcd::Init(uint8_t invert){
 	glcd_Device::Init(invert);  
-	this->ClearScreen(invert ? BLACK : WHITE);			// display clear
-    this->GotoXY(0,0);	
 	this->Text.Init((glcd_Device *)this); 
 }	
 	
