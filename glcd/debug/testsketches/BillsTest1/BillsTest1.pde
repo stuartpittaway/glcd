@@ -26,7 +26,7 @@ unsigned int iter = 0;
 void setup(){
   Serial.begin(9600);
   delay(500);    // allow the hardware time settle
-  GLCD.Init();   // initialise the library, non inverted writes pixels onto a clear screen
+  GLCD.Init(INVERTED);   // initialise the library, non inverted writes pixels onto a clear screen
   introScreen();
   GLCD.ClearScreen();
 }
@@ -100,7 +100,7 @@ void showCharacters(){
   GLCD.DrawRoundRect(GLCD.Width/2 + 2, 0, GLCD.Width/2 -3, GLCD.Height-1, 5);  // rounded rectangle around text area 
   GLCD.Text.SelectArea(1);
   GLCD.SelectFont(System5x7, BLACK);
-  GLCD.Text.DefineArea(1, GLCD.Width/2 + 5, 3, GLCD.Width -1-4, GLCD.Height -1-4, 1);
+  GLCD.Text.DefineArea(1, GLCD.Width/2 + 5, 3, GLCD.Width -1-2, GLCD.Height -1-4, 1);
   GLCD.CursorTo(0,0);
   for(byte c = 32; c <=127; c++){
     GLCD.print(c);  
@@ -200,12 +200,12 @@ void scrollingDemo()
 
   GLCD.ClearScreen();  
   GLCD.Text.SelectArea(0);
-  GLCD.Text.DefineArea(0, 0,1, GLCD.Width/2 -1,GLCD.Height/2 -2, 1);
+  GLCD.Text.DefineArea(0, 0,0, GLCD.Width/2 -1,GLCD.Height/2 -1, 1);
 //  GLCD.Text.DefineArea(0,textAreaLEFT,1); 
   GLCD.SelectFont(System5x7, WHITE);
   GLCD.CursorTo(0,0);
   GLCD.Text.SelectArea(1);
-  GLCD.Text.DefineArea(1, GLCD.Width/2,1, GLCD.Width-1,GLCD.Height/2-2, -1);
+  GLCD.Text.DefineArea(1, GLCD.Width/2,0, GLCD.Width-1,GLCD.Height/2-1, -1);
 //  GLCD.Text.DefineArea(1,textAreaRIGHT,-1); 
   GLCD.SelectFont(System5x7, BLACK);
   GLCD.CursorTo(0,0);
