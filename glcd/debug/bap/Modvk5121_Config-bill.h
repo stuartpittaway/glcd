@@ -139,5 +139,5 @@
 #define GLCD_tWL	450	/* E lo level width (minimum E lo pulse width)					*/
 
 
-#include "device/bap/sed1520_Device.h"
+#include "device/sed1520_Device.h"
 #endif

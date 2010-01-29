@@ -117,8 +117,8 @@
 #define glcdRW			    2
 #define glcdEN			    3
 
-#define glcdData0Pin		PIN_D4
-#define glcdData1Pin		0xd5
+#define glcdData0Pin		4
+#define glcdData1Pin		5
 #define glcdData2Pin		6
 #define glcdData3Pin		7
 #define glcdData4Pin		8

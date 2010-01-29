@@ -37,9 +37,58 @@
 
 typedef uint8_t (*FontCallback)(const uint8_t*);
 
-// enum for predefined areas, new areas should be added immediatly BEFORE the textAreaOfNbrAreas value
-typedef enum  {textAreaFULL, textAreaTOP,  textAreaBOTTOM, textAreaLEFT, textAreaRIGHT,
-               textAreaTOPLEFT, textAreaTOPRIGHT, textAreaBOTTOMLEFT, textAreaBOTTOMRIGHT, textAreaNbrOfAreas} predefinedArea;
+
+/*
+ * Coodinates for predefined areas are compressed into a single 32 bit token.
+ *
+ * This works as the coordinates are cuurenly only 8 bit values.
+ *
+ * This allows the creatation of an unlmited number of predefined areas with zero code or
+ * data space overhead.
+ * 
+ * A macro is used to create the tokens from a set of x1,y1 x2,y2 coordinates.
+ *
+ * A union is used to extract the coordinates from the 32 bit token.
+ *
+ * WARNING:
+ *	This is non portable code in that it will only work on little endian processors.
+ *	If you use big endian you have to switch the byte ordering in the union.
+ */
+
+#define MK_TareaToken(x1, y1, x2, y2) \
+	(uint32_t) (((uint32_t) (x1) << 24) | ((uint32_t)(y1) << 16) | ((uint32_t)(x2) << 8) | (uint32_t)(y2))
+        
+typedef union
+{       
+ struct
+ {      
+        uint8_t y2;
+        uint8_t x2;
+        uint8_t y1;
+        uint8_t x1;
+ }coord;
+        
+ uint32_t token; // swap byte order above for big endian
+        
+}TareaToken;
+
+
+
+/*
+ * Pre Defined Text areas
+ */
+typedef enum  {
+
+	textAreaFULL         = MK_TareaToken( 0,               0,                DISPLAY_WIDTH -1,   DISPLAY_HEIGHT -1   ),
+	textAreaTOP          = MK_TareaToken( 0,               0,                DISPLAY_WIDTH -1,   DISPLAY_HEIGHT/2 -1 ),
+	textAreaBOTTOM       = MK_TareaToken( 0,               DISPLAY_HEIGHT/2, DISPLAY_WIDTH -1,   DISPLAY_HEIGHT -1   ),
+	textAreaLEFT         = MK_TareaToken( 0,               0,                DISPLAY_WIDTH/2 -1, DISPLAY_HEIGHT -1   ),
+	textAreaRIGHT        = MK_TareaToken( DISPLAY_WIDTH/2, 0,                DISPLAY_WIDTH -1,   DISPLAY_HEIGHT -1   ),
+	textAreaTOPLEFT      = MK_TareaToken( 0,               0,                DISPLAY_WIDTH/2 -1, DISPLAY_HEIGHT/2 -1 ),
+	textAreaTOPRIGHT     = MK_TareaToken( DISPLAY_WIDTH/2, 0,                DISPLAY_WIDTH -1,   DISPLAY_HEIGHT/2 -1 ),
+	textAreaBOTTOMLEFT   = MK_TareaToken( 0,               DISPLAY_HEIGHT/2, DISPLAY_WIDTH/2 -1, DISPLAY_HEIGHT -1   ),
+	textAreaBOTTOMRIGHT  = MK_TareaToken( DISPLAY_WIDTH/2, DISPLAY_HEIGHT/2, DISPLAY_WIDTH -1,   DISPLAY_HEIGHT -1   )
+} predefinedArea;
 
 
 uint8_t ReadPgmData(const uint8_t* ptr);	//Standard Read Callback

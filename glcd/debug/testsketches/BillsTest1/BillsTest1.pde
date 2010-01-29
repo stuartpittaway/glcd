@@ -23,10 +23,88 @@ unsigned long startMillis;
 unsigned int loops = 0;
 unsigned int iter = 0;
 
+void areatest(void)
+{
+	GLCD.Text.SelectArea(0);
+
+	GLCD.Text.DefineArea(0, textAreaFULL);
+	GLCD.Text.SelectFont(System5x7, BLACK);
+	GLCD.Text.ClearArea();
+	delay(750);
+	GLCD.Text.SelectFont(System5x7, WHITE);
+	GLCD.Text.ClearArea();
+	delay(750);
+
+	GLCD.Text.DefineArea(0, textAreaTOP);
+	GLCD.Text.SelectFont(System5x7, BLACK);
+	GLCD.Text.ClearArea();
+	delay(750);
+	GLCD.Text.SelectFont(System5x7, WHITE);
+	GLCD.Text.ClearArea();
+	delay(750);
+
+	GLCD.Text.DefineArea(0, textAreaBOTTOM);
+	GLCD.Text.SelectFont(System5x7, BLACK);
+	GLCD.Text.ClearArea();
+	delay(750);
+	GLCD.Text.SelectFont(System5x7, WHITE);
+	GLCD.Text.ClearArea();
+	delay(750);
+
+	GLCD.Text.DefineArea(0, textAreaLEFT);
+	GLCD.Text.SelectFont(System5x7, BLACK);
+	GLCD.Text.ClearArea();
+	delay(750);
+	GLCD.Text.SelectFont(System5x7, WHITE);
+	GLCD.Text.ClearArea();
+	delay(750);
+
+	GLCD.Text.DefineArea(0, textAreaRIGHT);
+	GLCD.Text.SelectFont(System5x7, BLACK);
+	GLCD.Text.ClearArea();
+	delay(750);
+	GLCD.Text.SelectFont(System5x7, WHITE);
+	GLCD.Text.ClearArea();
+	delay(750);
+
+	GLCD.Text.DefineArea(0, textAreaTOPLEFT);
+	GLCD.Text.SelectFont(System5x7, BLACK);
+	GLCD.Text.ClearArea();
+	delay(750);
+	GLCD.Text.SelectFont(System5x7, WHITE);
+	GLCD.Text.ClearArea();
+	delay(750);
+
+	GLCD.Text.DefineArea(0, textAreaTOPRIGHT);
+	GLCD.Text.SelectFont(System5x7, BLACK);
+	GLCD.Text.ClearArea();
+	delay(750);
+	GLCD.Text.SelectFont(System5x7, WHITE);
+	GLCD.Text.ClearArea();
+	delay(750);
+
+	GLCD.Text.DefineArea(0, textAreaBOTTOMLEFT);
+	GLCD.Text.SelectFont(System5x7, BLACK);
+	GLCD.Text.ClearArea();
+	delay(750);
+	GLCD.Text.SelectFont(System5x7, WHITE);
+	GLCD.Text.ClearArea();
+	delay(750);
+
+	GLCD.Text.DefineArea(0, textAreaBOTTOMRIGHT);
+	GLCD.Text.SelectFont(System5x7, BLACK);
+	GLCD.Text.ClearArea();
+	delay(750);
+	GLCD.Text.SelectFont(System5x7, WHITE);
+	GLCD.Text.ClearArea();
+	delay(750);
+}
+
 void setup(){
   Serial.begin(9600);
   delay(500);    // allow the hardware time settle
   GLCD.Init(INVERTED);   // initialise the library, non inverted writes pixels onto a clear screen
+  areatest();
   introScreen();
   GLCD.ClearScreen();
 }
@@ -76,6 +154,9 @@ void introScreen(){
     GLCD.DrawBitmap(ArduinoIcon, 32,0); //draw the bitmap at the given x,y position
   else
     GLCD.DrawBitmap(ArduinoIcon64x32, 32,0); //draw the bitmap at the given x,y position
+
+  GLCD.Text.SelectArea(0);
+  GLCD.Text.DefineArea(0, textAreaFULL);
   countdown(3);
   GLCD.ClearScreen();
   GLCD.SelectFont(Arial_14); // you can also make your own fonts, see playground for details   

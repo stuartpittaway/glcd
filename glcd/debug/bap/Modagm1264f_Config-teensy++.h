@@ -113,23 +113,23 @@
  * Uses all forms of avrio pin definitions.
  */
 
-#define glcdDI			    0xd7
-#define glcdRW			    0xe0
-#define glcdEN			    0xe1
+#define glcdDI			    PIN_D7
+#define glcdRW			    PIN_E0
+#define glcdEN			    PIN_E1
 
-#define glcdData0Pin		0xc0
-#define glcdData1Pin		0xc1
-#define glcdData2Pin		0xc2
-#define glcdData3Pin		0xc3
-#define glcdData4Pin		0xc4
-#define glcdData5Pin		0xc5
-#define glcdData6Pin		0xc6
-#define glcdData7Pin		0xc7
+#define glcdData0Pin		PIN_C0
+#define glcdData1Pin		PIN_C1
+#define glcdData2Pin		PIN_C2
+#define glcdData3Pin		PIN_C3
+#define glcdData4Pin		PIN_C4
+#define glcdData5Pin		PIN_C5
+#define glcdData6Pin		PIN_C6
+#define glcdData7Pin		PIN_C7
 
-#define glcdCSEL1		    0xf7
-#define glcdCSEL2		    0xf6
+#define glcdCSEL1		    PIN_F7
+#define glcdCSEL2		    PIN_F6
 
-#define glcdRES 		    0xf5
+#define glcdRES 		    PIN_F5
 
 // bitmask to sequence chip select 
 // you can swap around the elements below if your display is reversed
