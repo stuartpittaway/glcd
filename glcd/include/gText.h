@@ -65,7 +65,7 @@ struct tareacntxt
 
 
  // graphical device text routines
-class gText
+class gText : public Print
 {
   private:
 	glcd_Device    *device;
@@ -116,7 +116,6 @@ class gText
  	 * ansi like line erase function
 	 */
 	void EraseInLine( uint8_t type=0); //  0 = EOL, 1= BOL, 2= full line
-
 };
 
 #endif
