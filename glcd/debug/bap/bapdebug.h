@@ -9,6 +9,7 @@
 //#define BAPDEBUG_BADVALUES
 
 
+#define BAPDEBUG
 
 extern "C" {
 #include <inttypes.h>

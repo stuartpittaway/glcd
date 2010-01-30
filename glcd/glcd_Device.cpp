@@ -590,6 +590,25 @@ delay(500);
 
 		glcd_DevENstrobeLo(chip);
 
+		/*
+		 * NOTE/WARNING:
+		 * This bump can cause the s/w X coordinate to bump beyond a legal value
+		 * for the display. This is allowed because after writing to the display
+		 * display, the column (x coordinate) is always bumped. However,
+		 * when writing to the the very last column, the resulting column location 
+		 * inside the hardware is somewhat undefined.
+		 * Some chips roll it back to 0, some stop the maximu of the LCD, and others
+		 * advance further as the chip supports more pixels than the LCD shows.
+		 *
+		 * So to ensure that the s/w is never indicating a column (x value) that is
+		 * incorrect, we allow it bump beyond the end.
+		 *
+		 * Future read/writes will not attempt to talk to the chip until this
+		 * condition is remedied (by a GotoXY()) and by having this somewhat
+		 * "invalid" value, it also ensures that the next GotoXY() will always send
+		 * both a set column and set page address to reposition the glcd hardware.
+		 */
+
 		this->Coord.x++;
 
 

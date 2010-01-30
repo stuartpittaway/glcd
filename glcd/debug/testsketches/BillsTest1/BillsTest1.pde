@@ -23,13 +23,15 @@ unsigned long startMillis;
 unsigned int loops = 0;
 unsigned int iter = 0;
 
-void areatest(void)
+void PreDefareatest(void)
 {
 	GLCD.Text.SelectArea(0);
+	GLCD.ClearScreen();
 
 	GLCD.Text.DefineArea(0, textAreaFULL);
 	GLCD.Text.SelectFont(System5x7, BLACK);
 	GLCD.Text.ClearArea();
+	GLCD.Text.print("Full");
 	delay(750);
 	GLCD.Text.SelectFont(System5x7, WHITE);
 	GLCD.Text.ClearArea();
@@ -38,6 +40,7 @@ void areatest(void)
 	GLCD.Text.DefineArea(0, textAreaTOP);
 	GLCD.Text.SelectFont(System5x7, BLACK);
 	GLCD.Text.ClearArea();
+	GLCD.Text.print("Top");
 	delay(750);
 	GLCD.Text.SelectFont(System5x7, WHITE);
 	GLCD.Text.ClearArea();
@@ -46,6 +49,7 @@ void areatest(void)
 	GLCD.Text.DefineArea(0, textAreaBOTTOM);
 	GLCD.Text.SelectFont(System5x7, BLACK);
 	GLCD.Text.ClearArea();
+	GLCD.Text.print("Bottom");
 	delay(750);
 	GLCD.Text.SelectFont(System5x7, WHITE);
 	GLCD.Text.ClearArea();
@@ -54,6 +58,7 @@ void areatest(void)
 	GLCD.Text.DefineArea(0, textAreaLEFT);
 	GLCD.Text.SelectFont(System5x7, BLACK);
 	GLCD.Text.ClearArea();
+	GLCD.Text.print("Left");
 	delay(750);
 	GLCD.Text.SelectFont(System5x7, WHITE);
 	GLCD.Text.ClearArea();
@@ -62,6 +67,7 @@ void areatest(void)
 	GLCD.Text.DefineArea(0, textAreaRIGHT);
 	GLCD.Text.SelectFont(System5x7, BLACK);
 	GLCD.Text.ClearArea();
+	GLCD.Text.print("Right");
 	delay(750);
 	GLCD.Text.SelectFont(System5x7, WHITE);
 	GLCD.Text.ClearArea();
@@ -70,6 +76,7 @@ void areatest(void)
 	GLCD.Text.DefineArea(0, textAreaTOPLEFT);
 	GLCD.Text.SelectFont(System5x7, BLACK);
 	GLCD.Text.ClearArea();
+	GLCD.Text.print("TLeft");
 	delay(750);
 	GLCD.Text.SelectFont(System5x7, WHITE);
 	GLCD.Text.ClearArea();
@@ -78,6 +85,7 @@ void areatest(void)
 	GLCD.Text.DefineArea(0, textAreaTOPRIGHT);
 	GLCD.Text.SelectFont(System5x7, BLACK);
 	GLCD.Text.ClearArea();
+	GLCD.Text.print("TRight");
 	delay(750);
 	GLCD.Text.SelectFont(System5x7, WHITE);
 	GLCD.Text.ClearArea();
@@ -86,6 +94,7 @@ void areatest(void)
 	GLCD.Text.DefineArea(0, textAreaBOTTOMLEFT);
 	GLCD.Text.SelectFont(System5x7, BLACK);
 	GLCD.Text.ClearArea();
+	GLCD.Text.print("BLeft");
 	delay(750);
 	GLCD.Text.SelectFont(System5x7, WHITE);
 	GLCD.Text.ClearArea();
@@ -94,19 +103,62 @@ void areatest(void)
 	GLCD.Text.DefineArea(0, textAreaBOTTOMRIGHT);
 	GLCD.Text.SelectFont(System5x7, BLACK);
 	GLCD.Text.ClearArea();
+	GLCD.Text.print("BRight");
 	delay(750);
 	GLCD.Text.SelectFont(System5x7, WHITE);
 	GLCD.Text.ClearArea();
 	delay(750);
 }
 
+void DefRowColtest(void)
+{
+
+	GLCD.SetInverted(NON_INVERTED);
+	GLCD.Text.SelectArea(0);
+	GLCD.Text.DefineArea(0, textAreaFULL);
+	GLCD.ClearScreen(BLACK);
+	
+	/*
+	 * create a 10 column, 4 row text area
+	 */
+	GLCD.Text.SelectArea(1);
+	GLCD.Text.DefineArea(1, 0,0, 10, 4, System5x7);
+	GLCD.Text.ClearArea();
+
+	GLCD.Text.print("10x4 chars");
+	delay(750);
+	GLCD.Text.print("1234567890");
+	delay(750);
+	GLCD.Text.print("1234567890");
+	delay(750);
+	GLCD.Text.print("1234567890");
+
+	delay(2000);
+}
+
+
 void setup(){
-  Serial.begin(9600);
-  delay(500);    // allow the hardware time settle
-  GLCD.Init(INVERTED);   // initialise the library, non inverted writes pixels onto a clear screen
-  areatest();
-  introScreen();
-  GLCD.ClearScreen();
+#ifdef BAPDEBUG
+	Serial.begin(9600);
+#ifdef CORE_TEENSY
+	delay(500);    // allow USB time to come up.
+#endif
+printf("Serial initialized\n");
+#endif
+	delay(5);    // allow the hardware time settle
+	
+	GLCD.Init();   // initialise the library, non inverted writes pixels onto a clear screen
+	DefRowColtest();
+	PreDefareatest();
+	GLCD.ClearScreen();
+	introScreen();
+  	scrollingDemo();
+
+  	GLCD.Text.SelectArea(0);
+  	GLCD.Text.DefineArea(0, textAreaFULL);
+  	//GLCD.SelectFont(Arial_14, BLACK);
+  	GLCD.SelectFont(System5x7, BLACK);
+	GLCD.ClearScreen();
 }
 
 void  loop(){   // run over and over again
@@ -160,27 +212,28 @@ void introScreen(){
   countdown(3);
   GLCD.ClearScreen();
   GLCD.SelectFont(Arial_14); // you can also make your own fonts, see playground for details   
-  GLCD.GotoXY(10, 2);
+  GLCD.GotoXY(10, 3);
   GLCD.print("GLCD ver ");
   GLCD.print(GLCD_VERSION, DEC);
-  GLCD.DrawRoundRect(8,0,GLCD.Width-9,18, 5);  // rounded rectangle around text area   
+  GLCD.DrawRoundRect(8,0,GLCD.Width-9,17, 5);  // rounded rectangle around text area   
   countdown(3);  
-  scrollingDemo();
   GLCD.Text.SelectArea(0);
   GLCD.SelectFont(System5x7, BLACK);
   GLCD.Text.DefineArea(0, 0,0,GLCD.Width-1, GLCD.Height-1, 1);
   GLCD.ClearScreen();  
-  showCharacters();
+  showCharacters("5x7 font:", System5x7);
+  countdown(3);
+  showCharacters("Arial_14:", Arial_14);
   countdown(3);
 }
 
-void showCharacters(){
+void showCharacters(char * title, uint8_t * font){
   // this displays the fixed width system font  
   GLCD.CursorTo(0,0);
-  GLCD.print("5x7 font:");
+  GLCD.print(title);
   GLCD.DrawRoundRect(GLCD.Width/2 + 2, 0, GLCD.Width/2 -3, GLCD.Height-1, 5);  // rounded rectangle around text area 
   GLCD.Text.SelectArea(1);
-  GLCD.SelectFont(System5x7, BLACK);
+  GLCD.SelectFont(font, BLACK);
   GLCD.Text.DefineArea(1, GLCD.Width/2 + 5, 3, GLCD.Width -1-2, GLCD.Height -1-4, 1);
   GLCD.CursorTo(0,0);
   for(byte c = 32; c <=127; c++){
@@ -219,6 +272,7 @@ void scrollingDemo()
   int x;
 
   GLCD.ClearScreen(WHITE);
+
   for(x = 0; x < 4; x++)
   {
   	GLCD.FillCircle(GLCD.Height/4+GLCD.Height/2*x, GLCD.Height/2, GLCD.Height/4-1);
@@ -279,6 +333,7 @@ void scrollingDemo()
     GLCD.ClearScreen();
   }
 
+
   GLCD.ClearScreen();  
   GLCD.Text.SelectArea(0);
   GLCD.Text.DefineArea(0, 0,0, GLCD.Width/2 -1,GLCD.Height/2 -1, 1);
@@ -316,6 +371,7 @@ void scrollingDemo()
   {
     GLCD.Text.SelectArea(area);
     GLCD.Text.ClearArea();
+    delay(500);
   }
   for(x = 0; x< 15; x++)
   {
@@ -335,6 +391,7 @@ void scrollingDemo()
       delay(100);
     }
   }
+
 
   GLCD.Text.SelectArea(1);
   GLCD.Text.ClearArea();
@@ -358,6 +415,7 @@ void scrollingDemo()
       GLCD.Text.SelectArea(2);
       GLCD.print(c);
     }           
+	
     delay(50);
   }
   delay(2000);

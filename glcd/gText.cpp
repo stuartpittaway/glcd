@@ -81,14 +81,52 @@ uint8_t area_active = this->tarea_active;
 		this->Font = this->tarea_cntxt[area].Font;
 
 		/*
-		 * Now send LCD to proper location.
+		 * Now send LCD to back to location where it was when area was last selected.
+		 *
+		 * WARNING: WARNING:
+		 *
+		 * The code below is intentionally done as two steps.
+		 *
+		 * The first step sets up the previous s/w X & Y coordinates.
+		 * The second step calls the GotoXY() function to set the X & Y position
+		 * in the lcd hardware.
+		 *
+		 * Normally just calling the GotoXY() routine would be good enough
+		 * as that routine also saves the s/w X & Y coordinates, however,
+		 * There are certain allowed conditions were the X coordinate will
+		 * be outsided the legal X value for the LCD display.
+		 *
+		 * Summary is that whenever you write to the lcd page of the right most 
+		 * column, the  s/w X coordinate will bump beyond the hardware boundary.
+		 * This is intentional.
+		 * See the WriteData() function for details on this condition.
+		 *
+		 * Whenever GotoXY() sees invalid coordinates, it tosses the request.
+		 * So in order ensure that the s/w coordinates are set in cases when
+		 * they are "technically" invalid, you have to manually set them.
+		 *
+		 * So rather than check their validity and only assign them in the invalid case,
+		 * it easiest to always set them just prior to the GotoXY().
+		 *
 		 */
 
-		device->GotoXY(this->tarea_cntxt[area].x, this->tarea_cntxt[area].y);
+
+		device->Coord.x = this->tarea_cntxt[area].x;
+		device->Coord.y = this->tarea_cntxt[area].y;
+
+		/*
+		 * New font rendering always does a GotoXY() up front so there is
+		 * no need to load the LCD h/w right here.
+		 */
+
+#ifndef GLCD_NEW_FONDDRAW
+		device->GotoXY(device->Coord.x, device->Coord.y);
+#endif
 
 		/*
 		 * keep track of active area.
 		 */
+
 		this->tarea_active = area;
 	}
 }
@@ -160,24 +198,33 @@ gText::DefineArea(uint8_t area, uint8_t x, uint8_t y, uint8_t columns, uint8_t r
 {
 uint8_t arearval;
 uint8_t x2,y2;
+uint8_t active_area;
 
-		x2 = x + columns * (this->FontRead(this->Font+FONT_FIXED_WIDTH)+1) -1;
-		y2 = y + rows * (this->FontRead(this->Font+FONT_HEIGHT)+1) -1;
+	active_area = this->tarea_active;
+	
+	/*
+	 * Because the font read routines only work on the "active" variables,
+	 * the area about to defined has to be selected before it is sized.
+	 */
 
-		arearval = DefineArea(area, x,y, x2, y2, scrolldir);
+	/*
+	 * Now fill in font information
+	 */
 
-		if(arearval != area)
-			return(arearval);
+	this->SelectArea(area);
+	this->SelectFont(font);
 
-		/*
-		 * Now fill in font information
-		 */
+	x2 = x + columns * (this->FontRead(this->Font+FONT_FIXED_WIDTH)+1) -1;
+	y2 = y + rows * (this->FontRead(this->Font+FONT_HEIGHT)+1) -1;
 
-		this->tarea_cntxt[area].Font = font;
-		this->tarea_cntxt[area].FontColor = BLACK;
-		this->tarea_cntxt[area].FontRead = ReadPgmData;
+	arearval = DefineArea(area, x,y, x2, y2, scrolldir);
 
-		return(area);
+	/*
+	 * Restore which ever area was previously active
+	 */
+	this->SelectArea(active_area);
+
+	return(arearval);
 }
 
 /**
@@ -221,7 +268,6 @@ gText::DefineArea(uint8_t area, uint8_t x1, uint8_t y1, uint8_t x2, uint8_t y2, 
 
 	if(area >= GLCD_TAREA_CNT)
 		return (area | 0x80); /* return something other than area */
-
 
 	/*
 	 * Sanity Check Params
@@ -287,7 +333,7 @@ gText::DefineArea(uint8_t area, uint8_t x1, uint8_t y1, uint8_t x2, uint8_t y2, 
 }
 
 /**
- * Define a preselected generic text area
+ * Define a predefined generic text area
  *
  * @param area the desired text area (0 to GLCD.Text.AreaCount)
  * @param selection one of: textAreaFULL, textAreaTOP,  textAreaBOTTOM, textAreaLEFT, textAreaRIGHT,
@@ -324,8 +370,6 @@ TareaToken tok;
 	y1 =  tok.coord.y1;
 	x2 =  tok.coord.x2;
 	y2 =  tok.coord.y2;
-
-	//printf("area=%d, sel=%d (%s) :%d,%d,%d,%d\n",area,selection, areaStr[selection], x1,y1,x2,y2); 
 
 	return DefineArea(area,x1,y1,x2,y2, scrolldir);
 }
@@ -838,8 +882,10 @@ int gText::PutChar(char c)
 	 * If the character won't fit in the text area,
 	 * fake a newline to get the text area to wrap and 
 	 * scroll if necessary.
+	 * NOTE/WARNING: the below calculation assumes a 1 pixel pad.
+	 * This will need to be changed if/when configurable pixel padding is supported.
 	 */
-	if(x + width +1 >= this->tarea.x2)
+	if(x + width > this->tarea.x2)
 	{
 		this->PutChar('\n'); // fake a newline to cause wrap/scroll
 		/*
@@ -847,6 +893,7 @@ int gText::PutChar(char c)
 		 */
 		x = device->Coord.x;
 		y = device->Coord.y;
+
 		//waitflg++; // BAPDEBUG
 		
 	}
@@ -1161,7 +1208,31 @@ int gText::PutChar(char c)
 		
 	}
 
-	device->GotoXY(x+width+1, y);
+
+	/*
+	 * At this point the X position has been advanced by writing the pages
+	 * so all that is necessary is to set the y position back to the upper pixel
+	 * where we started, to get ready for the next character.
+	 *
+	 * Since this rendering code always starts off with a GotoXY() it really isn't necessary
+	 * to do a real GotoXY() to set the h/w location. We can get away with only setting
+	 * the s/w version of X & Y.
+	 *
+	 * NOTE/WARNING:
+	 * DO NOT change the code below to use the function GotoXY() to set the Y position.
+	 * Doing so, will break a specific wrap condition.
+	 * If the last page written is exactly the right most page of the display, the s/w X
+	 * postion will be beyond the valid limit and so a GotoXY() will fail.
+	 * An illegal s/w X value is intentional.
+	 * See the WriteData() routine for details.
+	 *
+	 * So to get around this issue, this code simply patches the s/w verions of the Y
+	 * value so that the next character written, will set it.
+	 *
+	 * While ugly, it is necessary and actually does save a few cycles over GotoXY()
+	 */
+
+	device->Coord.y = y;
 
 /*================== END of NEW FONT DRAWING ============================*/
 

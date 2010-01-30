@@ -82,7 +82,7 @@
 #ifndef	glcd_KS0108_CONFIG_H
 #define glcd_KS0108_CONFIG_H
 
-//#include "debug/bap/bapdebug.h"
+#include "debug/bap/bapdebug.h"
 
 /*********************************************************/
 /*  Configuration for LCD panel specific configuration   */
