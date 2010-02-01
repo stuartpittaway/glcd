@@ -149,8 +149,6 @@ class gText : public Print
 	void Puts(char *str);
 	void Puts_P(PGM_P str);
 
-	void DrawString(char* str,uint8_t x, uint8_t y);
-	void DrawString_P(PGM_P str,uint8_t x, uint8_t y);
 	void write(uint8_t c);  // character output for print base class
 
 	void CursorTo( uint8_t column, uint8_t row); // 0 based coordinates for character columns and rows

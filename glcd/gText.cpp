@@ -1257,7 +1257,6 @@ int gText::PutChar(char c)
  * @see PutChar()
  * @see Puts_P()
  * @see write()
- * @see DrawString()
  */
 
 
@@ -1295,63 +1294,6 @@ char c;
         this->PutChar(c);
         str++;
     }
-}
-
-/**
- * Draw a character string at a specified position
- *
- * @param str pointer to a null terminated character string
- * @param x X coordinate of first character position
- * @param x Y coordinate of first character position
- *
- * The character string is drawn in the currently selected
- * text area at position x,y.
- * x & y are relative the the upper left corner of the currently
- * selected text area.
- *
- * This function is the equivalent of calling CursorToXY() follow by
- * Puts()
- *
- * @see PutChar()
- * @see Puts()
- * @see Puts_P()
- * @see write()
- * @see DrawSrring_P()
- *
- */
-
-void gText::DrawString(char *str, uint8_t x, uint8_t y)
-{
-	this->CursorToXY(x, y);
-	this->Puts(str);
-}
-/**
- * Draw a program memory based character string at a specified position
- *
- * @param str pointer to a null terminated character string stored in program memory
- * @param x X coordinate of first character position
- * @param y Y coordinate of first character position
- *
- * The program memory based character string is drawn in the currently selected
- * text area at position x,y.
- * x & y are relative the the upper left corner of the currently
- * selected text area.
- *
- * This function is the equivalent of calling CursorToXY() follow by
- * Puts_P()
- *
- * @see PutChar()
- * @see Puts()
- * @see Puts_P()
- * @see write()
- * @see DrawSrring()
- *
- */
-
-void gText::DrawString_P(PGM_P str, uint8_t x, uint8_t y)
-{
-	this->CursorToXY(x, y);
-	this->Puts_P(str);
 }
 
 /**
