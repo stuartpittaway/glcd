@@ -13,122 +13,44 @@
 #include <avr/pgmspace.h>
 #include "include/gText.h"
 #include "glcd_Config.h" 
+	
+extern glcd_Device GLCD; // this is the global GLCD instance, here upcast to the base glcd_Device class 
 
-
-//    gText::gText(glcd_Device* _device){
-//      this->device = _device;
-
+// This constructor creates a text area using the entire display
+// The device pointer is initialized using the global GLCD instance
+// New constuctors can be added to take an exlicit glcd instance pointer
+// if multiple glcd instances need to be supported
 gText::gText()
 {
+    device = (glcd_Device*)&GLCD; 
+    this->DefineArea(0,0,DISPLAY_WIDTH -1,DISPLAY_HEIGHT -1, DEFAULT_SCROLLDIR); // this should never fail
 }
 
-void gText::Init(glcd_Device* _device)
+// This constructor creates a text area with the given coordinates
+// full display area is used if any coordinate is invalid
+gText::gText(uint8_t x1, uint8_t y1, uint8_t x2, uint8_t y2, textMode scrolldir) 
 {
-    this->device = _device;
-
-	/*
-	 * Set up default/active text area to be entire display.
-	 * with up/normal scrolling
-	 * This is used for wrapping and scrolling.
-	 */
-
-	this->tarea_active = 0;
-
-	this->tarea.x1 = 0;
-	this->tarea.y1 = 0;
-	this->tarea.x2 = DISPLAY_WIDTH -1;
-	this->tarea.y2 = DISPLAY_HEIGHT -1;
-	this->tarea.scrolldir = 1;
+   device = (glcd_Device*)&GLCD; 
+   if( ! this->DefineArea(x1,y1,x2,y2,scrolldir))
+       this->DefineArea(0,0,DISPLAY_WIDTH -1,DISPLAY_HEIGHT -1,scrolldir); // this should never fail
 }
 
-/**
- * Select/Switch to desired text area
- *
- * @param area is the text area number
- * @see DefineArea()
- * @see ClearArea()
- */
-void gText::SelectArea(uint8_t area)
+gText::gText(predefinedArea selection, textMode scrolldir)
 {
-uint8_t area_active = this->tarea_active;
+   device = (glcd_Device*)&GLCD; 
+   if( ! this->DefineArea(selection,scrolldir))
+       this->DefineArea(0,0,DISPLAY_WIDTH -1,DISPLAY_HEIGHT -1,scrolldir); // this should never fail
 
-	/*
-	 * Sanity check area value.
-	 */
+}
 
-	if(area >= GLCD_TAREA_CNT)
-		return;
-
-	if(area != area_active)
-	{
-		/*
-		 * Changing area, so save off current area context
-		 */
-
-		this->tarea_cntxt[area_active].tarea = this->tarea; /* struct assignment */
-		this->tarea_cntxt[area_active].FontRead = this->FontRead;
-		this->tarea_cntxt[area_active].FontColor = this->FontColor;
-		this->tarea_cntxt[area_active].Font = this->Font;
-		this->tarea_cntxt[area_active].x = device->Coord.x;
-		this->tarea_cntxt[area_active].y = device->Coord.y;
-
-		/*
-		 * Now restore context of desired area
-		 */
-		this->tarea = this->tarea_cntxt[area].tarea;	/* struct assignment */
-		this->FontRead = this->tarea_cntxt[area].FontRead;
-		this->FontColor = this->tarea_cntxt[area].FontColor;
-		this->Font = this->tarea_cntxt[area].Font;
-
-		/*
-		 * Now send LCD to back to location where it was when area was last selected.
-		 *
-		 * WARNING: WARNING:
-		 *
-		 * The code below is intentionally done as two steps.
-		 *
-		 * The first step sets up the previous s/w X & Y coordinates.
-		 * The second step calls the GotoXY() function to set the X & Y position
-		 * in the lcd hardware.
-		 *
-		 * Normally just calling the GotoXY() routine would be good enough
-		 * as that routine also saves the s/w X & Y coordinates, however,
-		 * There are certain allowed conditions were the X coordinate will
-		 * be outsided the legal X value for the LCD display.
-		 *
-		 * Summary is that whenever you write to the lcd page of the right most 
-		 * column, the  s/w X coordinate will bump beyond the hardware boundary.
-		 * This is intentional.
-		 * See the WriteData() function for details on this condition.
-		 *
-		 * Whenever GotoXY() sees invalid coordinates, it tosses the request.
-		 * So in order ensure that the s/w coordinates are set in cases when
-		 * they are "technically" invalid, you have to manually set them.
-		 *
-		 * So rather than check their validity and only assign them in the invalid case,
-		 * it easiest to always set them just prior to the GotoXY().
-		 *
-		 */
-
-
-		device->Coord.x = this->tarea_cntxt[area].x;
-		device->Coord.y = this->tarea_cntxt[area].y;
-
-		/*
-		 * New font rendering always does a GotoXY() up front so there is
-		 * no need to load the LCD h/w right here.
-		 */
-
-#ifndef GLCD_NEW_FONDDRAW
-		device->GotoXY(device->Coord.x, device->Coord.y);
-#endif
-
-		/*
-		 * keep track of active area.
-		 */
-
-		this->tarea_active = area;
-	}
+gText::gText(uint8_t x1, uint8_t y1, uint8_t columns, uint8_t rows, const uint8_t* font, textMode scrolldir)
+{
+   device = (glcd_Device*)&GLCD; 
+   if( ! this->DefineArea(x1,y1,columns,rows,font, scrolldir))
+   {
+       this->DefineArea(0,0,DISPLAY_WIDTH -1,DISPLAY_HEIGHT -1,scrolldir); // this should never fail
+	  this->SelectFont(font);
+   }
 }
 
 /**
@@ -151,7 +73,7 @@ void gText::ClearArea(void)
 	 * put cursor at home position of text area to ensure we are always inside area.
 	 */
 
-	CursorToXY(0,0);
+	 this->CursorToXY(0,0);
 }
 
 /**
@@ -192,39 +114,22 @@ void gText::ClearArea(void)
  * @see ClearArea()
  * @see SelectArea()
  */
-
+// this function now only modifies an existing area, perhaps there is a more appropriate name
+// returns true if coordinates are valid, else returns false with nothing changed
+// use DEFAULT_SCROLLDIR if a scrolldir sanity check fails
 uint8_t
-gText::DefineArea(uint8_t area, uint8_t x, uint8_t y, uint8_t columns, uint8_t rows, const uint8_t* font, int8_t scrolldir)
+gText::DefineArea(uint8_t x, uint8_t y, uint8_t columns, uint8_t rows, const uint8_t* font, textMode scrolldir)
 {
 uint8_t arearval;
 uint8_t x2,y2;
 uint8_t active_area;
 
-	active_area = this->tarea_active;
-	
-	/*
-	 * Because the font read routines only work on the "active" variables,
-	 * the area about to defined has to be selected before it is sized.
-	 */
-
-	/*
-	 * Now fill in font information
-	 */
-
-	this->SelectArea(area);
 	this->SelectFont(font);
 
-	x2 = x + columns * (this->FontRead(this->Font+FONT_FIXED_WIDTH)+1) -1;
-	y2 = y + rows * (this->FontRead(this->Font+FONT_HEIGHT)+1) -1;
+	x2 = x + columns * (FontRead(this->Font+FONT_FIXED_WIDTH)+1) -1;
+	y2 = y + rows * (FontRead(this->Font+FONT_HEIGHT)+1) -1;
 
-	arearval = DefineArea(area, x,y, x2, y2, scrolldir);
-
-	/*
-	 * Restore which ever area was previously active
-	 */
-	this->SelectArea(active_area);
-
-	return(arearval);
+	return this->DefineArea(x, y, x2, y2, scrolldir);
 }
 
 /**
@@ -263,29 +168,9 @@ uint8_t active_area;
  */
 
 uint8_t
-gText::DefineArea(uint8_t area, uint8_t x1, uint8_t y1, uint8_t x2, uint8_t y2, int8_t scrolldir)
+gText::DefineArea(uint8_t x1, uint8_t y1, uint8_t x2, uint8_t y2, textMode scrolldir)
 {
-
-	if(area >= GLCD_TAREA_CNT)
-		return (area | 0x80); /* return something other than area */
-
-	/*
-	 * Sanity Check Params
-	 * FIXME
-	 *	What should be done for invalid params?
-	 *		- Silently, give them the entire display?
-	 *		- Ignore it?
-	 *		- Correct bad/invalid params?
-	 *		- return a bad status?
-	 *		- Give them entire display and slam a
-	 *			mssage to the LCD?
-	 *
-	 *	For now, you silently get the entire LCD
-	 *  on errors.
-	 *
-	 */
-
-
+uint8_t ret = false;
 	if(		(x1 >= x2)
 		||	(y1 >= y2)
 		||	(x1 >= DISPLAY_WIDTH)
@@ -294,42 +179,28 @@ gText::DefineArea(uint8_t area, uint8_t x1, uint8_t y1, uint8_t x2, uint8_t y2, 
 		||	(y2 >= DISPLAY_WIDTH)
 	)
 	{
-		x1 = 0;
-		y1 = 0;
-		x2 = DISPLAY_WIDTH -1;
-		y2 = DISPLAY_HEIGHT -1;
-	}
-
-	/*
-	 * If the area is not the active active area
-	 * fudge up the areas context information so that its
-	 * ready to be selected.
-	 * The cursor position for the area will be set to the
-	 * upper left corner of the text area.
-	 */
-	if(area != this->tarea_active)
-	{
-		this->tarea_cntxt[area].tarea.x1 = x1;
-		this->tarea_cntxt[area].tarea.y1 = y1;
-		this->tarea_cntxt[area].tarea.x2 = x2;
-		this->tarea_cntxt[area].tarea.y2 = y2;
-		this->tarea_cntxt[area].tarea.scrolldir = scrolldir;
-		/*
-		 * set cursor position for the area
-		 */
-		this->tarea_cntxt[area].x = x1;
-		this->tarea_cntxt[area].y = y1;
-	}
+	    // failed sanity check so set defaults and return false 
+		this->tarea.x1 = 0;
+		this->tarea.y1 = 0;
+		this->tarea.x2 = DISPLAY_WIDTH -1;
+		this->tarea.y2 = DISPLAY_HEIGHT -1;
+		this->tarea.scrolldir = DEFAULT_SCROLLDIR;
+    } 		
 	else
-	{
-		this->tarea.x1 = x1;
-		this->tarea.y1 = y1;
-		this->tarea.x2 = x2;
-		this->tarea.y2 = y2;
-		this->tarea.scrolldir = scrolldir;
-		device->GotoXY(x1, y1);
-	}
-	return(area);
+	{  
+	    this->tarea.x1 = x1; 
+	    this->tarea.y1 = y1; 
+		this->tarea.x2 = x2; 
+	    this->tarea.y2 = y2; 		
+		this->tarea.scrolldir = scrolldir; // not yet sanity checked
+		ret = true;
+    }		
+// bill does the cursor x,y need to be set here?	
+	// set cursor position for the area
+	this->x = x1;
+	this->y = y1;	
+	
+    return ret;
 }
 
 /**
@@ -359,7 +230,7 @@ gText::DefineArea(uint8_t area, uint8_t x1, uint8_t y1, uint8_t x2, uint8_t y2, 
  */
 
 uint8_t
-gText::DefineArea(uint8_t area, predefinedArea selection, int8_t scrolldir)
+gText::DefineArea(predefinedArea selection, textMode scrolldir)
 {
 uint8_t x1,y1,x2,y2;
 TareaToken tok;
@@ -371,7 +242,7 @@ TareaToken tok;
 	x2 =  tok.coord.x2;
 	y2 =  tok.coord.y2;
 
-	return DefineArea(area,x1,y1,x2,y2, scrolldir);
+	return this->DefineArea(x1,y1,x2,y2, scrolldir);
 }
 
 /*
@@ -628,9 +499,9 @@ void gText::SpecialChar(char c)
 
 	if(c == '\n')
 	{
-		uint8_t x = device->Coord.x;
-		uint8_t y = device->Coord.y;
-		uint8_t height = this->FontRead(this->Font+FONT_HEIGHT);
+		//uint8_t x = device->Coord.x;  // new ta
+		// uint8_t y = device->Coord.y;
+		uint8_t height = FontRead(this->Font+FONT_HEIGHT);
 
 //printf("Newline: x: %d y:%d, tarea.x2: %d, tarea.y2: %d, height: %d\n", x, y, tarea.x2, tarea.y2, height);
 
@@ -645,14 +516,14 @@ void gText::SpecialChar(char c)
 		 * The width/height arguments below take that into consideration.
 		 */
 
-		if(x < this->tarea.x2)
-			device->SetPixels(x, y, this->tarea.x2, y+height, this->FontColor == BLACK ? WHITE : BLACK);
+		if(this->x < this->tarea.x2)
+			device->SetPixels(this->x, this->y, this->tarea.x2, this->y+height, this->FontColor == BLACK ? WHITE : BLACK);
 
 		/*
 		 * Check for scroll up vs scroll down (scrollup is normal)
 		 */
 #ifndef GLCD_NO_SCROLLDOWN
-		if(this->tarea.scrolldir >= 0)
+		if(this->tarea.scrolldir == SCROLL_UP)
 #endif
 		{
 			/*
@@ -665,7 +536,7 @@ void gText::SpecialChar(char c)
 			 * are atually 1 pixel taller when rendered. 
 			 * This extra pixel is along the bottom for a "gap" between the character below.
 			 */
-			if(y + 2*height >= this->tarea.y2)
+			if(this->y + 2*height >= this->tarea.y2)
 			{
 //printf("Scroll Required: y: %d, height: %d, tarea.y2: %d\n", y, height, this->tarea.y2);
 
@@ -673,14 +544,14 @@ void gText::SpecialChar(char c)
 				 * forumula for pixels to scroll is:
 				 *	(assumes "height" is one less than rendered height)
 				 *
-				 *		pixels = height - ((this->tarea.y2 - y)  - height) +1;
+				 *		pixels = height - ((this->tarea.y2 - this->y)  - height) +1;
 				 *
 				 *		The forumala below is unchanged 
 				 *		But has been re-written/simplified in hopes of better code
 				 *
 				 */
 
-				uint8_t pixels = 2*height + y - this->tarea.y2 +1;
+				uint8_t pixels = 2*height + this->y - this->tarea.y2 +1;
 		
 				/*
 				 * Scroll everything to make room
@@ -721,16 +592,16 @@ void gText::SpecialChar(char c)
 				 * Room for simple wrap
 				 */
 
-				x = this->tarea.x1;
-				y = y+height+1;
+				this->x = this->tarea.x1;
+				this->y = y+height+1;
 
 #ifdef NOTNEEDED
-				if(x < this->tarea.x2)
+				if(this->x < this->tarea.x2)
 					//device->SetPixels(x, y, this->tarea.x2, y+height, this->FontColor == BLACK ? WHITE : BLACK);
-					device->SetPixels(x, y, this->tarea.x2, y+height, WHITE);
+					device->SetPixels(this->x, this->y, this->tarea.x2, this->y+height, WHITE);
 #endif
 
-				device->GotoXY(x, y);
+				device->GotoXY(this->x, this->y);
 
 			}
 		}
@@ -749,20 +620,20 @@ void gText::SpecialChar(char c)
 			 * are atually 1 pixel taller when rendered. 
 			 *
 			 */
-			if(y > this->tarea.y1 + height)
+			if(this->y > this->tarea.y1 + height)
 			{
 				/*
 				 * There is room so just do a simple wrap
 				 */
-				x = this->tarea.x1;
-				y = y - (height+1);
+				this->x = this->tarea.x1;
+				this->y = this->y - (height+1);
 #ifdef NOTNEEDED
-				if(x < this->tarea.x2)
+				if(this->x < this->tarea.x2)
 					//device->SetPixels(x, y, this->tarea.x2, y+height, this->FontColor == BLACK ? WHITE : BLACK);
-					device->SetPixels(x, y, this->tarea.x2, y+height, WHITE);
+					device->SetPixels(this->x, this->y, this->tarea.x2, this->y+height, WHITE);
 #endif
 
-				device->GotoXY(x, y);
+				device->GotoXY(this->x, this->y);
 			}
 			else
 			{
@@ -771,7 +642,7 @@ void gText::SpecialChar(char c)
 				 *	(assumes "height" is one less than rendered height)
 				 */
 
-				uint8_t pixels = height+1 - (this->tarea.y1 - y);
+				uint8_t pixels = height+1 - (this->tarea.y1 - this->y);
 
 				this->ScrollDown(this->tarea.x1, this->tarea.y1, 
 					this->tarea.x2, this->tarea.y2, pixels, this->FontColor == BLACK ? WHITE : BLACK);
@@ -813,7 +684,7 @@ int gText::PutChar(char c)
 //uint8_t waitflg = 0; // BAPDEBUG
 
 
-    if(this->FontRead == 0)
+    if(FontRead == 0)
 	  return 0; // no font selected
 
 	/*
@@ -827,15 +698,16 @@ int gText::PutChar(char c)
 	}
 	   
 	uint8_t width = 0;
-	uint8_t height = this->FontRead(this->Font+FONT_HEIGHT);
+	uint8_t height = FontRead(this->Font+FONT_HEIGHT);
 	uint8_t bytes = (height+7)/8; /* calculates height in rounded up bytes */
 	
-	uint8_t firstChar = this->FontRead(this->Font+FONT_FIRST_CHAR);
-	uint8_t charCount = this->FontRead(this->Font+FONT_CHAR_COUNT);
+	uint8_t firstChar = FontRead(this->Font+FONT_FIRST_CHAR);
+	uint8_t charCount = FontRead(this->Font+FONT_CHAR_COUNT);
 	
 	uint16_t index = 0;
-	uint8_t x = device->Coord.x, y = device->Coord.y;
-
+	//uint8_t x = device->Coord.x, y = device->Coord.y;   // new TA
+	this->x = device->Coord.x; // new TA
+	this->y = device->Coord.y; 	// x ,y are now instance properties of the class  
 
 	if(c < firstChar || c >= (firstChar+charCount)) {
 		return 0; // invalid char
@@ -843,7 +715,7 @@ int gText::PutChar(char c)
 	c-= firstChar;
 
 	if( isFixedWidtFont(this->Font) {
-	   width = this->FontRead(this->Font+FONT_FIXED_WIDTH); 
+	   width = FontRead(this->Font+FONT_FIXED_WIDTH); 
 	   index = c*bytes*width+FONT_WIDTH_TABLE;
 	}
 	else{
@@ -855,7 +727,7 @@ int gText::PutChar(char c)
 		 * need to locate.
 		 */
 	   for(uint8_t i=0; i<c; i++) {  
-		 index += this->FontRead(this->Font+FONT_WIDTH_TABLE+i);
+		 index += FontRead(this->Font+FONT_WIDTH_TABLE+i);
 	   }
 		/*
 		 * Calculate the offset of where the font data
@@ -875,7 +747,7 @@ int gText::PutChar(char c)
 		/*
 		 * Finally, fetch the width of our character
 		 */
-	   width = this->FontRead(this->Font+FONT_WIDTH_TABLE+c);
+	   width = FontRead(this->Font+FONT_WIDTH_TABLE+c);
     }
 
 	/*
@@ -885,14 +757,14 @@ int gText::PutChar(char c)
 	 * NOTE/WARNING: the below calculation assumes a 1 pixel pad.
 	 * This will need to be changed if/when configurable pixel padding is supported.
 	 */
-	if(x + width > this->tarea.x2)
+	if(this->x + width > this->tarea.x2)
 	{
 		this->PutChar('\n'); // fake a newline to cause wrap/scroll
 		/*
 		 * Re-fetch x/y coordinates after wrap/scroll.
 		 */
-		x = device->Coord.x;
-		y = device->Coord.y;
+		this->x = device->Coord.x;
+		this->y = device->Coord.y;
 
 		//waitflg++; // BAPDEBUG
 		
@@ -917,7 +789,7 @@ int gText::PutChar(char c)
 		uint8_t page = i*width;
 		for(uint8_t j=0; j<width; j++) /* each column */
 		{
-			uint8_t data = this->FontRead(this->Font+index+page+j);
+			uint8_t data = FontRead(this->Font+index+page+j);
 		
 			/*
 			 * This funkyness is because when the character glyph is not a
@@ -947,9 +819,9 @@ int gText::PutChar(char c)
 		} else {
 			device->WriteData(0xFF);
 		}
-		device->GotoXY(x, device->Coord.y+8);
+		device->GotoXY(this->x, device->Coord.y+8);
 	}
-	device->GotoXY(x+width+1, y);
+	device->GotoXY(this->x+width+1, this->y);
 
 /*================== END of OLD FONT DRAWING ============================*/
 #else
@@ -976,7 +848,7 @@ int gText::PutChar(char c)
 
 	for(p = 0; p < pixels;)
 	{
-		dy = y + p;
+		dy = this->y + p;
 
 //printf("pixel loop: dy: %d, y: %d, p: %d\n", dy, y, p);
 
@@ -984,7 +856,7 @@ int gText::PutChar(char c)
 		 * Align to proper Column and page in LCD memory
 		 */
 
-		device->GotoXY(x, (dy & ~7));
+		device->GotoXY(this->x, (dy & ~7));
 
 		uint8_t page = p/8 * width;
 
@@ -1016,7 +888,7 @@ int gText::PutChar(char c)
 			}
 			else
 			{
-				fdata = this->FontRead(this->Font+index+page+j);
+				fdata = FontRead(this->Font+index+page+j);
 
 				/*
 				 * Have to shift font data because Thiele shifted residual
@@ -1108,7 +980,7 @@ int gText::PutChar(char c)
 				if((tfp & 7)== 7)
 				{
 //printf("paintloop: fetching new font byte, page: %d j: %d\n", page, j);
-					fdata = this->FontRead(this->Font+index+page+j+width);
+					fdata = FontRead(this->Font+index+page+j+width);
 
 					/*
 					 * Have to shift font data because Thiele shifted residual
@@ -1232,7 +1104,7 @@ int gText::PutChar(char c)
 	 * While ugly, it is necessary and actually does save a few cycles over GotoXY()
 	 */
 
-	device->Coord.y = y;
+	device->Coord.y = this->y;
 
 /*================== END of NEW FONT DRAWING ============================*/
 
@@ -1243,6 +1115,7 @@ int gText::PutChar(char c)
 
 	return 1; // valid char
 }
+
 
 /**
  * output a character string
@@ -1321,8 +1194,8 @@ void gText::CursorTo( uint8_t column, uint8_t row)
 	/*
 	 * Text position is relative to current text area
 	 */
-  device->GotoXY( column * (this->FontRead(this->Font+FONT_FIXED_WIDTH)+1) + this->tarea.x1,
-	       row * (this->FontRead(this->Font+FONT_HEIGHT)+1) + this->tarea.y1
+  device->GotoXY( column * (FontRead(this->Font+FONT_FIXED_WIDTH)+1) + this->tarea.x1,
+	       row * (FontRead(this->Font+FONT_HEIGHT)+1) + this->tarea.y1
 		 ) ; 
 }
 
@@ -1366,26 +1239,24 @@ void gText::CursorToXY( uint8_t x, uint8_t y)
  * @see ClearArea()
  */
 
-void gText::EraseInLine(uint8_t type)
+//void gText::EraseTextLine(uint8_t type)
+void gText::EraseTextLine( eraseLine_t type) 
 {
 
 	uint8_t x = device->Coord.x;
 	uint8_t y = device->Coord.y;
-	uint8_t height = this->FontRead(this->Font+FONT_HEIGHT);
+	uint8_t height = FontRead(this->Font+FONT_HEIGHT);
 	uint8_t color = (this->FontColor == BLACK) ? WHITE : BLACK;
 
 	switch(type)
 	{
-		/*
-		 * These numbers are based on the ANSI EraseInLine terminal primitive: CSI n K
-		 */
-		case 0:
+		case eraseFROM_EOL:
 				device->SetPixels(x, y, this->tarea.x2, y+height, color);
 				break;
-		case 1:
+		case eraseFROM_BOL:
 				device->SetPixels(this->tarea.x1, y, x, y+height, color);
 				break;
-		case 2:
+		case eraseFULL_LINE:
 				device->SetPixels(this->tarea.x1, y, this->tarea.x2, y+height, color);
 				break;
 	}
@@ -1395,6 +1266,15 @@ void gText::EraseInLine(uint8_t type)
 	 */
 	device->GotoXY(x,y);
 }
+
+// erase the entire text line in the given row
+// cursor set to the first column of the given row
+void gText::EraseTextLine( uint8_t row)
+{
+   this->CursorTo(0, row);
+   EraseTextLine(eraseFROM_BOL);	
+}
+
 
 /**
  * Select a Font and font color
@@ -1427,10 +1307,24 @@ void gText::EraseInLine(uint8_t type)
 void gText::SelectFont(const uint8_t* font,uint8_t color, FontCallback callback)
 {
 	this->Font = font;
-	this->FontRead = callback;
+	FontRead = callback;  // this sets the callback that will be used by all instances of gText
 	this->FontColor = color;
 }
 
+void gText::SetFontColor(uint8_t color) // new method
+{
+   	this->FontColor = color;
+}
+
+/*
+ * currently the only supported mode is scrolldir
+ * when other modes are added the tarea.scrolldir variable will hold a bitmask or enum for the modde and should be renamed
+ */
+void gText::SetTextMode(textMode mode)
+{
+   this->tarea.scrolldir = mode; 
+} 
+	
 /**
  * Returns the pixel width of a character
  *
@@ -1451,17 +1345,17 @@ uint8_t gText::CharWidth(char c)
 	uint8_t width = 0;
 	
     if(isFixedWidtFont(this->Font){
-		width = this->FontRead(this->Font+FONT_FIXED_WIDTH)+1;  // there is 1 pixel pad here BAP
+		width = FontRead(this->Font+FONT_FIXED_WIDTH)+1;  // there is 1 pixel pad here BAP
 	} 
     else{ 
 	    // variable width font 
-		uint8_t firstChar = this->FontRead(this->Font+FONT_FIRST_CHAR);
-		uint8_t charCount = this->FontRead(this->Font+FONT_CHAR_COUNT);
+		uint8_t firstChar = FontRead(this->Font+FONT_FIRST_CHAR);
+		uint8_t charCount = FontRead(this->Font+FONT_CHAR_COUNT);
 	
 		// read width data
 		if(c >= firstChar && c < (firstChar+charCount)) {
 			c -= firstChar;
-			width = this->FontRead(this->Font+FONT_WIDTH_TABLE+c)+1;
+			width = FontRead(this->Font+FONT_WIDTH_TABLE+c)+1;
 		}
 	}	
 	return width;
@@ -1521,7 +1415,7 @@ uint16_t gText::StringWidth_P(PGM_P str)
 
 void gText::write(uint8_t c) 
 {
-	PutChar(c);
+	this->PutChar(c);
 } 
 
  
