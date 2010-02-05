@@ -13,9 +13,9 @@
 // the new function will use the default color if the color parameter is omitted
 #define DrawVertLine(x, y, length, color)   DrawVLine(x, y, length, color)
 #define DrawHoriLine(x, y, length, color)   DrawHLine(x, y, length, color)
+#define ClearSysTextLine(line) FillRect(0, (line*8), (DISPLAY_WIDTH-1), ((line*8)+ 7), WHITE )
 
-// ClearPage is replaced by ClearSysTextLine
-#define ClearPage(page, color)   ClearSysTextLine(page)  // note that color is ignored !!!
+#define SetInverted(mode)	SetDisplayMode(mode)  // function renamed
 	
 // the following deprecated functions are replaced by Arduino style print methods
 #define PutChar(c)       print(c)
