@@ -32,7 +32,7 @@
 
 // the following returns true if the given font is fixed width
 // zero length is flag indicating fixed width font (array does not contain width data entries)
-#define isFixedWidtFont(font)  (this->FontRead(font+FONT_LENGTH) == 0 && this->FontRead(font+FONT_LENGTH+1) == 0))
+#define isFixedWidtFont(font)  (FontRead(font+FONT_LENGTH) == 0 && FontRead(font+FONT_LENGTH+1) == 0))
 
 
 typedef uint8_t (*FontCallback)(const uint8_t*);
@@ -72,6 +72,11 @@ typedef union
         
 }TareaToken;
 
+typedef uint8_t textMode;  // type holding mode for scrolling and future attributes like padding etc.
+// the only textMode supported in the current release is scrolling
+const textMode SCROLL_UP = 1;
+const textMode SCROLL_DOWN = 0; // this was changed from -1 so it can used in a bitmask 
+const textMode DEFAULT_SCROLLDIR = SCROLL_DOWN;
 
 
 /*
@@ -91,7 +96,17 @@ typedef enum  {
 } predefinedArea;
 
 
+
+/*
+  * enums for ansi style erase function
+  * These values match the ANSI EraseInLine terminal primitive: CSI n K
+*/  
+typedef enum {eraseFROM_EOL, eraseFROM_BOL, eraseFULL_LINE} eraseLine_t;  	
+
+
 uint8_t ReadPgmData(const uint8_t* ptr);	//Standard Read Callback
+static glcd_Device    *device;              // static pointer to the device instance
+static FontCallback	FontRead;               // font callback shared across all instances
 
 struct tarea
 {
@@ -102,49 +117,43 @@ struct tarea
 	int8_t  scrolldir;	/* signed value, -1 is reverse scroll */
 };
 
-struct tareacntxt
-{
-	struct tarea 	tarea;
-	const uint8_t*	Font;
-	FontCallback 	FontRead;
-	uint8_t			FontColor;
-	uint8_t			x;
-	uint8_t			y;
-};
-
-
+  
  // graphical device text routines
 class gText : public Print
 {
   private:
-	glcd_Device    *device;
-	FontCallback	FontRead;
+    //FontCallback	FontRead;     // now static, move back here if each instance needs its own callback
 	uint8_t			FontColor;
 	const uint8_t*	Font;
 	struct tarea tarea;
+	uint8_t			x;
+	uint8_t			y;
 
-	uint8_t tarea_active;
-	struct tareacntxt tarea_cntxt[GLCD_TAREA_CNT];
 	void SpecialChar(char c);
 
 	// Scroll routines are private for now
 	void ScrollUp(uint8_t x1, uint8_t y1, uint8_t x2, uint8_t y2, uint8_t pixels, uint8_t color);
 	void ScrollDown(uint8_t x1, uint8_t y1, uint8_t x2, uint8_t y2, uint8_t pixels, uint8_t color);
-
+	
   public:
-	gText();
-	void Init(glcd_Device* _device);
+	gText(); // default - uses the entire display
+    gText(uint8_t x1, uint8_t y1, uint8_t x2, uint8_t y2, textMode scrolldir=DEFAULT_SCROLLDIR);
+	// 4 Feb - added two constuctors (and SetFontColor below) 
+	gText(predefinedArea selection, textMode scrolldir=DEFAULT_SCROLLDIR);
+	gText(uint8_t x1, uint8_t y1, uint8_t columns, uint8_t rows, const uint8_t* font, textMode scrolldir=DEFAULT_SCROLLDIR);
+
+	//void Init(glcd_Device* _device); // no longer used
 
 	// Text area functions
-
-	uint8_t DefineArea(uint8_t area, uint8_t x1, uint8_t y1, uint8_t x2, uint8_t y2, int8_t scrolldir=1);
-	uint8_t DefineArea(uint8_t area, uint8_t x1, uint8_t y1, uint8_t columns, uint8_t rows, const uint8_t* font, int8_t scrolldir=1);
-	uint8_t DefineArea(uint8_t area, predefinedArea selection, int8_t scrolldir=1);
+	uint8_t DefineArea(uint8_t x1, uint8_t y1, uint8_t x2, uint8_t y2, textMode scrolldir=DEFAULT_SCROLLDIR);
+	uint8_t DefineArea(uint8_t x1, uint8_t y1, uint8_t columns, uint8_t rows, const uint8_t* font, textMode scrolldir=DEFAULT_SCROLLDIR);
+	uint8_t DefineArea(predefinedArea selection, textMode scrolldir=DEFAULT_SCROLLDIR);
+	void SetTextMode(textMode mode); // change to the given text mode
 	void ClearArea(void);
-	void SelectArea(uint8_t area);
 
 	// Font Functions
-	void SelectFont(const uint8_t* font, uint8_t color=BLACK, FontCallback callback=ReadPgmData); // defualt arguments added, callback now last arg
+	void SelectFont(const uint8_t* font, uint8_t color=BLACK, FontCallback callback=ReadPgmData); // default arguments added, callback now last arg
+	void SetFontColor(uint8_t color); // new method
 	int PutChar(char c);
 	void Puts(char *str);
 	void Puts_P(PGM_P str);
@@ -157,12 +166,9 @@ class gText : public Print
 	uint16_t StringWidth(const char* str);
 	uint16_t StringWidth_P(PGM_P str);
 
-	static const uint8_t AreaCount = GLCD_TAREA_CNT;	 //mem 15 Jan 10
-
-	/*
- 	 * ansi like line erase function
-	 */
-	void EraseInLine( uint8_t type=0); //  0 = EOL, 1= BOL, 2= full line
+	//void EraseInLine( uint8_t type=eraseFROM_EOL); //ansi like line erase function 
+	void EraseTextLine( eraseLine_t type=eraseFROM_EOL); //ansi like line erase function 
+	void EraseTextLine( uint8_t row); // erase the entire text line in the given row
 };
 
 #endif
