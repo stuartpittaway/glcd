@@ -12,12 +12,17 @@
     not all library functionality has been implemented
  */
 
-
 #include <glcd.h>
 #include "fonts/Arial14.h"             // proportional font
 #include "fonts/SystemFont5x7.h"       // system font
 #include "bitmaps/ArduinoIcon64x64.h"  // 64x64 bitmap 
 #include "bitmaps/ArduinoIcon64x32.h"
+
+ // Create an array of text areas 
+ // In a typical app, each text area would be a meaningful named variable
+ // that is initialized when its declared 
+ // but its an array here to keep the old example logic unchanged
+gText textArea[3];
 
 unsigned long startMillis;
 unsigned int loops = 0;
@@ -61,11 +66,11 @@ void  loop(){   // run over and over again
   GLCD.print(fps_fract);
 }
 
-void showAscii(int _delay)
+void showAscii(int area, int _delay)
 {
   for( char ch = 0x40; ch < 0x7f; ch++)
   {
-    GLCD.print(ch);
+    textArea[area].print(ch);
     delay(_delay);
   }   
 }
@@ -84,9 +89,7 @@ void introScreen(){
   GLCD.DrawRoundRect(8,0,GLCD.Width-9,18, 5);  // rounded rectangle around text area   
   countdown(3);  
   scrollingDemo();
-  GLCD.Text.SelectArea(0);
   GLCD.SelectFont(System5x7, BLACK);
-  GLCD.Text.DefineArea(0, 0,0,GLCD.Width-1, GLCD.Height-1, 1);
   GLCD.ClearScreen();  
   showCharacters();
   countdown(3);
@@ -97,15 +100,13 @@ void showCharacters(){
   GLCD.CursorTo(0,0);
   GLCD.print("5x7 font:");
   GLCD.DrawRoundRect(GLCD.Width/2 + 2, 0, GLCD.Width/2 -3, GLCD.Height-1, 5);  // rounded rectangle around text area 
-  GLCD.Text.SelectArea(1);
-  GLCD.SelectFont(System5x7, BLACK);
-  GLCD.Text.DefineArea(1, GLCD.Width/2 + 5, 3, GLCD.Width -1-2, GLCD.Height -1-4, 1);
-  GLCD.CursorTo(0,0);
+  textArea[1].DefineArea( GLCD.Width/2 + 5, 3, GLCD.Width -1-2, GLCD.Height -1-4, 1); 
+  textArea[1].SelectFont(System5x7, BLACK);
+  textArea[1].CursorTo(0,0);
   for(byte c = 32; c <=127; c++){
-    GLCD.print(c);  
+    textArea[1].print(c);  
     delay(50);
   }
-  GLCD.Text.SelectArea(0); 
 }
 
 void drawSpinner(byte pos, byte x, byte y) {   
@@ -166,10 +167,9 @@ void scrollingDemo()
     GLCD.DrawBitmap(ArduinoIcon64x32, GLCD.Width /2 -16 + x, 0, WHITE);
     delay(50);
   }
-  
-  GLCD.Text.SelectArea(0);
-  GLCD.Text.DefineArea(0, 0,0, GLCD.Width-1,GLCD.Height-1, 1);
-  GLCD.SelectFont(Arial_14, WHITE);
+
+  textArea[0].DefineArea(0,0, GLCD.Width-1,GLCD.Height-1, 1);
+  textArea[0].SelectFont(Arial_14, WHITE);
   for(x=0; x< 15; x++)
   {
     for(byte p = 0; p < GLCD.Height; p+=8)
@@ -177,55 +177,44 @@ void scrollingDemo()
       GLCD.DrawHLine(0,p, 8);
     }
     GLCD.GotoXY(x,x);
-    GLCD.print("@ABCDFGHIJ");
+     textArea[0].print("@ABCDFGHIJ");
     delay(200);
     GLCD.ClearScreen();
   }
 
   GLCD.ClearScreen();  
-  GLCD.Text.SelectArea(0);
-  GLCD.Text.DefineArea(0, 0,0, GLCD.Width/2 -1,GLCD.Height/2 -1, 1);
-//  GLCD.Text.DefineArea(0,textAreaLEFT,1); 
-  GLCD.SelectFont(System5x7, WHITE);
-  GLCD.CursorTo(0,0);
-  GLCD.Text.SelectArea(1);
-  GLCD.Text.DefineArea(1, GLCD.Width/2,0, GLCD.Width-1,GLCD.Height/2-1, -1);
-//  GLCD.Text.DefineArea(1,textAreaRIGHT,-1); 
-  GLCD.SelectFont(System5x7, BLACK);
-  GLCD.CursorTo(0,0);
-  GLCD.Text.SelectArea(2);
-//  GLCD.Text.DefineArea(2, 0,GLCD.Height/2, GLCD.Width-1,GLCD.Height-1, 1);
-  GLCD.Text.DefineArea(2,textAreaBOTTOM,1); 
+  textArea[0].DefineArea(0,0, GLCD.Width/2 -1,GLCD.Height/2 -1, 1);
+  textArea[0].SelectFont(System5x7, WHITE);
+  textArea[0].CursorTo(0,0);
+  textArea[1].DefineArea(GLCD.Width/2,0, GLCD.Width-1,GLCD.Height/2-1, -1);
+  textArea[1].SelectFont(System5x7, BLACK);
+  textArea[1].CursorTo(0,0);
+  textArea[2].DefineArea(textAreaBOTTOM,1); 
   
-  GLCD.SelectFont(Arial_14, BLACK);
-  GLCD.CursorTo(0,0);
+  textArea[2].SelectFont(Arial_14, BLACK);
+  textArea[2].CursorTo(0,0);
 
   for(byte area = 0; area< 3; area++)
   {
-    GLCD.Text.SelectArea(area);
-    showAscii(80);
+    showAscii(area, 80);
   }
   for(char c = 0x20; c < 0x7f; c++)
   {
     for(byte area = 0; area < 3; area++)
     {
-      GLCD.Text.SelectArea(area);
-      GLCD.print(c);
+       textArea[area].print(c);
     }
     delay(50);
   }  
 
   for(byte area = 0; area< 3; area++)
   {
-    GLCD.Text.SelectArea(area);
-    GLCD.Text.ClearArea();
+     textArea[area].ClearArea();
   }
   for(x = 0; x< 15; x++)
   {
     for(byte area = 0; area < 3; area++)
     {
-      GLCD.Text.SelectArea(area);
-
       // The newline needs to be sent just before the string to make
       // the scrolling look correct. It can be moved below
       // the delay but it won't look as good.
@@ -233,14 +222,12 @@ void scrollingDemo()
       // you lose a line in the text area because of the scroll
       // and it no longer works with only a 2 line text area.
 
-      GLCD.print("\nline ");
-      GLCD.print(x);
-      delay(100);
+       textArea[area].print("\nline ");
+       textArea[area].print(x);
+       delay(100);
     }
   }
-
-  GLCD.Text.SelectArea(1);
-  GLCD.Text.ClearArea();
+  textArea[1].ClearArea();
   for(x = 0; x < 16; x++)
   {
     GLCD.DrawBitmap(ArduinoIcon64x32, GLCD.Width/2 -16 + x, 0, WHITE);
@@ -248,18 +235,15 @@ void scrollingDemo()
   }
   if(GLCD.Height < 64)
   {
-    GLCD.Text.SelectArea(0);
-    GLCD.Text.DefineArea(0, 0,0,GLCD.Width/2-1, GLCD.Height-1, 1);
+     textArea[0].DefineArea(0,0,GLCD.Width/2-1, GLCD.Height-1, 1);
   }
 
   for(char c = 0x20; c < 0x7f; c++)
   {
-    GLCD.Text.SelectArea(0);
-    GLCD.print(c);
+    textArea[0].print(c);
     if(GLCD.Height > 32 )
     {    
-      GLCD.Text.SelectArea(2);
-      GLCD.print(c);
+       textArea[2].print(c);
     }           
     delay(50);
   }
