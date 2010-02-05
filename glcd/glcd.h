@@ -51,16 +51,18 @@
 class glcd : public glcd_Device  // glcd_Device has low level device access routines
 {
   private:
-	void ClearPage(uint8_t page, uint8_t color = WHITE);
-	void ClearPage(uint8_t page, uint8_t startX, uint8_t length, uint8_t color = WHITE);
+	void ClearPage(uint8_t page, uint8_t startX, uint8_t length, uint8_t color = WHITE); 
+	void write(uint8_t c);  // character output for print base class
   public:
     glcd();
 	
 	// Control functions
 	void Init(uint8_t invert = NON_INVERTED);
+	void SetDisplayMode(uint8_t mode); //NON_INVERTED or INVERTED,   was SetInverted(uint8_t invert);
 	
 	// Graphic Functions
 	void ClearScreen(uint8_t color = WHITE);
+	void ClearPage(uint8_t page, uint8_t color = WHITE); // bill, this was public in ks0108, why did we make it private?
 	void DrawVLine(uint8_t x, uint8_t y, uint8_t height, uint8_t color= BLACK);
 	void DrawHLine(uint8_t x, uint8_t y, uint8_t width, uint8_t color= BLACK);
     void DrawLine(uint8_t x1, uint8_t y1, uint8_t x2, uint8_t y2, uint8_t color= BLACK);
@@ -70,20 +72,23 @@ class glcd : public glcd_Device  // glcd_Device has low level device access rout
     void InvertRect(uint8_t x, uint8_t y, uint8_t width, uint8_t height);
 	void DrawCircle(uint8_t xCenter, uint8_t yCenter, uint8_t radius, uint8_t color= BLACK);	
 	void FillCircle(uint8_t xCenter, uint8_t yCenter, uint8_t radius, uint8_t color= BLACK);	
-	void SetInverted(uint8_t invert);
 	void DrawBitmap(const uint8_t * bitmap, uint8_t x, uint8_t y, uint8_t color= BLACK);
 	
 	// Text class
-	gText Text;
+	gText Text; // making this class public allows access to undocumented functions, not sure if we should allow that.
 	
     // Font Functions - this is public API for functionality in the Text class:
     void SelectFont(const uint8_t* font, uint8_t color=BLACK); // default arguments added, callback removed from public method
+	void SetFontColor(uint8_t color); // new method to change the selected fonts color
+	void SetTextMode(textMode mode);  // change to the given text mode (currently only scroll direction is supported)
     void Puts_P(PGM_P str);  // this prints a string defined explicitly as a constant in program memory
-	
-	// functions for use with system (fixed width 5x7) font
-	void ClearSysTextLine( uint8_t row); 
+
 	void CursorTo( uint8_t column, uint8_t row); // 0 based coordinates for character columns and rows
-	void write(uint8_t c);  // character output for print base class
+	void CursorToXY( uint8_t x, uint8_t y); // pixel coordinates 
+	void EraseTextLine( eraseLine_t type=eraseFROM_EOL); // default erases from the end of line
+	void EraseTextLine( uint8_t row); // erase the entire text line in the given row    
+	// void ClearSysTextLine( uint8_t row); // note the old ClearSysTextLine behaviour is supported using glcd_Deprecated.h
+
     uint8_t CharWidth(char c);
     uint16_t StringWidth(const char* str);
     uint16_t StringWidth_P(PGM_P str);
