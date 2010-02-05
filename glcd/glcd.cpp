@@ -27,12 +27,6 @@
 #define BITMAP_FIX // enables a bitmap rendering fix/patch
 
 
-glcd::glcd(){
-  this->Inverted=0;
-//  this->Text = gText((glcd_Device *)this); 
-  this->Text = gText(); 
-}
-
 /**
  * Initilize the GLCD library and hardware
  *
@@ -51,10 +45,17 @@ glcd::glcd(){
  * Upon completion of the initialization, then entire display will be cleared.
  */
 
+ 
+glcd::glcd(){
+   this->Inverted=0; 
+}
+
 void glcd::Init(uint8_t invert){
+    this->Inverted=invert;
 	glcd_Device::Init(invert);  
-	this->Text.Init((glcd_Device *)this); 
-}	
+	//this->Text.Init((glcd_Device *)this); // new TA - init of gText no longer needed
+	//this->Text = gText();
+}		
 	
 // Note that the ClearPage functions are now private and probably no longer be necessary - mem 21 Jan
 // if ClearScreen coding is modifed to do the clear page	
@@ -426,7 +427,7 @@ void glcd::InvertRect(uint8_t x, uint8_t y, uint8_t width, uint8_t height) {
  *
  */
 
-void glcd::SetInverted(uint8_t invert) { 
+void glcd::SetDisplayMode(uint8_t invert) {  // was named SetInverted
 	if(this->Inverted != invert) {
 		this->InvertRect(0,0,DISPLAY_WIDTH-1,DISPLAY_HEIGHT-1);
 		this->Inverted = invert;
@@ -672,34 +673,55 @@ void glcd::write(uint8_t c)  // method needed for Print base class
 } 
 
 
-// Font and text methods now imlimented in the gText class
+// Font and text methods now implemented in the gText class
 void glcd::SelectFont(const uint8_t* font, uint8_t color)
 {
    Text.SelectFont(font, color);
 }
 
+void glcd::SetFontColor(uint8_t color)
+{
+   Text.SetFontColor(color);
+}
+
+void glcd::SetTextMode(textMode mode)
+{
+  Text.SetTextMode(mode);
+}
+
 void glcd::Puts_P(PGM_P str) {
 	char c;
 	while((c = pgm_read_byte(str)) != 0) {
-		Text.PutChar(c);
+		write(c);//   was Text.PutChar(c);
 		str++;
 	}
 }
 
+void glcd::EraseTextLine( eraseLine_t type) 
+{
+   Text.EraseTextLine(type);
+} 
+
+void glcd::EraseTextLine( uint8_t row)  
+{
+     Text.EraseTextLine(row);
+}
+	
 void glcd::CursorTo( uint8_t column, uint8_t row)    // 0 based coordinates for fixed width fonts (i.e. systemFont5x7)
 {
 
 	/*
-	 * Text position is relative to current text window.
+	 * Text position is relative to default text window which is the entire display
 	 */
 	Text.CursorTo(column, row); 
 }
 
-
-// functions for use with system (fixed width 5x7) font
-void glcd::ClearSysTextLine( uint8_t row)
+void glcd::CursorToXY( uint8_t x, uint8_t y)
 {
-	this->ClearPage(row);
+	/*
+	 * Pixel coordinataes relative to the default text window which is the entire display
+	 */
+   	Text.CursorToXY(x,y); 
 }
 
 uint8_t glcd::CharWidth(char c)
@@ -717,25 +739,6 @@ uint16_t glcd::StringWidth_P(PGM_P str)
   return Text.StringWidth_P(str);
 }
  
-
-#ifdef NOT_NEEDED
-int glcd::PutChar(char c)
-{
-   return Text.PutChar(c); // change to Print??
-}
-
-void glcd::Puts(char* str) {
-	while(*str) {
-		Text.PutChar(*str);
-		str++;
-	}
-}
-
-void glcd::PrintNumber(long n) // on Arduino the print method is more capable
-{
-   this->print(n);
-}
-#endif
 
 // Make one instance for the user
 glcd GLCD = glcd();
