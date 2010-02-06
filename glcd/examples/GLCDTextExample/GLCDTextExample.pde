@@ -8,8 +8,9 @@
  * number of frames drawn per second.  
  */
 
-/*  This version uses .Text.WindowFunction syntax 
-    not all library functionality has been implemented
+/*  This version uses user defined text areas 
+ *  Code added to show use of GLCD.GotoXY in default area and CursorToXY in user area 
+ *  new GLCD constants used to define Right, Bottom and Center coordinates
  */
 
 #include <glcd.h>
@@ -17,9 +18,6 @@
 #include "fonts/SystemFont5x7.h"       // system font
 #include "bitmaps/ArduinoIcon64x64.h"  // 64x64 bitmap 
 #include "bitmaps/ArduinoIcon64x32.h"
-
-#define GotoXY CursorToXY
-
 
  // Create an array of text areas 
  // In a typical app, each text area would be a meaningful named variable
@@ -40,20 +38,17 @@ void setup(){
 }
 
 void  loop(){   // run over and over again
-  byte centerX = GLCD.Width /2 ;
-  byte centerY = GLCD.Height / 2;
-  byte bottom = GLCD.Height -1;
   iter=0; 
   startMillis = millis();
   while(iter++ < 10){   // do 10 iterations
-    GLCD.DrawRect(0, 0, centerX, bottom); // rectangle in left side of screen
-    GLCD.DrawRoundRect(centerX + 2, 0, centerX -3, bottom, 5);  // rounded rectangle around text area   
-    for(int i=0; i < bottom; i += 4)
-      GLCD.DrawLine(1,1, centerX-1, i);  // draw lines from upper left down right side of rectangle  
-    GLCD.DrawCircle(centerX/2, centerY-1, centerY-2);   // draw circle centered in the left side of screen  
-    GLCD.FillRect( centerX + centerX/2-8 ,centerY + centerY/2 -8,16,16, WHITE); // clear previous spinner position  
-    drawSpinner(loops++, centerX + centerX/2, centerY + centerY/2);       // draw new spinner position
-    GLCD.GotoXY(centerX/2, bottom -15); // todo             
+    GLCD.DrawRect(0, 0, GLCD.CenterX, GLCD.Bottom); // rectangle in left side of screen
+    GLCD.DrawRoundRect(GLCD.CenterX + 2, 0, GLCD.CenterX - 3, GLCD.Bottom, 5);  // rounded rectangle around text area   
+    for(int i=0; i < GLCD.Bottom; i += 4)
+      GLCD.DrawLine(1,1, GLCD.CenterX-1, i);  // draw lines from upper left down right side of rectangle  
+    GLCD.DrawCircle(GLCD.CenterX/2, GLCD.CenterY-1, GLCD.CenterY-2);   // draw circle centered in the left side of screen  
+    GLCD.FillRect( GLCD.CenterX + GLCD.CenterX/2-8 ,GLCD.CenterY + GLCD.CenterY/2 -8,16,16, WHITE); // clear previous spinner position  
+    drawSpinner(loops++, GLCD.CenterX + GLCD.CenterX/2, GLCD.CenterY + GLCD.CenterY/2);       // draw new spinner position
+    GLCD.GotoXY(GLCD.CenterX/2, GLCD.Bottom -15); // todo             
     GLCD.print(iter);            // print current iteration at the current cursor position 
   } 
   // display iterations per second
@@ -61,8 +56,8 @@ void  loop(){   // run over and over again
   int fps = 10000 / duration;
   int fps_fract = (10000 % duration) / 10;
   GLCD.ClearScreen();               // clear the screen  
-  //  GLCD.CursorTo(centerX/8 + 1,1);   // position cursor - TODO 
-  GLCD.GotoXY(centerX + 4, centerY - 8);
+  //  GLCD.CursorTo(GLCD.CenterX/8 + 1,1);   // position cursor - TODO 
+  GLCD.GotoXY(GLCD.CenterX + 4, GLCD.CenterY - 8);
   GLCD.print("FPS=");               // print a text string
   GLCD.print(fps);              
   GLCD.print(".");
@@ -102,8 +97,8 @@ void showCharacters(){
   // this displays the fixed width system font  
   GLCD.CursorTo(0,0);
   GLCD.print("5x7 font:");
-  GLCD.DrawRoundRect(GLCD.Width/2 + 2, 0, GLCD.Width/2 -3, GLCD.Height-1, 5);  // rounded rectangle around text area 
-  textArea[1].DefineArea( GLCD.Width/2 + 5, 3, GLCD.Width -1-2, GLCD.Height -1-4, 1); 
+  GLCD.DrawRoundRect(GLCD.CenterX + 2, 0, GLCD.CenterX -3, GLCD.Bottom, 5);  // rounded rectangle around text area 
+  textArea[1].DefineArea( GLCD.CenterX + 5, 3, GLCD.Right-2, GLCD.Bottom-4, 1); 
   textArea[1].SelectFont(System5x7, BLACK);
   textArea[1].CursorTo(0,0);
   for(byte c = 32; c <=127; c++){
@@ -170,8 +165,23 @@ void scrollingDemo()
     GLCD.DrawBitmap(ArduinoIcon64x32, GLCD.Width /2 -16 + x, 0, WHITE);
     delay(50);
   }
+ 
+ // gotoxy using default text area  
+  textArea[0].SelectFont(Arial_14, WHITE);
+  for(x=0; x< 15; x++)
+  {
+    for(byte p = 0; p < GLCD.Height; p+=8)
+    {
+      GLCD.DrawHLine(0,p, 8);
+    }
+    GLCD.GotoXY(x,x);
+     GLCD.print("@ABCDFGHIJ");
+    delay(200);
+    GLCD.ClearScreen();
+  }
 
-  textArea[0].DefineArea(0,0, GLCD.Width-1,GLCD.Height-1, 1);
+  // CursorToXY using user defined text area  
+  textArea[0].DefineArea(0,0, GLCD.Right,GLCD.Bottom, 1);
   textArea[0].SelectFont(Arial_14, WHITE);
   for(x=0; x< 15; x++)
   {
@@ -186,10 +196,10 @@ void scrollingDemo()
   }
 
   GLCD.ClearScreen();  
-  textArea[0].DefineArea(0,0, GLCD.Width/2 -1,GLCD.Height/2 -1, 1);
+  textArea[0].DefineArea(0,0, GLCD.CenterX -1,GLCD.CenterY -1, 1);
   textArea[0].SelectFont(System5x7, WHITE);
   textArea[0].CursorTo(0,0);
-  textArea[1].DefineArea(GLCD.Width/2,0, GLCD.Width-1,GLCD.Height/2-1, -1);
+  textArea[1].DefineArea(GLCD.CenterX,0, GLCD.Right,GLCD.CenterY-1, -1);
   textArea[1].SelectFont(System5x7, BLACK);
   textArea[1].CursorTo(0,0);
   textArea[2].DefineArea(textAreaBOTTOM,1); 
@@ -213,7 +223,6 @@ void scrollingDemo()
   for(byte area = 0; area< 3; area++)
   {
      textArea[area].ClearArea();
-     delay(800);
   }
   for(x = 0; x< 15; x++)
   {
@@ -228,7 +237,7 @@ void scrollingDemo()
 
        textArea[area].print("\nline ");
        textArea[area].print(x);
-       delay(300);
+       delay(100);
     }
   }
   textArea[1].ClearArea();
@@ -239,7 +248,7 @@ void scrollingDemo()
   }
   if(GLCD.Height < 64)
   {
-     textArea[0].DefineArea(0,0,GLCD.Width/2-1, GLCD.Height-1, 1);
+     textArea[0].DefineArea(0,0,GLCD.CenterX-1, GLCD.Bottom-1, 1);
   }
 
   for(char c = 0x20; c < 0x7f; c++)
@@ -253,4 +262,3 @@ void scrollingDemo()
   }
   delay(2000);
 }
-
