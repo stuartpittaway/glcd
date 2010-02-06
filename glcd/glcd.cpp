@@ -100,7 +100,11 @@ void glcd::ClearPage(uint8_t page, uint8_t startX, uint8_t length, uint8_t color
 	if(startX + length > DISPLAY_WIDTH)
 		length = DISPLAY_WIDTH - startX;
 
-	this->GotoXY(startX, page * 8); 
+	/*
+  	 * calls to GotoXY from within this class call the device GotoXY method directly
+	 * calls to GotoXY from user programs are overriden to call CursorToXY
+	 */
+	glcd_Device::GotoXY(startX, page * 8); 
 	while(length--){
 		this->WriteData(color);
 	}
@@ -379,7 +383,7 @@ void glcd::InvertRect(uint8_t x, uint8_t y, uint8_t width, uint8_t height) {
 	/*
 	 * First do the fractional pages at the top of the region
 	 */
-	this->GotoXY(x, y);
+	glcd_Device::GotoXY(x, y);
 	for(i=0; i<=width; i++) {
 		data = this->ReadData();
 		tmpData = ~data;
@@ -393,7 +397,7 @@ void glcd::InvertRect(uint8_t x, uint8_t y, uint8_t width, uint8_t height) {
 	while(h+8 <= height) {
 		h += 8;
 		y += 8;
-		this->GotoXY(x, y);
+		glcd_Device::GotoXY(x, y);
 		
 		for(i=0; i<=width; i++) {
 			data = this->ReadData();
@@ -406,7 +410,7 @@ void glcd::InvertRect(uint8_t x, uint8_t y, uint8_t width, uint8_t height) {
 	 */
 	if(h < height) {
 		mask = ~(0xFF << (height-h));
-		this->GotoXY(x, y+8);
+		glcd_Device::GotoXY(x, y+8);
 		
 		for(i=0; i<=width; i++) {
 			data = this->ReadData();
@@ -485,7 +489,7 @@ uint8_t i, j;
 #endif
 
   for(j = 0; j < height / 8; j++) {
-     this->GotoXY(x, y + (j*8) );
+     glcd_Device::GotoXY(x, y + (j*8) );
 	 for(i = 0; i < width; i++) {
 		 uint8_t displayData = ReadPgmData(bitmap++);
 	   	 if(color == BLACK)
@@ -715,6 +719,13 @@ void glcd::CursorTo( uint8_t column, uint8_t row)    // 0 based coordinates for 
 	 */
 	Text.CursorTo(column, row); 
 }
+
+
+// override GotoXY to call CursorToxy
+void glcd::GotoXY(uint8_t x, uint8_t y)
+{
+  	Text.CursorToXY(x,y); 
+} 
 
 void glcd::CursorToXY( uint8_t x, uint8_t y)
 {
