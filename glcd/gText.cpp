@@ -499,8 +499,6 @@ void gText::SpecialChar(char c)
 
 	if(c == '\n')
 	{
-		//uint8_t x = device->Coord.x;  // new ta
-		// uint8_t y = device->Coord.y;
 		uint8_t height = FontRead(this->Font+FONT_HEIGHT);
 
 //printf("Newline: x: %d y:%d, tarea.x2: %d, tarea.y2: %d, height: %d\n", x, y, tarea.x2, tarea.y2, height);
@@ -511,9 +509,6 @@ void gText::SpecialChar(char c)
 		 * It looks better when using inverted (WHITE) text, on proportional fonts, and
 		 * doing WHITE scroll fills.
 		 *
-		 * REMEMBER: current drawing routines like FillRect() take
-		 * width/height arguments that are 1 less than what they really do.
-		 * The width/height arguments below take that into consideration.
 		 */
 
 		if(this->x < this->tarea.x2)
@@ -581,7 +576,8 @@ void gText::SpecialChar(char c)
 					this->tarea.x2, this->tarea.y2, pixels, this->FontColor == BLACK ? WHITE : BLACK);
 
 //printf("New XY: %d, %d\n", this->tarea.x1, this->tarea.y2 - height);
-				device->GotoXY(this->tarea.x1, this->tarea.y2 - height);
+				this->x = this->tarea.x1;
+				this->y = this->tarea.y2 - height;
 //kbwait();
 			
 			}
@@ -593,16 +589,7 @@ void gText::SpecialChar(char c)
 				 */
 
 				this->x = this->tarea.x1;
-				this->y = y+height+1;
-
-#ifdef NOTNEEDED
-				if(this->x < this->tarea.x2)
-					//device->SetPixels(x, y, this->tarea.x2, y+height, this->FontColor == BLACK ? WHITE : BLACK);
-					device->SetPixels(this->x, this->y, this->tarea.x2, this->y+height, WHITE);
-#endif
-
-				device->GotoXY(this->x, this->y);
-
+				this->y = this->y+height+1;
 			}
 		}
 #ifndef GLCD_NO_SCROLLDOWN
@@ -627,13 +614,6 @@ void gText::SpecialChar(char c)
 				 */
 				this->x = this->tarea.x1;
 				this->y = this->y - (height+1);
-#ifdef NOTNEEDED
-				if(this->x < this->tarea.x2)
-					//device->SetPixels(x, y, this->tarea.x2, y+height, this->FontColor == BLACK ? WHITE : BLACK);
-					device->SetPixels(this->x, this->y, this->tarea.x2, this->y+height, WHITE);
-#endif
-
-				device->GotoXY(this->x, this->y);
 			}
 			else
 			{
@@ -648,7 +628,9 @@ void gText::SpecialChar(char c)
 					this->tarea.x2, this->tarea.y2, pixels, this->FontColor == BLACK ? WHITE : BLACK);
 
 //printf("New XY: %d, %d\n", this->tarea.x1, this->tarea.y1);
-				device->GotoXY(this->tarea.x1, this->tarea.y1);
+
+				this->x = this->tarea.x1;
+				this->y = this->tarea.y1;
 			}
 		}
 #endif
@@ -684,7 +666,7 @@ int gText::PutChar(char c)
 //uint8_t waitflg = 0; // BAPDEBUG
 
 
-    if(FontRead == 0)
+    if(this->Font == 0)
 	  return 0; // no font selected
 
 	/*
@@ -705,9 +687,6 @@ int gText::PutChar(char c)
 	uint8_t charCount = FontRead(this->Font+FONT_CHAR_COUNT);
 	
 	uint16_t index = 0;
-	//uint8_t x = device->Coord.x, y = device->Coord.y;   // new TA
-	this->x = device->Coord.x; // new TA
-	this->y = device->Coord.y; 	// x ,y are now instance properties of the class  
 
 	if(c < firstChar || c >= (firstChar+charCount)) {
 		return 0; // invalid char
@@ -760,20 +739,15 @@ int gText::PutChar(char c)
 	if(this->x + width > this->tarea.x2)
 	{
 		this->PutChar('\n'); // fake a newline to cause wrap/scroll
-		/*
-		 * Re-fetch x/y coordinates after wrap/scroll.
-		 */
-		this->x = device->Coord.x;
-		this->y = device->Coord.y;
-
 		//waitflg++; // BAPDEBUG
-		
 	}
 
 	// last but not least, draw the character
 
 #ifndef GLCD_NEW_FONTDRAW
 /*================== OLD FONT DRAWING ============================*/
+	device->GotoXY(this->x, this->y);
+
 	/*
 	 * Draw each column of the glyph (character) horizontally
 	 * 8 bits (1 page) at a time.
@@ -821,7 +795,7 @@ int gText::PutChar(char c)
 		}
 		device->GotoXY(this->x, device->Coord.y+8);
 	}
-	device->GotoXY(this->x+width+1, this->y);
+	this->x = this->x+width+1;
 
 /*================== END of OLD FONT DRAWING ============================*/
 #else
@@ -830,8 +804,20 @@ int gText::PutChar(char c)
 
 	/*
 	 * Paint font data bits and write them to LCD memory 1 LCD page at a time.
-	 * This is very different from simply writing 1 page of font data
-	 * bits to LCD memory.
+	 * This is very different from simply reading 1 byte of font data
+	 * and writing all 8 bits to LCD memory and expecting the write data routine
+	 * to fragement the 8 bits across LCD 2 memory pages when necessary.
+	 * That method (really doesn't work) and reads and writes the same LCD page 
+	 * more than once as well is does not do sequential writes to memory.
+	 *
+	 * This method of rendering while much more complicated, somewhat scrambles the font 
+	 * data reads to ensure that all writes to LCD pages are always sequential and a given LCD
+	 * memory page is never read or written more than once.
+	 * And reads of LCD pages are only done at the top or bottom of the font data rendering
+	 * when necessary. 
+	 * i.e it ensures the absolute minimum number of LCD page accesses
+	 * as well as does the sequential writes as much as possible.
+	 *
 	 */
 
 //printf("NewFontDraw: c:<%c>, 0x%x> Font: %d (0x%x)\n", c, c, this->Font, this->Font);
@@ -1082,29 +1068,16 @@ int gText::PutChar(char c)
 
 
 	/*
-	 * At this point the X position has been advanced by writing the pages
-	 * so all that is necessary is to set the y position back to the upper pixel
-	 * where we started, to get ready for the next character.
-	 *
 	 * Since this rendering code always starts off with a GotoXY() it really isn't necessary
-	 * to do a real GotoXY() to set the h/w location. We can get away with only setting
-	 * the s/w version of X & Y.
+	 * to do a real GotoXY() to set the h/w location after rendering a character.
+	 * We can get away with only setting the s/w version of X & Y.
 	 *
-	 * NOTE/WARNING:
-	 * DO NOT change the code below to use the function GotoXY() to set the Y position.
-	 * Doing so, will break a specific wrap condition.
-	 * If the last page written is exactly the right most page of the display, the s/w X
-	 * postion will be beyond the valid limit and so a GotoXY() will fail.
-	 * An illegal s/w X value is intentional.
-	 * See the WriteData() routine for details.
+	 * Since y didn't change while rendering, it is still correct.
+	 * But update x for the pixels rendered.
 	 *
-	 * So to get around this issue, this code simply patches the s/w verions of the Y
-	 * value so that the next character written, will set it.
-	 *
-	 * While ugly, it is necessary and actually does save a few cycles over GotoXY()
 	 */
 
-	device->Coord.y = this->y;
+	this->x = this->x+width+1;
 
 /*================== END of NEW FONT DRAWING ============================*/
 
@@ -1190,13 +1163,12 @@ char c;
 
 void gText::CursorTo( uint8_t column, uint8_t row)
 {
-
 	/*
 	 * Text position is relative to current text area
 	 */
-  device->GotoXY( column * (FontRead(this->Font+FONT_FIXED_WIDTH)+1) + this->tarea.x1,
-	       row * (FontRead(this->Font+FONT_HEIGHT)+1) + this->tarea.y1
-		 ) ; 
+
+	this->x = column * (FontRead(this->Font+FONT_FIXED_WIDTH)+1) + this->tarea.x1;
+	this->y = row * (FontRead(this->Font+FONT_HEIGHT)+1) + this->tarea.y1;
 }
 
 /**
@@ -1217,7 +1189,8 @@ void gText::CursorToXY( uint8_t x, uint8_t y)
 	/*
 	 * Text position is relative to current text area
 	 */
-	device->GotoXY(this->tarea.x1 +x, this->tarea.y1 + y);
+	this->x = this->tarea.x1 + x;
+	this->y = this->tarea.y1 + y;
 }
 
 /**
@@ -1243,8 +1216,8 @@ void gText::CursorToXY( uint8_t x, uint8_t y)
 void gText::EraseTextLine( eraseLine_t type) 
 {
 
-	uint8_t x = device->Coord.x;
-	uint8_t y = device->Coord.y;
+	uint8_t x = this->x;
+	uint8_t y = this->y;
 	uint8_t height = FontRead(this->Font+FONT_HEIGHT);
 	uint8_t color = (this->FontColor == BLACK) ? WHITE : BLACK;
 
@@ -1264,7 +1237,7 @@ void gText::EraseTextLine( eraseLine_t type)
 	/*
 	 * restore cursor position
 	 */
-	device->GotoXY(x,y);
+	this->CursorToXY(x,y);
 }
 
 // erase the entire text line in the given row
@@ -1272,7 +1245,7 @@ void gText::EraseTextLine( eraseLine_t type)
 void gText::EraseTextLine( uint8_t row)
 {
    this->CursorTo(0, row);
-   EraseTextLine(eraseFROM_BOL);	
+   EraseTextLine(eraseFROM_EOL);	
 }
 
 

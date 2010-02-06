@@ -76,7 +76,7 @@ typedef uint8_t textMode;  // type holding mode for scrolling and future attribu
 // the only textMode supported in the current release is scrolling
 const textMode SCROLL_UP = 1;
 const textMode SCROLL_DOWN = 0; // this was changed from -1 so it can used in a bitmask 
-const textMode DEFAULT_SCROLLDIR = SCROLL_DOWN;
+const textMode DEFAULT_SCROLLDIR = SCROLL_UP;
 
 
 /*

@@ -18,6 +18,9 @@
 #include "bitmaps/ArduinoIcon64x64.h"  // 64x64 bitmap 
 #include "bitmaps/ArduinoIcon64x32.h"
 
+#define GotoXY CursorToXY
+
+
  // Create an array of text areas 
  // In a typical app, each text area would be a meaningful named variable
  // that is initialized when its declared 
@@ -176,7 +179,7 @@ void scrollingDemo()
     {
       GLCD.DrawHLine(0,p, 8);
     }
-    GLCD.GotoXY(x,x);
+     textArea[0].CursorToXY(x,x);
      textArea[0].print("@ABCDFGHIJ");
     delay(200);
     GLCD.ClearScreen();
@@ -210,6 +213,7 @@ void scrollingDemo()
   for(byte area = 0; area< 3; area++)
   {
      textArea[area].ClearArea();
+     delay(800);
   }
   for(x = 0; x< 15; x++)
   {
@@ -224,7 +228,7 @@ void scrollingDemo()
 
        textArea[area].print("\nline ");
        textArea[area].print(x);
-       delay(100);
+       delay(300);
     }
   }
   textArea[1].ClearArea();
