@@ -84,6 +84,7 @@ class glcd : public glcd_Device  // glcd_Device has low level device access rout
     void Puts_P(PGM_P str);  // this prints a string defined explicitly as a constant in program memory
 
 	void CursorTo( uint8_t column, uint8_t row); // 0 based coordinates for character columns and rows
+	void GotoXY(uint8_t x, uint8_t y);  // overrride for GotoXY in device class
 	void CursorToXY( uint8_t x, uint8_t y); // pixel coordinates 
 	void EraseTextLine( eraseLine_t type=eraseFROM_EOL); // default erases from the end of line
 	void EraseTextLine( uint8_t row); // erase the entire text line in the given row    
@@ -96,6 +97,10 @@ class glcd : public glcd_Device  // glcd_Device has low level device access rout
 	//Device Properties - these are read only constants	 
 	static const uint8_t Width = DISPLAY_WIDTH;
 	static const uint8_t Height = DISPLAY_HEIGHT;
+	static const uint8_t Right = DISPLAY_WIDTH-1;
+	static const uint8_t Bottom = DISPLAY_HEIGHT-1;
+	static const uint8_t CenterX = DISPLAY_WIDTH/2;
+	static const uint8_t CenterY = DISPLAY_HEIGHT/2;
 	
 };
 
