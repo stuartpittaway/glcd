@@ -130,7 +130,7 @@ uint8_t x2,y2;
  * @param y1 Y coordinate of upper left corner
  * @param x2 X coordinate of lower right corner
  * @param y2 Y coordinate of lower right corner
- * @param	mode	<0 it scrolls down/reverse, >0 up/normal
+ * @param	mode	constants SCROLL_DOWN and SCROLL_UP control scroll direction
  *
  * Defines a text area based on absolute coordinates.
  * The pixel coordinates for the text area are inclusive so x2,y2 is the lower right
@@ -143,12 +143,8 @@ uint8_t x2,y2;
  *
  * mode is an optional parameter and defaults to normal/up scrolling
  *
- * @return returns <FIXME NEED TEXT HERE>
- * Part of the comments say one thing yet the code does something else.
- * The difference being one function says on error nothing chanages, yet the code
- * gives you a full DISPLAY text area on an error.
- * This needs to be FIXED!!!!
- *
+ * @returns true with the given area selected if all the coordinates are valid,
+ * otherwise returns returns false with the area set to the full display
  *
  * @note
  * Upon creation of the text area, the cursor position for the text area will be set to x1, y1
