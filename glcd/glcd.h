@@ -77,7 +77,11 @@ class glcd : public glcd_Device  // glcd_Device has low level device access rout
 	// Text class
 	gText Text; // making this class public allows access to undocumented functions, not sure if we should allow that.
 	
+
+/// @cond hide_from_doxygen
+
     // Font Functions - this is public API for functionality in the Text class:
+
     void SelectFont(const uint8_t* font, uint8_t color=BLACK); // default arguments added, callback removed from public method
 	void SetFontColor(uint8_t color); // new method to change the selected fonts color
 	void SetTextMode(textMode mode);  // change to the given text mode (currently only scroll direction is supported)
@@ -93,6 +97,7 @@ class glcd : public glcd_Device  // glcd_Device has low level device access rout
     uint8_t CharWidth(char c);
     uint16_t StringWidth(const char* str);
     uint16_t StringWidth_P(PGM_P str);
+/// @endcond
 
 	//Device Properties - these are read only constants	 
 	static const uint8_t Width = DISPLAY_WIDTH;

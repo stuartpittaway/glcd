@@ -114,7 +114,7 @@ struct tarea
 	uint8_t y1;
 	uint8_t	x2;
 	uint8_t y2;
-	int8_t  scrolldir;	/* signed value, -1 is reverse scroll */
+	int8_t  mode;
 };
 
   
@@ -137,17 +137,17 @@ class gText : public Print
 	
   public:
 	gText(); // default - uses the entire display
-    gText(uint8_t x1, uint8_t y1, uint8_t x2, uint8_t y2, textMode scrolldir=DEFAULT_SCROLLDIR);
+    gText(uint8_t x1, uint8_t y1, uint8_t x2, uint8_t y2, textMode mode=DEFAULT_SCROLLDIR);
 	// 4 Feb - added two constuctors (and SetFontColor below) 
-	gText(predefinedArea selection, textMode scrolldir=DEFAULT_SCROLLDIR);
-	gText(uint8_t x1, uint8_t y1, uint8_t columns, uint8_t rows, const uint8_t* font, textMode scrolldir=DEFAULT_SCROLLDIR);
+	gText(predefinedArea selection, textMode mode=DEFAULT_SCROLLDIR);
+	gText(uint8_t x1, uint8_t y1, uint8_t columns, uint8_t rows, const uint8_t* font, textMode mode=DEFAULT_SCROLLDIR);
 
 	//void Init(glcd_Device* _device); // no longer used
 
 	// Text area functions
-	uint8_t DefineArea(uint8_t x1, uint8_t y1, uint8_t x2, uint8_t y2, textMode scrolldir=DEFAULT_SCROLLDIR);
-	uint8_t DefineArea(uint8_t x1, uint8_t y1, uint8_t columns, uint8_t rows, const uint8_t* font, textMode scrolldir=DEFAULT_SCROLLDIR);
-	uint8_t DefineArea(predefinedArea selection, textMode scrolldir=DEFAULT_SCROLLDIR);
+	uint8_t DefineArea(uint8_t x1, uint8_t y1, uint8_t x2, uint8_t y2, textMode mode=DEFAULT_SCROLLDIR);
+	uint8_t DefineArea(uint8_t x1, uint8_t y1, uint8_t columns, uint8_t rows, const uint8_t* font, textMode mode=DEFAULT_SCROLLDIR);
+	uint8_t DefineArea(predefinedArea selection, textMode mode=DEFAULT_SCROLLDIR);
 	void SetTextMode(textMode mode); // change to the given text mode
 	void ClearArea(void);
 

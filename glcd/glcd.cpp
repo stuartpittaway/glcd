@@ -27,6 +27,10 @@
 #define BITMAP_FIX // enables a bitmap rendering fix/patch
 
 
+glcd::glcd(){
+   this->Inverted=0; 
+}
+
 /**
  * Initilize the GLCD library and hardware
  *
@@ -46,9 +50,6 @@
  */
 
  
-glcd::glcd(){
-   this->Inverted=0; 
-}
 
 void glcd::Init(uint8_t invert){
     this->Inverted=invert;
@@ -73,6 +74,7 @@ void glcd::Init(uint8_t invert){
  *
  * Color is optional and defaults to WHITE.
  *
+ * @see ClearScreen()
  */
 
 void glcd::ClearPage(uint8_t page, uint8_t color){
@@ -421,7 +423,7 @@ void glcd::InvertRect(uint8_t x, uint8_t y, uint8_t width, uint8_t height) {
 	}
 }
 /**
- * Set LCD inverted mode
+ * Set LCD Display mode
  *
  * @param invert Inverted mode
  *
@@ -578,7 +580,7 @@ void glcd::DrawCircle(uint8_t xCenter, uint8_t yCenter, uint8_t radius, uint8_t 
  * @param xCenter X coordinate of the center of the circle
  * @param yCenter Y coordinate of the center of the circle
  * @param radius radius of circle
- * @param color
+ * @param color WHITE or BLACK
  *
  * Draws a filled in circle of the given radius extending out from
  * the center pixel.
@@ -670,6 +672,10 @@ uint8_t ReadPgmData(const uint8_t* ptr) {  // note this is a static function
 	return pgm_read_byte(ptr);
 }
 
+/*
+ * Below here are text functions
+ */
+
 
 void glcd::write(uint8_t c)  // method needed for Print base class
 {
@@ -693,12 +699,9 @@ void glcd::SetTextMode(textMode mode)
   Text.SetTextMode(mode);
 }
 
-void glcd::Puts_P(PGM_P str) {
-	char c;
-	while((c = pgm_read_byte(str)) != 0) {
-		write(c);//   was Text.PutChar(c);
-		str++;
-	}
+void glcd::Puts_P(PGM_P str)
+{
+  Text.Puts_P(str);
 }
 
 void glcd::EraseTextLine( eraseLine_t type) 
@@ -749,7 +752,7 @@ uint16_t glcd::StringWidth_P(PGM_P str)
 {
   return Text.StringWidth_P(str);
 }
- 
+
 
 // Make one instance for the user
 glcd GLCD = glcd();

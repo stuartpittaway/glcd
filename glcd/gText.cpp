@@ -28,37 +28,36 @@ gText::gText()
 
 // This constructor creates a text area with the given coordinates
 // full display area is used if any coordinate is invalid
-gText::gText(uint8_t x1, uint8_t y1, uint8_t x2, uint8_t y2, textMode scrolldir) 
+gText::gText(uint8_t x1, uint8_t y1, uint8_t x2, uint8_t y2, textMode mode) 
 {
    device = (glcd_Device*)&GLCD; 
-   if( ! this->DefineArea(x1,y1,x2,y2,scrolldir))
-       this->DefineArea(0,0,DISPLAY_WIDTH -1,DISPLAY_HEIGHT -1,scrolldir); // this should never fail
+   if( ! this->DefineArea(x1,y1,x2,y2,mode))
+       this->DefineArea(0,0,DISPLAY_WIDTH -1,DISPLAY_HEIGHT -1,mode); // this should never fail
 }
 
-gText::gText(predefinedArea selection, textMode scrolldir)
+gText::gText(predefinedArea selection, textMode mode)
 {
    device = (glcd_Device*)&GLCD; 
-   if( ! this->DefineArea(selection,scrolldir))
-       this->DefineArea(0,0,DISPLAY_WIDTH -1,DISPLAY_HEIGHT -1,scrolldir); // this should never fail
+   if( ! this->DefineArea(selection,mode))
+       this->DefineArea(0,0,DISPLAY_WIDTH -1,DISPLAY_HEIGHT -1,mode); // this should never fail
 
 }
 
-gText::gText(uint8_t x1, uint8_t y1, uint8_t columns, uint8_t rows, const uint8_t* font, textMode scrolldir)
+gText::gText(uint8_t x1, uint8_t y1, uint8_t columns, uint8_t rows, const uint8_t* font, textMode mode)
 {
    device = (glcd_Device*)&GLCD; 
-   if( ! this->DefineArea(x1,y1,columns,rows,font, scrolldir))
+   if( ! this->DefineArea(x1,y1,columns,rows,font, mode))
    {
-       this->DefineArea(0,0,DISPLAY_WIDTH -1,DISPLAY_HEIGHT -1,scrolldir); // this should never fail
+       this->DefineArea(0,0,DISPLAY_WIDTH -1,DISPLAY_HEIGHT -1,mode); // this should never fail
 	  this->SelectFont(font);
    }
 }
 
 /**
- * Clear the active text area with the current font background color
- * and home the cursor to upper left corner.
+ * Clear text area with the current font background color
+ * and home the cursor to upper left corner of the text area.
  *
  * @see DefineArea()
- * @see SelectArea()
  */
 void gText::ClearArea(void)
 {
@@ -79,13 +78,12 @@ void gText::ClearArea(void)
 /**
  * Define a Text area by columns and rows
  *
- * @param area the desired text area (0 to GLCD.Text.AreaCount)
  * @param x X coordinate of upper left corner
  * @param y Y coordinate of upper left corner
  * @param columns number of text columns
  * @param rows number of text rows
  * @param font a pointer defined in a font defintion file
- * @param scrolldir	<0 it scrolls down/reverse, >0 up/normal
+ * @param mode	<0 it scrolls down/reverse, >0 up/normal
  *
  *
  * Defines a text area sized to hold columns characters across and rows characters tall.
@@ -102,45 +100,37 @@ void gText::ClearArea(void)
  * x,y is an absolute coordinate and is relateive to the 0,0 origin of the
  * display.
  *
- * scrolldir is an optional parameter and defaults to normal/up
+ * mode is an optional parameter and defaults to normal/up scrolling
  *
  * @note
- * Upon creation of the text area, the cursor position for the text area will be set to x,y
- * While the x,y position of the text area being defined will be set to x,y 
- * if the text are being defined is different from the currently active text postion, the
- * x,y postion of the currently active text area will not be modified.
- *
+ * Upon defining the text area, the cursor position for the text area will be set to x,y
  *
  * @see ClearArea()
- * @see SelectArea()
  */
 // this function now only modifies an existing area, perhaps there is a more appropriate name
 // returns true if coordinates are valid, else returns false with nothing changed
-// use DEFAULT_SCROLLDIR if a scrolldir sanity check fails
+// use DEFAULT_SCROLLDIR if a mode sanity check fails
 uint8_t
-gText::DefineArea(uint8_t x, uint8_t y, uint8_t columns, uint8_t rows, const uint8_t* font, textMode scrolldir)
+gText::DefineArea(uint8_t x, uint8_t y, uint8_t columns, uint8_t rows, const uint8_t* font, textMode mode)
 {
-uint8_t arearval;
 uint8_t x2,y2;
-uint8_t active_area;
 
 	this->SelectFont(font);
 
 	x2 = x + columns * (FontRead(this->Font+FONT_FIXED_WIDTH)+1) -1;
 	y2 = y + rows * (FontRead(this->Font+FONT_HEIGHT)+1) -1;
 
-	return this->DefineArea(x, y, x2, y2, scrolldir);
+	return this->DefineArea(x, y, x2, y2, mode);
 }
 
 /**
  * Define a text area by absolute coordinates
  *
- * @param area the desired text area (0 to GLCD.Text.AreaCount)
  * @param x1 X coordinate of upper left corner
  * @param y1 Y coordinate of upper left corner
  * @param x2 X coordinate of lower right corner
  * @param y2 Y coordinate of lower right corner
- * @param	scrolldir	<0 it scrolls down/reverse, >0 up/normal
+ * @param	mode	<0 it scrolls down/reverse, >0 up/normal
  *
  * Defines a text area based on absolute coordinates.
  * The pixel coordinates for the text area are inclusive so x2,y2 is the lower right
@@ -151,24 +141,24 @@ uint8_t active_area;
  *
  * The area within the newly defined text area is intentionally not cleared.
  *
- * scrolldir is an optional parameter and defaults to normal/up
+ * mode is an optional parameter and defaults to normal/up scrolling
  *
- * @return returns @em area if successful.
+ * @return returns <FIXME NEED TEXT HERE>
+ * Part of the comments say one thing yet the code does something else.
+ * The difference being one function says on error nothing chanages, yet the code
+ * gives you a full DISPLAY text area on an error.
+ * This needs to be FIXED!!!!
  *
  *
  * @note
- * Upon creation of the text area, the cursor position for the text area will be set to x,y
- * While the x,y position of the text area being defined will be set to x,y 
- * if the text are being defined is different from the currently active text postion, the
- * x,y postion of the currently active text area will not be modified.
+ * Upon creation of the text area, the cursor position for the text area will be set to x1, y1
  *
  * @see ClearArea()
- * @see SelectArea()
  *
  */
 
 uint8_t
-gText::DefineArea(uint8_t x1, uint8_t y1, uint8_t x2, uint8_t y2, textMode scrolldir)
+gText::DefineArea(uint8_t x1, uint8_t y1, uint8_t x2, uint8_t y2, textMode mode)
 {
 uint8_t ret = false;
 	if(		(x1 >= x2)
@@ -184,7 +174,7 @@ uint8_t ret = false;
 		this->tarea.y1 = 0;
 		this->tarea.x2 = DISPLAY_WIDTH -1;
 		this->tarea.y2 = DISPLAY_HEIGHT -1;
-		this->tarea.scrolldir = DEFAULT_SCROLLDIR;
+		this->tarea.mode = DEFAULT_SCROLLDIR;
     } 		
 	else
 	{  
@@ -192,11 +182,12 @@ uint8_t ret = false;
 	    this->tarea.y1 = y1; 
 		this->tarea.x2 = x2; 
 	    this->tarea.y2 = y2; 		
-		this->tarea.scrolldir = scrolldir; // not yet sanity checked
+		this->tarea.mode = mode; // not yet sanity checked
 		ret = true;
     }		
-// bill does the cursor x,y need to be set here?	
-	// set cursor position for the area
+	/*
+	 * set cursor position for the area
+	 */
 	this->x = x1;
 	this->y = y1;	
 	
@@ -209,28 +200,27 @@ uint8_t ret = false;
  * @param area the desired text area (0 to GLCD.Text.AreaCount)
  * @param selection one of: textAreaFULL, textAreaTOP,  textAreaBOTTOM, textAreaLEFT, textAreaRIGHT,
  *                                textAreaTOPLEFT,textAreaTOPRIGHT,textAreaBOTTOMLEFT,textAreaBOTTOMRIGHT
- * @param	scrolldir	<0 it scrolls down/reverse, >0 up/normal
+ * @param	mode	<0 it scrolls down/reverse, >0 up/normal
  *
- * Defines a pre-selected text area
+ * Defines a text area using a predefined area.
  *
  * The area within the newly defined text area is intentionally not cleared.
  *
- * scrolldir is an optional parameter and defaults to normal/up
+ * mode is an optional parameter and defaults to normal/up scrolling
  *
- * @return returns @em area if successful.
+ * @return returns @em true if successful.
  *
  *
  * @note
- * Upon creation of the text area, the cursor position for the text area will be set to 
- * the upper left coordinate of the given preselected area
+ * Upon defining the text area, the cursor position for the text area will be set to 
+ * the upper left coordinate of the given predefined area
  *
  * @see ClearArea()
- * @see SelectArea()
  *
  */
 
 uint8_t
-gText::DefineArea(predefinedArea selection, textMode scrolldir)
+gText::DefineArea(predefinedArea selection, textMode mode)
 {
 uint8_t x1,y1,x2,y2;
 TareaToken tok;
@@ -242,7 +232,7 @@ TareaToken tok;
 	x2 =  tok.coord.x2;
 	y2 =  tok.coord.y2;
 
-	return this->DefineArea(x1,y1,x2,y2, scrolldir);
+	return this->DefineArea(x1,y1,x2,y2, mode);
 }
 
 /*
@@ -518,7 +508,7 @@ void gText::SpecialChar(char c)
 		 * Check for scroll up vs scroll down (scrollup is normal)
 		 */
 #ifndef GLCD_NO_SCROLLDOWN
-		if(this->tarea.scrolldir == SCROLL_UP)
+		if(this->tarea.mode == SCROLL_UP)
 #endif
 		{
 			/*
@@ -639,12 +629,12 @@ void gText::SpecialChar(char c)
 }
 
 /**
- * output a character to the currently selected text area
+ * output a character
  *
  * @param c the character to output
  *
  * If the character will not fit on the current text line
- * inside the currently selected text area,
+ * inside the text area,
  * the text position is wrapped to the next line. This might be
  * the next lower or the next higher line depending on the
  * scroll direction.
@@ -1095,8 +1085,7 @@ int gText::PutChar(char c)
  *
  * @param str pointer to a null terminated character string.
  *
- * Outputs all the characters in the string to the currently
- * selected text area. 
+ * Outputs all the characters in the string to the text area. 
  * See PutChar() for a full description of how characters are
  * written to the text area.
  *
@@ -1120,8 +1109,7 @@ void gText::Puts(char* str)
  *
  * @param str pointer to a null terminated character string stored in program memory
  *
- * Outputs all the characters in the string to the currently
- * selected text area. 
+ * Outputs all the characters in the string to the text area. 
  * See PutChar() for a full description of how characters are
  * written to the text area.
  *
@@ -1149,8 +1137,8 @@ char c;
  * @param row  specifies the vertical position
  *
  *	Column and Row are zero based character positions
- *	and are relative the the upper left corner of the currently
- *	selected text area base on the size of the currently selected font.
+ *	and are relative the the upper left corner of the
+ *	text area base on the size of the currently selected font.
  *
  * While intended for fixed width fonts, positioning will work for variable
  * width fonts.
@@ -1178,7 +1166,7 @@ void gText::CursorTo( uint8_t column, uint8_t row)
  * @param y  specifies the vertical locaion
  *
  *	X & Y are zero based pixel coordinates and are relative to 
- *	the upper left corner of the currently selected text area.
+ *	the upper left corner of the text area.
  *
  * @see CursorTo()
  */
@@ -1212,7 +1200,6 @@ void gText::CursorToXY( uint8_t x, uint8_t y)
  * @see ClearArea()
  */
 
-//void gText::EraseTextLine(uint8_t type)
 void gText::EraseTextLine( eraseLine_t type) 
 {
 
@@ -1240,8 +1227,17 @@ void gText::EraseTextLine( eraseLine_t type)
 	this->CursorToXY(x,y);
 }
 
-// erase the entire text line in the given row
-// cursor set to the first column of the given row
+/**
+ * Erase Text Line
+ *
+ * @param row row # of text to earase
+ *
+ * Erases a line of text and moves the cursor
+ * to the begining of the line.
+ *
+ * @see ClearArea()
+ */
+
 void gText::EraseTextLine( uint8_t row)
 {
    this->CursorTo(0, row);
@@ -1257,8 +1253,7 @@ void gText::EraseTextLine( uint8_t row)
  * @param callback optional font read routine
  *
  *
- * Selects the font definition as the current font for the currently
- * selected text area.
+ * Selects the font definition as the current font for the text area.
  *
  * All subsequent printing functions will use this font. 
  *
@@ -1284,18 +1279,40 @@ void gText::SelectFont(const uint8_t* font,uint8_t color, FontCallback callback)
 	this->FontColor = color;
 }
 
-void gText::SetFontColor(uint8_t color) // new method
+/**
+ * Select a font color
+ *
+ * @param color  can be WHITE or BLACK
+ *
+ *
+ * @see SelectFont()
+ * @see SetTextMode()
+ */
+
+void gText::SetFontColor(uint8_t color)
 {
    	this->FontColor = color;
 }
 
+/**
+ * Select a font color
+ *
+ * @param mode  text area mode
+ *
+ * mode is a scroll direction.
+ *
+ * @see SelectFont()
+ * @see SetFontColor()
+ */
 /*
- * currently the only supported mode is scrolldir
- * when other modes are added the tarea.scrolldir variable will hold a bitmask or enum for the modde and should be renamed
  */
 void gText::SetTextMode(textMode mode)
 {
-   this->tarea.scrolldir = mode; 
+
+/*
+ * when other modes are added the tarea.mode variable will hold a bitmask or enum for the modde and should be renamed
+ */
+   this->tarea.mode = mode; 
 } 
 	
 /**
@@ -1307,7 +1324,7 @@ void gText::SetTextMode(textMode mode)
  * including any inter-character gap pixels following the character when the character is
  * rendered on the display.
  *
- * @note The font for the character is the font of the currently selected text area.
+ * @note The font for the character is the most recently selected font.
  *
  * @see StringWidth()
  * @see StringWidth_P()
@@ -1380,7 +1397,7 @@ uint16_t gText::StringWidth_P(PGM_P str)
 	return width;
 }
 /**
- * output a character to the currently selected text area
+ * output a character to the text area
  * @param c the character to output
  *
  * This method is needed for the Print base class
