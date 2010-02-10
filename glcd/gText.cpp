@@ -107,9 +107,7 @@ void gText::ClearArea(void)
  *
  * @see ClearArea()
  */
-// this function now only modifies an existing area, perhaps there is a more appropriate name
-// returns true if coordinates are valid, else returns false with nothing changed
-// use DEFAULT_SCROLLDIR if a mode sanity check fails
+
 uint8_t
 gText::DefineArea(uint8_t x, uint8_t y, uint8_t columns, uint8_t rows, const uint8_t* font, textMode mode)
 {
@@ -487,9 +485,6 @@ void gText::SpecialChar(char c)
 	{
 		uint8_t height = FontRead(this->Font+FONT_HEIGHT);
 
-//printf("Newline: x: %d y:%d, tarea.x2: %d, tarea.y2: %d, height: %d\n", x, y, tarea.x2, tarea.y2, height);
-
-
 		/*
 		 * Erase all pixels remaining to edge of text area.on all wraps
 		 * It looks better when using inverted (WHITE) text, on proportional fonts, and
@@ -519,8 +514,6 @@ void gText::SpecialChar(char c)
 			 */
 			if(this->y + 2*height >= this->tarea.y2)
 			{
-//printf("Scroll Required: y: %d, height: %d, tarea.y2: %d\n", y, height, this->tarea.y2);
-
 				/*
 				 * forumula for pixels to scroll is:
 				 *	(assumes "height" is one less than rendered height)
@@ -561,15 +554,11 @@ void gText::SpecialChar(char c)
 				this->ScrollUp(this->tarea.x1, this->tarea.y1, 
 					this->tarea.x2, this->tarea.y2, pixels, this->FontColor == BLACK ? WHITE : BLACK);
 
-//printf("New XY: %d, %d\n", this->tarea.x1, this->tarea.y2 - height);
 				this->x = this->tarea.x1;
 				this->y = this->tarea.y2 - height;
-//kbwait();
-			
 			}
 			else
 			{
-//printf("Simple Wrap: to %d,%d\n", this->tarea.x1, y + height + 1);
 				/*
 				 * Room for simple wrap
 				 */
@@ -613,8 +602,6 @@ void gText::SpecialChar(char c)
 				this->ScrollDown(this->tarea.x1, this->tarea.y1, 
 					this->tarea.x2, this->tarea.y2, pixels, this->FontColor == BLACK ? WHITE : BLACK);
 
-//printf("New XY: %d, %d\n", this->tarea.x1, this->tarea.y1);
-
 				this->x = this->tarea.x1;
 				this->y = this->tarea.y1;
 			}
@@ -647,11 +634,6 @@ void gText::SpecialChar(char c)
 
 int gText::PutChar(char c)
 {
-
-//printf("PutChar: <0x%x>\n", c);
-//uint8_t waitflg = 0; // BAPDEBUG
-
-
     if(this->Font == 0)
 	  return 0; // no font selected
 
@@ -806,8 +788,6 @@ int gText::PutChar(char c)
 	 *
 	 */
 
-//printf("NewFontDraw: c:<%c>, 0x%x> Font: %d (0x%x)\n", c, c, this->Font, this->Font);
-
 	uint8_t pixels = height +1; /* 1 for gap below character*/
 	uint8_t p;
 	uint8_t dy;
@@ -816,13 +796,9 @@ int gText::PutChar(char c)
 	uint8_t dbyte;
 	uint8_t fdata;
 
-//printf("painting char: %d,%d  pixels: %d\n", x, y, pixels);
-
 	for(p = 0; p < pixels;)
 	{
 		dy = this->y + p;
-
-//printf("pixel loop: dy: %d, y: %d, p: %d\n", dy, y, p);
 
 		/*
 		 * Align to proper Column and page in LCD memory
@@ -880,8 +856,6 @@ int gText::PutChar(char c)
 				if((height > 8) && (height - (p&~7)) < 8)
 				{
 					fdata >>= 8 - (height & 7);
-//printf("Shifting font data: %d, p: %d\n", (8 - (height&7)), p);
-
 				}
 			}
 
@@ -902,8 +876,6 @@ int gText::PutChar(char c)
 				 * And there are 8 or more pixels left
 				 * to paint so a full byte write can be done.
 				 */
-
-//printf("no paint 8 bit write: j: %d p, %d, y: %d, dy: %d\n", j, p, y, dy);
 					
 					device->WriteData(fdata);
 					continue;
@@ -913,7 +885,6 @@ int gText::PutChar(char c)
 					/*
 					 * No, so must fetch byte from LCD memory.
 					 */
-//printf("Reading LCD data, %d,%d\n", device->Coord.x, device->Coord.y);
 					dbyte = device->ReadData();
 			}
 
@@ -928,15 +899,12 @@ int gText::PutChar(char c)
 			tfp = p;		/* font pixel bit position 		*/
 			dp = dy & 7;	/* data byte pixel bit position */
 
-//printf("painting: j: %d dy: %d, p: %d, tfp %d, dp: %d\n", j, dy, p, tfp, dp);
-
 			/*
 			 * paint bits until we hit bottom of page/byte
 			 * or run out of pixels to paint.
 			 */
 			while((dp <= 7) && (tfp) < pixels)
 			{
-//printf("paintloop: dp: %d, p: %d tfp: %d\n", dp, p, tfp);
 				if(fdata & _BV(tfp & 7))
 				{
 					dbyte |= _BV(dp);
@@ -951,7 +919,6 @@ int gText::PutChar(char c)
 				 */
 				if((tfp & 7)== 7)
 				{
-//printf("paintloop: fetching new font byte, page: %d j: %d\n", page, j);
 					fdata = FontRead(this->Font+index+page+j+width);
 
 					/*
@@ -967,7 +934,6 @@ int gText::PutChar(char c)
 					if((height > 8) && ((height - tfp) < 8))
 					{
 						fdata >>= (8 - (height & 7));
-//printf("paintloop: Shifting font data: %d, p: %d, tfp: %d\n", (8 - (height&7)), p, tfp);
 					}
 
 					if(this->FontColor == WHITE)
@@ -980,12 +946,8 @@ int gText::PutChar(char c)
 			/*
 			 * Now flush out the painted byte.
 			 */
-//printf("Flush painted byte %d,%d 0x%x\n", device->Coord.x, device->Coord.y, dbyte);
-
 			device->WriteData(dbyte);
 		}
-//printf("adding H gap: dy: %d p: %d, dp: %d\n", dy, p, dp);
-
 
 		/*
 		 * now create a horizontal gap (vertical line of pixels) between characters.
@@ -1035,8 +997,6 @@ int gText::PutChar(char c)
 				dbyte = 0;
 		}
 
-//printf("H gap write %d,%d 0x%x\n", device->Coord.x, device->Coord.y, dbyte);
-
 		device->WriteData(dbyte);
 
 		/*
@@ -1045,11 +1005,6 @@ int gText::PutChar(char c)
 		 */
 
 		p += 8 - (dy & 7);
-
-//printf("Bump p by %d\n", 8  - (dy & 7));
-//printf("New p: %d\n", p);
-
-		
 	}
 
 
