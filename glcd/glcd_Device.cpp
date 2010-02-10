@@ -59,6 +59,7 @@ glcd_Device::glcd_Device(){
  * Sets the pixel at location x,y to the specified color.
  * x and y are relative to the 0,0 origin of the display which
  * is the upper left corner.
+ * Requests to set pixels outside the range of the display will be ignored.
  *
  * @note If the display has been set to INVERTED mode then the colors
  * will be automically reversed.
@@ -68,6 +69,9 @@ glcd_Device::glcd_Device(){
 void glcd_Device::SetDot(uint8_t x, uint8_t y, uint8_t color) 
 {
 	uint8_t data;
+
+	if((x >= DISPLAY_WIDTH) || (y >= DISPLAY_HEIGHT))
+		return;
 	
 	this->GotoXY(x, y-y%8);					// read data from display memory
   	
