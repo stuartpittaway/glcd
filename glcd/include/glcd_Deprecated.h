@@ -16,10 +16,5 @@
 #define ClearSysTextLine(line) FillRect(0, (line*8), (DISPLAY_WIDTH-1), ((line*8)+ 7), WHITE )
 
 #define SetInverted(mode)	SetDisplayMode(mode)  // function renamed
-	
-// the following deprecated functions are replaced by Arduino style print methods
-#define PutChar(c)       print(c)
-#define Puts(str)        print(str)
-#define PrintNumber(n)   print(n)
 
 #endif
