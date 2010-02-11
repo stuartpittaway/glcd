@@ -161,6 +161,7 @@ class gText : public Print
 	void write(uint8_t c);  // character output for print base class
 
 	void CursorTo( uint8_t column, uint8_t row); // 0 based coordinates for character columns and rows
+	void CursorTo( int8_t column); // move cursor on the current row
 	void CursorToXY( uint8_t x, uint8_t y); // coordinates relative to active text area
 	uint8_t CharWidth(char c);
 	uint16_t StringWidth(const char* str);
