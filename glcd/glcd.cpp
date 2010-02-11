@@ -763,6 +763,45 @@ uint16_t glcd::StringWidth_P(PGM_P str)
   return Text.StringWidth_P(str);
 }
 
+/*
+ * These legacy print functions are almost 500 bytes smaller than
+ * output using the Arduino print class.
+ * Note that if any Arduino print function is included in a sketch then
+ * the entire class is linked
+ *
+ * It is suggested that the print class functions are used unless 
+ * absolute minimim code size is required.
+ */
+ 
+int glcd::PutChar(char c)
+{
+   Text.PutChar(c);
+}
+
+void glcd::Puts(char* str)
+{
+   Text.Puts(str);
+}
+
+void glcd::PrintNumber(long n)
+{
+   uint8_t buf[10];  // prints up to 10 digits  
+   uint8_t i=0;
+   if(n==0)
+	   Text.PutChar('0');
+   else{
+	 if(n < 0){
+        Text.PutChar('-');
+		n = -n;
+	 }
+     while(n>0 && i <= 10){
+	   buf[i++] = n % 10;  // n % base
+	   n /= 10;   // n/= base
+	 }
+	 for(; i >0; i--)
+		 Text.PutChar((char) (buf[i-1] < 10 ? '0' + buf[i-1] : 'A' + buf[i-1] - 10));	  
+   }
+}
 
 // Make one instance for the user
 glcd GLCD = glcd();
