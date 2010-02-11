@@ -1110,6 +1110,40 @@ void gText::CursorTo( uint8_t column, uint8_t row)
 	this->y = row * (FontRead(this->Font+FONT_HEIGHT)+1) + this->tarea.y1;
 }
 
+// Bill, I think the following would be a useful addition to the API
+// Should we add a sanity check to these?
+/**
+ * Positions cursor to a character based column on the current row.
+ *
+ * @param column specifies the horizontal position 
+ *
+ *	Column is a zero based character position
+ *	and is relative the the left edge of the
+ *	text area base on the size of the currently selected font.
+ *
+ * While intended for fixed width fonts, positioning will work for variable
+ * width fonts.
+ *
+ * When variable width fonts are used, the column is based on assuming a width
+ * of the widest character.
+ *
+ * if column is negative then the column position is relative to the current cursor
+ *
+ * @see CursorTo(column, row)
+ */
+void gText::CursorTo( int8_t column)
+{
+	/*
+	 * Text position is relative to current text area
+	 * negative value moves the cursor backwards
+	 */
+    if(column >= 0) 
+	  this->x = column * (FontRead(this->Font+FONT_FIXED_WIDTH)+1) + this->tarea.x1;
+	else
+   	  this->x -= column * (FontRead(this->Font+FONT_FIXED_WIDTH)+1);   	
+}
+
+
 /**
  * Positions cursor to a X,Y position
  *
