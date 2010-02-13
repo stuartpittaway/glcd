@@ -33,14 +33,15 @@
  * configuration information will need modification to work with the new library. 
  */
 
+#ifndef	GLCD_H
+#define GLCD_H
+
 #include <inttypes.h>
 #include <avr/pgmspace.h>
 
 #include "include/glcd_Device.h"
 #include "include/gText.h"
 
-#ifndef	GLCD_H
-#define GLCD_H
 
 #define GLCD_VERSION 3 // software version of this library
 

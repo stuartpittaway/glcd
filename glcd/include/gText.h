@@ -11,14 +11,15 @@
   version 2.1 of the License, or (at your option) any later version.
 */
 
+#ifndef	GTEXT_H
+#define GTEXT_H
+
 #include <inttypes.h>
 #include <avr/pgmspace.h>
 
 #include "include/glcd_Device.h"
 
 
-#ifndef	GTEXT_H
-#define GTEXT_H
 
 #define GTEXT_VERSION 1 // software version of this code
 
