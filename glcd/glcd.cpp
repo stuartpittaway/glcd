@@ -284,7 +284,7 @@ void glcd::DrawRect(uint8_t x, uint8_t y, uint8_t width, uint8_t height, uint8_t
 
 void glcd::DrawRoundRect(uint8_t x, uint8_t y, uint8_t width, uint8_t height, uint8_t radius, uint8_t color) {
   	int16_t tSwitch; 
-	uint8_t x1 = 0, y1 = radius; //BAPTEST
+	uint8_t x1 = 0, y1 = radius;
   	tSwitch = 3 - 2 * radius;
 	
 	while (x1 <= y1) {

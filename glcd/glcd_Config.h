@@ -18,25 +18,29 @@
   *
  */
 
+
 //#include "config/ks0108_Config.h"
 //#include "config/sed1520_Config.h"
+
+#include "debug/bap/bapdebug.h"
+
+//#include "debug/bap/Modagm1264f_Config-teensy++.h"
+#include "debug/bap/Modagm1264f_Config-bill.h"
+//#include "debug/bap/Modvk5121_Config-bill.h"
 
 
 /*================================== User Defines ==================================*/
 
-#define GLCD_TAREA_CNT	3 	// number of text areas, each text area costs ~12 bytes of RAM.
-
-
 //#define GLCD_NO_SCROLLDOWN	// disable reverse scrolling (saves ~600 bytes of code)
 				// This will allow those tight on FLASH space to save a bit of code space
 
-//#define GLCD_ATOMIC_IO	// Genrate code that ensures all pin i/o operations are atomic
+//#define GLCD_ATOMIC_IO	// Generate code that ensures all pin i/o operations are atomic
 				// including any potential nibble operations.
 				// Without this option enabled, nibble operations will be slightly faster but
 				// might have issues if a pin used shares a processor i/o port with an
 				// interrupt routine that updates pins/bits on the same port.
 
-#define GLCD_NEW_FONTDRAW	// turn on to get new font rendering
+//#define GLCD_OLD_FONTDRAW	// turn on to get old font rendering
 
 
 #endif

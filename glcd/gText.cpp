@@ -707,12 +707,11 @@ int gText::PutChar(char c)
 	if(this->x + width > this->tarea.x2)
 	{
 		this->PutChar('\n'); // fake a newline to cause wrap/scroll
-		//waitflg++; // BAPDEBUG
 	}
 
 	// last but not least, draw the character
 
-#ifndef GLCD_NEW_FONTDRAW
+#ifdef GLCD_OLD_FONTDRAW
 /*================== OLD FONT DRAWING ============================*/
 	device->GotoXY(this->x, this->y);
 
@@ -1024,9 +1023,6 @@ int gText::PutChar(char c)
 
 #endif // NEW_FONTDRAW
 
-//if(waitflg)
-//	kbwait();
-
 	return 1; // valid char
 }
 
@@ -1320,7 +1316,7 @@ uint8_t gText::CharWidth(char c)
 	uint8_t width = 0;
 	
     if(isFixedWidtFont(this->Font){
-		width = FontRead(this->Font+FONT_FIXED_WIDTH)+1;  // there is 1 pixel pad here BAP
+		width = FontRead(this->Font+FONT_FIXED_WIDTH)+1;  // there is 1 pixel pad here
 	} 
     else{ 
 	    // variable width font 

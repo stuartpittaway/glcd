@@ -178,9 +178,6 @@ void glcd_Device::GotoXY(uint8_t x, uint8_t y)
   uint8_t chip, cmd;
 
   if( (x > DISPLAY_WIDTH-1) || (y > DISPLAY_HEIGHT-1) ) {	// exit if coordinates are not legal  
-#ifdef BAPDEBUG_BADVALUES
-printf("gotoxy: badXY: %d,%d\n", x, y);
-#endif
     return;
   }
 
@@ -502,9 +499,6 @@ void glcd_Device::WriteData(uint8_t data) {
 	yOffset = this->Coord.y%8;
 
 	if(yOffset != 0) {
-#ifdef BAPDEBUG_WRITE
-printf("--------- Split page write: %d,%d 0x%x\n", this->Coord.x, this->Coord.y, data); //BAPDEBUG
-#endif
 		// first page
 		displayData = this->ReadData();
 		this->WaitReady(chip);
@@ -530,10 +524,6 @@ printf("--------- Split page write: %d,%d 0x%x\n", this->Coord.x, this->Coord.y,
 		_delayNanoseconds(GLCD_tWH);
 		glcd_DevENstrobeLo(chip);
 
-#ifdef BAPDEBUG_WRITE
-printf("WriteData: 2nd page write\n");
-delay(500);
-#endif
 		// second page
 
 		/*
