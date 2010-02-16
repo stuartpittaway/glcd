@@ -22,13 +22,6 @@
 //#include "config/ks0108_Config.h"
 //#include "config/sed1520_Config.h"
 
-#include "debug/bap/bapdebug.h"
-
-//#include "debug/bap/Modagm1264f_Config-teensy++.h"
-#include "debug/bap/Modagm1264f_Config-bill.h"
-//#include "debug/bap/Modvk5121_Config-bill.h"
-
-
 /*================================== User Defines ==================================*/
 
 //#define GLCD_NO_SCROLLDOWN	// disable reverse scrolling (saves ~600 bytes of code)
