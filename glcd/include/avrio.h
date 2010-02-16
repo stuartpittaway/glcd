@@ -1575,7 +1575,7 @@ do										\
  * already defined them.
  */
 
-#ifndef CORE_NUM_TOTAL_PINS
+#ifdef CORE_NUM_TOTAL_PINS
 /*
  * If teensy files are defining PIN_Pb defines, then there must
  * also be arduino mapping macros.
