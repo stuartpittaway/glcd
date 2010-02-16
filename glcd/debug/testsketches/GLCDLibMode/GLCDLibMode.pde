@@ -112,10 +112,10 @@ void showGLCDconfig(void)
 
 	delay(CONFIG_DELAY);
 	GLCD.Text.print("Text Render: ");
-#ifdef GLCD_NEW_FONTDRAW
-	GLCD.Text.println("NEW");
-#else
+#ifdef GLCD_OLD_FONTDRAW
 	GLCD.Text.println("OLD");
+#else
+	GLCD.Text.println("NEW");
 #endif
 
 	/*
