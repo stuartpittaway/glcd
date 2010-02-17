@@ -72,6 +72,8 @@ void showGLCDconfig(void)
 			GLCD.Text.print("nibble");
 #ifndef GLCD_ATOMIC_IO
 			GLCD.Text.print("-na");
+#else
+			GLCD.Text.print("-dis"); // for now this "knows" avrio disabled nibbles when in atomic mode.
 #endif
 		}
 		else
@@ -97,14 +99,6 @@ void showGLCDconfig(void)
 		}
 		GLCD.Text.print("\n");
 	}
-
-	/*
-	 * Show number of text areas
-	 */
-
-	delay(CONFIG_DELAY);
-	GLCD.Text.print("Text Areas: ");
-	GLCD.Text.println(GLCD_TAREA_CNT);
 
 	/*
  	 * Show font rendering:
