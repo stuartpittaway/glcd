@@ -22,8 +22,8 @@
 
 
 #ifdef glcd_CHIP1
-#define glcd_CHIP_COUNT (DISPLAY_WIDTH / CHIP_WIDTH)
-static uint8_t chipSelect[glcd_CHIP_COUNT] ; //static array for sequencing chip selects
+#define glcd_CHIP_COUNT ((DISPLAY_WIDTH + CHIP_WIDTH - 1)  / CHIP_WIDTH) // round up if width is not evenly divisable
+static uint8_t chipSelect[glcd_CHIP_COUNT] ; //static array for sequencing chip, order is given in config file
 #endif
 
 /*
@@ -242,8 +242,11 @@ void glcd_Device::Init(uint8_t invert)
     chipSelect[0] =  glcd_CHIP1;
     chipSelect[1] =  glcd_CHIP2;
 #endif	
-#if glcd_CHIP_COUNT > 2	
-	chipSelect[2] =  glcd_CHIP3;
+#ifdef  glcd_CHIP3
+	chipSelect[2] =  glcd_CHIP3;  // displays that are larger than 128 pixels
+#endif
+#ifdef  glcd_CHIP4
+	chipSelect[3] =  glcd_CHIP4;  // displays that are larger than 192 pixels
 #endif
 
 	/*
@@ -353,7 +356,7 @@ void glcd_Device::Init(uint8_t invert)
 #ifdef glcd_CHIP1
 __inline__ void glcd_Device::SelectChip(uint8_t chip)
 {  
-#ifndef NEW_CHIPSELECT
+#ifndef NEW_CHIPSELECT  // bill is this define now obsolete??
 
 	if(chipSelect[chip] & 1)
        lcdfastWrite(glcdCSEL1, HIGH);
