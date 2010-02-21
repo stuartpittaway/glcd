@@ -15,4 +15,4 @@ where x and y are the desired location of the upper left edge of the bitmap
 The utility is written in the Processing languge.
 The pde file runs in the Proccessing environment on your computer, not on Arduino.
 See: http://processing.org/
-Executable versions of this utility are in directories for the relevant operating systems
+Executable versions of this utility are in directories for the relevant operating systems
