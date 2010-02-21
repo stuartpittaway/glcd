@@ -737,6 +737,7 @@ void glcd::CursorTo( uint8_t column, uint8_t row)    // 0 based coordinates for 
 // override GotoXY to call CursorToxy
 void glcd::GotoXY(uint8_t x, uint8_t y)
 {
+	glcd_Device::GotoXY(x, y);
   	Text.CursorToXY(x,y); 
 } 
 
