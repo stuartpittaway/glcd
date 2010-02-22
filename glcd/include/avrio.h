@@ -204,53 +204,57 @@ static inline avrpin_t  avrio_arduino_pin2avrpin(uint8_t pin) __attribute__((alw
 avrpin_t
 avrio_arduino_pin2avrpin(uint8_t pin)
 {
+uint8_t avrbit = digitalPinToBit(pin);
+volatile void *avrportaddr = digitalPinToPortReg(pin);
+
+
 #ifdef PORTA
-	if(digitalPinToPortReg(pin) == &PORTA)
-		return(AVRIO_PIN(AVRIO_PORTA, digitalPinToBit(pin)));
+	if(avrportaddr == &PORTA)
+		return(AVRIO_PIN(AVRIO_PORTA, avrbit));
 #endif
 #ifdef PORTB
-	if(digitalPinToPortReg(pin) == &PORTB)
-		return(AVRIO_PIN(AVRIO_PORTB, digitalPinToBit(pin)));
+	if(avrportaddr == &PORTB)
+		return(AVRIO_PIN(AVRIO_PORTB, avrbit));
 #endif
 #ifdef PORTC
-	if(digitalPinToPortReg(pin) == &PORTC)
-		return(AVRIO_PIN(AVRIO_PORTC, digitalPinToBit(pin)));
+	if(avrportaddr == &PORTC)
+		return(AVRIO_PIN(AVRIO_PORTC, avrbit));
 #endif
 #ifdef PORTD
-	if(digitalPinToPortReg(pin) == &PORTD)
-		return(AVRIO_PIN(AVRIO_PORTD, digitalPinToBit(pin)));
+	if(avrportaddr == &PORTD)
+		return(AVRIO_PIN(AVRIO_PORTD, avrbit));
 #endif
 #ifdef PORTE
-	if(digitalPinToPortReg(pin) == &PORTE)
-		return(AVRIO_PIN(AVRIO_PORTE, digitalPinToBit(pin)));
+	if(avrportaddr == &PORTE)
+		return(AVRIO_PIN(AVRIO_PORTE, avrbit));
 #endif
 #ifdef PORTF
-	if(digitalPinToPortReg(pin) == &PORTF)
-		return(AVRIO_PIN(AVRIO_PORTF, digitalPinToBit(pin)));
+	if(avrportaddr == &PORTF)
+		return(AVRIO_PIN(AVRIO_PORTF, avrbit));
 #endif
 #ifdef PORTG
-	if(digitalPinToPortReg(pin) == &PORTG)
-		return(AVRIO_PIN(AVRIO_PORTG, digitalPinToBit(pin)));
+	if(avrportaddr == &PORTG)
+		return(AVRIO_PIN(AVRIO_PORTG, avrbit));
 #endif
 #ifdef PORTH
-	if(digitalPinToPortReg(pin) == &PORTH)
-		return(AVRIO_PIN(AVRIO_PORTH, digitalPinToBit(pin)));
+	if(avrportaddr == &PORTH)
+		return(AVRIO_PIN(AVRIO_PORTH, avrbit));
 #endif
 #ifdef PORTI
-	if(digitalPinToPortReg(pin) == &PORTI)
-		return(AVRIO_PIN(AVRIO_PORTI, digitalPinToBit(pin)));
+	if(avrportaddr == &PORTI)
+		return(AVRIO_PIN(AVRIO_PORTI, avrbit));
 #endif
 #ifdef PORTJ
-	if(digitalPinToPortReg(pin) == &PORTJ)
-		return(AVRIO_PIN(AVRIO_PORTJ, digitalPinToBit(pin)));
+	if(avrportaddr == &PORTJ)
+		return(AVRIO_PIN(AVRIO_PORTJ, avrbit));
 #endif
 #ifdef PORTK
-	if(digitalPinToPortReg(pin) == &PORTK)
-		return(AVRIO_PIN(AVRIO_PORTK, digitalPinToBit(pin)));
+	if(avrportaddr == &PORTK)
+		return(AVRIO_PIN(AVRIO_PORTK, avrbit));
 #endif
 #ifdef PORTL
-	if(digitalPinToPortReg(pin) == &PORTL)
-		return(AVRIO_PIN(AVRIO_PORTL, digitalPinToBit(pin)));
+	if(avrportaddr == &PORTL)
+		return(AVRIO_PIN(AVRIO_PORTL, avrbit));
 #endif
 	return(-1);
 }
