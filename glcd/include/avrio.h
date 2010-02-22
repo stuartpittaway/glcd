@@ -388,225 +388,228 @@ static inline void avrio_WriteBit(uint8_t regtyp, avrpin_t pin, uint8_t val) __a
 void
 avrio_WriteBit(uint8_t regtyp, avrpin_t avrpin, uint8_t val)					
 {									
+uint8_t avrbitmask = AVRIO_PIN2AVRBITMASK(avrpin);
+uint8_t avrport = AVRIO_PIN2AVRPORT(avrpin);
+
         if (val) {                                                      
-                if (AVRIO_PIN2AVRPORT(avrpin) == AVRIO_PORTA) {				
+                if (avrport == AVRIO_PORTA) {				
 #ifdef PORTA
 			if(regtyp == AVRIO_DDRREG)
-				DDRA |= AVRIO_PIN2AVRBITMASK(avrpin);
+				DDRA |= avrbitmask;
 			else if ( regtyp == AVRIO_PINREG)
-				PINA |= AVRIO_PIN2AVRBITMASK(avrpin);
+				PINA |= avrbitmask;
 			else if ( regtyp == AVRIO_PORTREG)
-				PORTA |= AVRIO_PIN2AVRBITMASK(avrpin);
+				PORTA |= avrbitmask;
 #endif
 #ifdef PORTB
-                } else if (AVRIO_PIN2AVRPORT(avrpin) == AVRIO_PORTB) {				
+                } else if (avrport == AVRIO_PORTB) {				
 			if(regtyp == AVRIO_DDRREG)
-				DDRB |= AVRIO_PIN2AVRBITMASK(avrpin);
+				DDRB |= avrbitmask;
 			else if ( regtyp == AVRIO_PINREG)
-				PINB |= AVRIO_PIN2AVRBITMASK(avrpin);
+				PINB |= avrbitmask;
 			else if ( regtyp == AVRIO_PORTREG)
-				PORTB |= AVRIO_PIN2AVRBITMASK(avrpin);
+				PORTB |= avrbitmask;
 #endif
 #ifdef PORTC
-                } else if (AVRIO_PIN2AVRPORT(avrpin) == AVRIO_PORTC) {				
+                } else if (avrport == AVRIO_PORTC) {				
 			if(regtyp == AVRIO_DDRREG)
-				DDRC |= AVRIO_PIN2AVRBITMASK(avrpin);
+				DDRC |= avrbitmask;
 			else if ( regtyp == AVRIO_PINREG)
-				PINC |= AVRIO_PIN2AVRBITMASK(avrpin);
+				PINC |= avrbitmask;
 			else if ( regtyp == AVRIO_PORTREG)
-				PORTC |= AVRIO_PIN2AVRBITMASK(avrpin);
+				PORTC |= avrbitmask;
 #endif
 #ifdef PORTD
-                } else if (AVRIO_PIN2AVRPORT(avrpin) == AVRIO_PORTD) {				
+                } else if (avrport == AVRIO_PORTD) {				
 			if(regtyp == AVRIO_DDRREG)
-				DDRD |= AVRIO_PIN2AVRBITMASK(avrpin);
+				DDRD |= avrbitmask;
 			else if ( regtyp == AVRIO_PINREG)
-				PIND |= AVRIO_PIN2AVRBITMASK(avrpin);
+				PIND |= avrbitmask;
 			else if ( regtyp == AVRIO_PORTREG)
-				PORTD |= AVRIO_PIN2AVRBITMASK(avrpin);
+				PORTD |= avrbitmask;
 #endif
 #ifdef PORTE
-                } else if (AVRIO_PIN2AVRPORT(avrpin) == AVRIO_PORTE) {				
+                } else if (avrport == AVRIO_PORTE) {				
 			if(regtyp == AVRIO_DDRREG)
-				DDRE |= AVRIO_PIN2AVRBITMASK(avrpin);
+				DDRE |= avrbitmask;
 			else if ( regtyp == AVRIO_PINREG)
-				PINE |= AVRIO_PIN2AVRBITMASK(avrpin);
+				PINE |= avrbitmask;
 			else if ( regtyp == AVRIO_PORTREG)
-				PORTE |= AVRIO_PIN2AVRBITMASK(avrpin);
+				PORTE |= avrbitmask;
 #endif
 #ifdef PORTF
-                } else if (AVRIO_PIN2AVRPORT(avrpin) == AVRIO_PORTF) {				
+                } else if (avrport == AVRIO_PORTF) {				
 			if(regtyp == AVRIO_DDRREG)
-				DDRF |= AVRIO_PIN2AVRBITMASK(avrpin);
+				DDRF |= avrbitmask;
 			else if ( regtyp == AVRIO_PINREG)
-				PINF |= AVRIO_PIN2AVRBITMASK(avrpin);
+				PINF |= avrbitmask;
 			else if ( regtyp == AVRIO_PORTREG)
-				PORTF |= AVRIO_PIN2AVRBITMASK(avrpin);
+				PORTF |= avrbitmask;
 #endif
 #ifdef PORTG
-                } else if (AVRIO_PIN2AVRPORT(avrpin) == AVRIO_PORTG) {				
+                } else if (avrport == AVRIO_PORTG) {				
 			if(regtyp == AVRIO_DDRREG)
-				DDRG |= AVRIO_PIN2AVRBITMASK(avrpin);
+				DDRG |= avrbitmask;
 			else if ( regtyp == AVRIO_PINREG)
-				PING |= AVRIO_PIN2AVRBITMASK(avrpin);
+				PING |= avrbitmask;
 			else if ( regtyp == AVRIO_PORTREG)
-				PORTG |= AVRIO_PIN2AVRBITMASK(avrpin);
+				PORTG |= avrbitmask;
 #endif
 #ifdef PORTH
-                } else if (AVRIO_PIN2AVRPORT(avrpin) == AVRIO_PORTH) {				
+                } else if (avrport == AVRIO_PORTH) {				
 			if(regtyp == AVRIO_DDRREG)
-				DDRH |= AVRIO_PIN2AVRBITMASK(avrpin);
+				DDRH |= avrbitmask;
 			else if ( regtyp == AVRIO_PINREG)
-				PINH |= AVRIO_PIN2AVRBITMASK(avrpin);
+				PINH |= avrbitmask;
 			else if ( regtyp == AVRIO_PORTREG)
-				PORTH |= AVRIO_PIN2AVRBITMASK(avrpin);
+				PORTH |= avrbitmask;
 #endif
 #ifdef PORTI
-                } else if (AVRIO_PIN2AVRPORT(avrpin) == AVRIO_PORTI) {				
+                } else if (avrport == AVRIO_PORTI) {				
 			if(regtyp == AVRIO_DDRREG)
-				DDRI |= AVRIO_PIN2AVRBITMASK(avrpin);
+				DDRI |= avrbitmask;
 			else if ( regtyp == AVRIO_PINREG)
-				PINI |= AVRIO_PIN2AVRBITMASK(avrpin);
+				PINI |= avrbitmask;
 			else if ( regtyp == AVRIO_PORTREG)
-				PORTI |= AVRIO_PIN2AVRBITMASK(avrpin);
+				PORTI |= avrbitmask;
 #endif
 #ifdef PORTJ
-                } else if (AVRIO_PIN2AVRPORT(avrpin) == AVRIO_PORTJ) {				
+                } else if (avrport == AVRIO_PORTJ) {				
 			if(regtyp == AVRIO_DDRREG)
-				DDRJ |= AVRIO_PIN2AVRBITMASK(avrpin);
+				DDRJ |= avrbitmask;
 			else if ( regtyp == AVRIO_PINREG)
-				PINJ |= AVRIO_PIN2AVRBITMASK(avrpin);
+				PINJ |= avrbitmask;
 			else if ( regtyp == AVRIO_PORTREG)
-				PORTJ |= AVRIO_PIN2AVRBITMASK(avrpin);
+				PORTJ |= avrbitmask;
 #endif
 #ifdef PORTK
-                } else if (AVRIO_PIN2AVRPORT(avrpin) == AVRIO_PORTK) {				
+                } else if (avrport == AVRIO_PORTK) {				
 			if(regtyp == AVRIO_DDRREG)
-				DDRK |= AVRIO_PIN2AVRBITMASK(avrpin);
+				DDRK |= avrbitmask;
 			else if ( regtyp == AVRIO_PINREG)
-				PINK |= AVRIO_PIN2AVRBITMASK(avrpin);
+				PINK |= avrbitmask;
 			else if ( regtyp == AVRIO_PORTREG)
-				PORTK |= AVRIO_PIN2AVRBITMASK(avrpin);
+				PORTK |= avrbitmask;
 #endif
 #ifdef PORTL
-                } else if (AVRIO_PIN2AVRPORT(avrpin) == AVRIO_PORTL) {				
+                } else if (avrport == AVRIO_PORTL) {				
 			if(regtyp == AVRIO_DDRREG)
-				DDRL |= AVRIO_PIN2AVRBITMASK(avrpin);
+				DDRL |= avrbitmask;
 			else if ( regtyp == AVRIO_PINREG)
-				PINL |= AVRIO_PIN2AVRBITMASK(avrpin);
+				PINL |= avrbitmask;
 			else if ( regtyp == AVRIO_PORTREG)
-				PORTL |= AVRIO_PIN2AVRBITMASK(avrpin);
+				PORTL |= avrbitmask;
 #endif
                 } else {                                                
                 }                                                       
         } else {                                                        
-                if (AVRIO_PIN2AVRPORT(avrpin) == AVRIO_PORTA) {				
+                if (avrport == AVRIO_PORTA) {				
 #ifdef PORTA
 			if(regtyp == AVRIO_DDRREG)
-				DDRA &= ~AVRIO_PIN2AVRBITMASK(avrpin);
+				DDRA &= ~avrbitmask;
 			else if ( regtyp == AVRIO_PINREG)
-				PINA &= ~AVRIO_PIN2AVRBITMASK(avrpin);
+				PINA &= ~avrbitmask;
 			else if ( regtyp == AVRIO_PORTREG)
-				PORTA &= ~AVRIO_PIN2AVRBITMASK(avrpin);
+				PORTA &= ~avrbitmask;
 #endif
 #ifdef PORTB
-                } else if (AVRIO_PIN2AVRPORT(avrpin) == AVRIO_PORTB) {				
+                } else if (avrport == AVRIO_PORTB) {				
 			if(regtyp == AVRIO_DDRREG)
-				DDRB &= ~AVRIO_PIN2AVRBITMASK(avrpin);
+				DDRB &= ~avrbitmask;
 			else if ( regtyp == AVRIO_PINREG)
-				PINB &= ~AVRIO_PIN2AVRBITMASK(avrpin);
+				PINB &= ~avrbitmask;
 			else if ( regtyp == AVRIO_PORTREG)
-				PORTB &= ~AVRIO_PIN2AVRBITMASK(avrpin);
+				PORTB &= ~avrbitmask;
 #endif
 #ifdef PORTC
-                } else if (AVRIO_PIN2AVRPORT(avrpin) == AVRIO_PORTC) {				
+                } else if (avrport == AVRIO_PORTC) {				
 			if(regtyp == AVRIO_DDRREG)
-				DDRC &= ~AVRIO_PIN2AVRBITMASK(avrpin);
+				DDRC &= ~avrbitmask;
 			else if ( regtyp == AVRIO_PINREG)
-				PINC &= ~AVRIO_PIN2AVRBITMASK(avrpin);
+				PINC &= ~avrbitmask;
 			else if ( regtyp == AVRIO_PORTREG)
-				PORTC &= ~AVRIO_PIN2AVRBITMASK(avrpin);
+				PORTC &= ~avrbitmask;
 #endif
 #ifdef PORTD
-                } else if (AVRIO_PIN2AVRPORT(avrpin) == AVRIO_PORTD) {				
+                } else if (avrport == AVRIO_PORTD) {				
 			if(regtyp == AVRIO_DDRREG)
-				DDRD &= ~AVRIO_PIN2AVRBITMASK(avrpin);
+				DDRD &= ~avrbitmask;
 			else if ( regtyp == AVRIO_PINREG)
-				PIND &= ~AVRIO_PIN2AVRBITMASK(avrpin);
+				PIND &= ~avrbitmask;
 			else if ( regtyp == AVRIO_PORTREG)
-				PORTD &= ~AVRIO_PIN2AVRBITMASK(avrpin);
+				PORTD &= ~avrbitmask;
 #endif
 #ifdef PORTE
-                } else if (AVRIO_PIN2AVRPORT(avrpin) == AVRIO_PORTE) {				
+                } else if (avrport == AVRIO_PORTE) {				
 			if(regtyp == AVRIO_DDRREG)
-				DDRE &= ~AVRIO_PIN2AVRBITMASK(avrpin);
+				DDRE &= ~avrbitmask;
 			else if ( regtyp == AVRIO_PINREG)
-				PINE &= ~AVRIO_PIN2AVRBITMASK(avrpin);
+				PINE &= ~avrbitmask;
 			else if ( regtyp == AVRIO_PORTREG)
-				PORTE &= ~AVRIO_PIN2AVRBITMASK(avrpin);
+				PORTE &= ~avrbitmask;
 #endif
 #ifdef PORTF
-                } else if (AVRIO_PIN2AVRPORT(avrpin) == AVRIO_PORTF) {
+                } else if (avrport == AVRIO_PORTF) {
 			if(regtyp == AVRIO_DDRREG)
-				DDRF &= ~AVRIO_PIN2AVRBITMASK(avrpin);
+				DDRF &= ~avrbitmask;
 			else if ( regtyp == AVRIO_PINREG)
-				PINF &= ~AVRIO_PIN2AVRBITMASK(avrpin);
+				PINF &= ~avrbitmask;
 			else if ( regtyp == AVRIO_PORTREG)
-				PORTF &= ~AVRIO_PIN2AVRBITMASK(avrpin);
+				PORTF &= ~avrbitmask;
 #endif
 #ifdef PORTG
-                } else if (AVRIO_PIN2AVRPORT(avrpin) == AVRIO_PORTG) {
+                } else if (avrport == AVRIO_PORTG) {
 			if(regtyp == AVRIO_DDRREG)
-				DDRG &= ~AVRIO_PIN2AVRBITMASK(avrpin);
+				DDRG &= ~avrbitmask;
 			else if ( regtyp == AVRIO_PINREG)
-				PING &= ~AVRIO_PIN2AVRBITMASK(avrpin);
+				PING &= ~avrbitmask;
 			else if ( regtyp == AVRIO_PORTREG)
-				PORTG &= ~AVRIO_PIN2AVRBITMASK(avrpin);
+				PORTG &= ~avrbitmask;
 #endif
 #ifdef PORTH
-                } else if (AVRIO_PIN2AVRPORT(avrpin) == AVRIO_PORTH) {
+                } else if (avrport == AVRIO_PORTH) {
 			if(regtyp == AVRIO_DDRREG)
-				DDRH &= ~AVRIO_PIN2AVRBITMASK(avrpin);
+				DDRH &= ~avrbitmask;
 			else if ( regtyp == AVRIO_PINREG)
-				PINH &= ~AVRIO_PIN2AVRBITMASK(avrpin);
+				PINH &= ~avrbitmask;
 			else if ( regtyp == AVRIO_PORTREG)
-				PORTH &= ~AVRIO_PIN2AVRBITMASK(avrpin);
+				PORTH &= ~avrbitmask;
 #endif
 #ifdef PORTI
-                } else if (AVRIO_PIN2AVRPORT(avrpin) == AVRIO_PORTI) {
+                } else if (avrport == AVRIO_PORTI) {
 			if(regtyp == AVRIO_DDRREG)
-				DDRI &= ~AVRIO_PIN2AVRBITMASK(avrpin);
+				DDRI &= ~avrbitmask;
 			else if ( regtyp == AVRIO_PINREG)
-				PINI &= ~AVRIO_PIN2AVRBITMASK(avrpin);
+				PINI &= ~avrbitmask;
 			else if ( regtyp == AVRIO_PORTREG)
-				PORTI &= ~AVRIO_PIN2AVRBITMASK(avrpin);
+				PORTI &= ~avrbitmask;
 #endif
 #ifdef PORTJ
-                } else if (AVRIO_PIN2AVRPORT(avrpin) == AVRIO_PORTJ) {				
+                } else if (avrport == AVRIO_PORTJ) {				
 			if(regtyp == AVRIO_DDRREG)
-				DDRJ &= ~AVRIO_PIN2AVRBITMASK(avrpin);
+				DDRJ &= ~avrbitmask;
 			else if ( regtyp == AVRIO_PINREG)
-				PINJ &= ~AVRIO_PIN2AVRBITMASK(avrpin);
+				PINJ &= ~avrbitmask;
 			else if ( regtyp == AVRIO_PORTREG)
-				PORTJ &= ~AVRIO_PIN2AVRBITMASK(avrpin);
+				PORTJ &= ~avrbitmask;
 #endif
 #ifdef PORTK
-                } else if (AVRIO_PIN2AVRPORT(avrpin) == AVRIO_PORTK) {				
+                } else if (avrport == AVRIO_PORTK) {				
 			if(regtyp == AVRIO_DDRREG)
-				DDRK &= ~AVRIO_PIN2AVRBITMASK(avrpin);
+				DDRK &= ~avrbitmask;
 			else if ( regtyp == AVRIO_PINREG)
-				PINK &= ~AVRIO_PIN2AVRBITMASK(avrpin);
+				PINK &= ~avrbitmask;
 			else if ( regtyp == AVRIO_PORTREG)
-				PORTK &= ~AVRIO_PIN2AVRBITMASK(avrpin);
+				PORTK &= ~avrbitmask;
 #endif
 #ifdef PORTL
-                } else if (AVRIO_PIN2AVRPORT(avrpin) == AVRIO_PORTL) {				
+                } else if (avrport == AVRIO_PORTL) {				
 			if(regtyp == AVRIO_DDRREG)
-				DDRL &= ~AVRIO_PIN2AVRBITMASK(avrpin);
+				DDRL &= ~avrbitmask;
 			else if ( regtyp == AVRIO_PINREG)
-				PINL &= ~AVRIO_PIN2AVRBITMASK(avrpin);
+				PINL &= ~avrbitmask;
 			else if ( regtyp == AVRIO_PORTREG)
-				PORTL &= ~AVRIO_PIN2AVRBITMASK(avrpin);
+				PORTL &= ~avrbitmask;
 #endif
                 } else {                                                
                 }                                                       
@@ -939,136 +942,139 @@ static inline uint8_t avrio_ReadBit(uint8_t regtyp, avrpin_t avrpin) __attribute
 uint8_t
 avrio_ReadBit(uint8_t regtyp, avrpin_t avrpin)					
 {									
+uint8_t avrbitmask = AVRIO_PIN2AVRBITMASK(avrpin);
+uint8_t avrport = AVRIO_PIN2AVRPORT(avrpin);
+
 #ifdef PORTA
-	if (AVRIO_PIN2AVRPORT(avrpin) == AVRIO_PORTA)
+	if (avrport == AVRIO_PORTA)
 	{
 		if(regtyp == AVRIO_DDRREG)
-			return(DDRA & AVRIO_PIN2AVRBITMASK(avrpin));
+			return(DDRA & avrbitmask);
 		else if ( regtyp == AVRIO_PINREG)
-			return(PINA & AVRIO_PIN2AVRBITMASK(avrpin));
+			return(PINA & avrbitmask);
 		else if ( regtyp == AVRIO_PORTREG)
-			return(PORTA & AVRIO_PIN2AVRBITMASK(avrpin));
+			return(PORTA & avrbitmask);
 	}
 #endif
 #ifdef PORTB
-	if (AVRIO_PIN2AVRPORT(avrpin) == AVRIO_PORTB)
+	if (avrport == AVRIO_PORTB)
 	{
 		if(regtyp == AVRIO_DDRREG)
-			return(DDRB & AVRIO_PIN2AVRBITMASK(avrpin));
+			return(DDRB & avrbitmask);
 		else if ( regtyp == AVRIO_PINREG)
-			return(PINB & AVRIO_PIN2AVRBITMASK(avrpin));
+			return(PINB & avrbitmask);
 		else if ( regtyp == AVRIO_PORTREG)
-			return(PORTB & AVRIO_PIN2AVRBITMASK(avrpin));
+			return(PORTB & avrbitmask);
 	}
 #endif
 #ifdef PORTC
-	if (AVRIO_PIN2AVRPORT(avrpin) == AVRIO_PORTC)
+	if (avrport == AVRIO_PORTC)
 	{
 		if(regtyp == AVRIO_DDRREG)
-			return(DDRC & AVRIO_PIN2AVRBITMASK(avrpin));
+			return(DDRC & avrbitmask);
 		else if ( regtyp == AVRIO_PINREG)
-			return(PINC & AVRIO_PIN2AVRBITMASK(avrpin));
+			return(PINC & avrbitmask);
 		else if ( regtyp == AVRIO_PORTREG)
-			return(PORTC & AVRIO_PIN2AVRBITMASK(avrpin));
+			return(PORTC & avrbitmask);
 	}
 #endif
 #ifdef PORTD
-	if (AVRIO_PIN2AVRPORT(avrpin) == AVRIO_PORTD)
+	if (avrport == AVRIO_PORTD)
 	{
 		if(regtyp == AVRIO_DDRREG)
-			return(DDRD & AVRIO_PIN2AVRBITMASK(avrpin));
+			return(DDRD & avrbitmask);
 		else if ( regtyp == AVRIO_PINREG)
-			return(PIND & AVRIO_PIN2AVRBITMASK(avrpin));
+			return(PIND & avrbitmask);
 		else if ( regtyp == AVRIO_PORTREG)
-			return(PORTD & AVRIO_PIN2AVRBITMASK(avrpin));
+			return(PORTD & avrbitmask);
 	}
 #endif
 #ifdef PORTE
-	if (AVRIO_PIN2AVRPORT(avrpin) == AVRIO_PORTE)
+	if (avrport == AVRIO_PORTE)
 	{
 		if(regtyp == AVRIO_DDRREG)
-			return(DDRE & AVRIO_PIN2AVRBITMASK(avrpin));
+			return(DDRE & avrbitmask);
 		else if ( regtyp == AVRIO_PINREG)
-			return(PINE & AVRIO_PIN2AVRBITMASK(avrpin));
+			return(PINE & avrbitmask);
 		else if ( regtyp == AVRIO_PORTREG)
-			return(PORTE & AVRIO_PIN2AVRBITMASK(avrpin));
+			return(PORTE & avrbitmask);
 	}
 #endif
 #ifdef PORTF
-	if (AVRIO_PIN2AVRPORT(avrpin) == AVRIO_PORTF)
+	if (avrport == AVRIO_PORTF)
 	{
 		if(regtyp == AVRIO_DDRREG)
-			return(DDRF & AVRIO_PIN2AVRBITMASK(avrpin));
+			return(DDRF & avrbitmask);
 		else if ( regtyp == AVRIO_PINREG)
-			return(PINF & AVRIO_PIN2AVRBITMASK(avrpin));
+			return(PINF & avrbitmask);
 		else if ( regtyp == AVRIO_PORTREG)
-			return(PORTF & AVRIO_PIN2AVRBITMASK(avrpin));
+			return(PORTF & avrbitmask);
 	}
 #endif
 #ifdef PORTG
-	if (AVRIO_PIN2AVRPORT(avrpin) == AVRIO_PORTG)
+	if (avrport == AVRIO_PORTG)
 	{
 		if(regtyp == AVRIO_DDRREG)
-			return(DDRG & AVRIO_PIN2AVRBITMASK(avrpin));
+			return(DDRG & avrbitmask);
 		else if ( regtyp == AVRIO_PINREG)
-			return(PING & AVRIO_PIN2AVRBITMASK(avrpin));
+			return(PING & avrbitmask);
 		else if ( regtyp == AVRIO_PORTREG)
-			return(PORTG & AVRIO_PIN2AVRBITMASK(avrpin));
+			return(PORTG & avrbitmask);
 	}
 #endif
 #ifdef PORTH
-	if (AVRIO_PIN2AVRPORT(avrpin) == AVRIO_PORTH)
+	if (avrport == AVRIO_PORTH)
 	{
 		if(regtyp == AVRIO_DDRREG)
-			return(DDRH & AVRIO_PIN2AVRBITMASK(avrpin));
+			return(DDRH & avrbitmask);
 		else if ( regtyp == AVRIO_PINREG)
-			return(PINH & AVRIO_PIN2AVRBITMASK(avrpin));
+			return(PINH & avrbitmask);
 		else if ( regtyp == AVRIO_PORTREG)
-			return(PORTH & AVRIO_PIN2AVRBITMASK(avrpin));
+			return(PORTH & avrbitmask);
 	}
 #endif
 #ifdef PORTI
-	if (AVRIO_PIN2AVRPORT(avrpin) == AVRIO_PORTI)
+	if (avrport == AVRIO_PORTI)
 	{
 		if(regtyp == AVRIO_DDRREG)
-			return(DDRI & AVRIO_PIN2AVRBITMASK(avrpin));
+			return(DDRI & avrbitmask);
 		else if ( regtyp == AVRIO_PINREG)
-			return(PINI & AVRIO_PIN2AVRBITMASK(avrpin));
+			return(PINI & avrbitmask);
 		else if ( regtyp == AVRIO_PORTREG)
-			return(PORTI & AVRIO_PIN2AVRBITMASK(avrpin));
+			return(PORTI & avrbitmask);
 	}
 #endif
 #ifdef PORTJ
-	if (AVRIO_PIN2AVRPORT(avrpin) == AVRIO_PORTJ)
+	if (avrport == AVRIO_PORTJ)
 	{
 		if(regtyp == AVRIO_DDRREG)
-			return(DDRJ & AVRIO_PIN2AVRBITMASK(avrpin));
+			return(DDRJ & avrbitmask);
 		else if ( regtyp == AVRIO_PINREG)
-			return(PINJ & AVRIO_PIN2AVRBITMASK(avrpin));
+			return(PINJ & avrbitmask);
 		else if ( regtyp == AVRIO_PORTREG)
-			return(PORTJ & AVRIO_PIN2AVRBITMASK(avrpin));
+			return(PORTJ & avrbitmask);
 	}
 #endif
 #ifdef PORTK
-	if (AVRIO_PIN2AVRPORT(avrpin) == AVRIO_PORTK)
+	if (avrport == AVRIO_PORTK)
 	{
 		if(regtyp == AVRIO_DDRREG)
-			return(DDRK & AVRIO_PIN2AVRBITMASK(avrpin));
+			return(DDRK & avrbitmask);
 		else if ( regtyp == AVRIO_PINREG)
-			return(PINK & AVRIO_PIN2AVRBITMASK(avrpin));
+			return(PINK & avrbitmask);
 		else if ( regtyp == AVRIO_PORTREG)
-			return(PORTK & AVRIO_PIN2AVRBITMASK(avrpin));
+			return(PORTK & avrbitmask);
 	}
 #endif
 #ifdef PORTL
-	if (AVRIO_PIN2AVRPORT(avrpin) == AVRIO_PORTL)
+	if (avrport == AVRIO_PORTL)
 	{
 		if(regtyp == AVRIO_DDRREG)
-			return(DDRL & AVRIO_PIN2AVRBITMASK(avrpin));
+			return(DDRL & avrbitmask);
 		else if ( regtyp == AVRIO_PINREG)
-			return(PINL & AVRIO_PIN2AVRBITMASK(avrpin));
+			return(PINL & avrbitmask);
 		else if ( regtyp == AVRIO_PORTREG)
-			return(PORTL & AVRIO_PIN2AVRBITMASK(avrpin));
+			return(PORTL & avrbitmask);
 	}
 #endif
 	return(0);	/* not sure how to handle bad port values */
