@@ -91,8 +91,8 @@ class glcd : public glcd_Device  // glcd_Device has low level device access rout
 	void CursorTo( uint8_t column, uint8_t row); // 0 based coordinates for character columns and rows
 	void GotoXY(uint8_t x, uint8_t y);  // overrride for GotoXY in device class
 	void CursorToXY( uint8_t x, uint8_t y); // pixel coordinates 
-	void EraseTextLine( eraseLine_t type=eraseFROM_EOL); // default erases from the end of line
-	void EraseTextLine( uint8_t row); // erase the entire text line in the given row    
+	void EraseTextLine( eraseLine_t type=eraseTO_EOL); // default erases to the end of line
+	void EraseTextLine( uint8_t row); // erase the entire text line in the given row and move cursor to left position
 	// void ClearSysTextLine( uint8_t row); // note the old ClearSysTextLine behaviour is supported using glcd_Deprecated.h
 	
 	// legacy text output functions 

@@ -13,6 +13,14 @@
 #include <avr/pgmspace.h>
 #include "include/gText.h"
 #include "glcd_Config.h" 
+
+#ifndef GLCD_NO_PRINTF
+extern "C"
+{
+#include <stdio.h>
+}
+#endif
+
 	
 extern glcd_Device GLCD; // this is the global GLCD instance, here upcast to the base glcd_Device class 
 
@@ -1098,6 +1106,9 @@ char c;
 
 void gText::CursorTo( uint8_t column, uint8_t row)
 {
+	if(this->Font == 0)
+		return; // no font selected
+
 	/*
 	 * Text position is relative to current text area
 	 */
@@ -1129,6 +1140,8 @@ void gText::CursorTo( uint8_t column, uint8_t row)
  */
 void gText::CursorTo( int8_t column)
 {
+	if(this->Font == 0)
+		return; // no font selected
 	/*
 	 * Text position is relative to current text area
 	 * negative value moves the cursor backwards
@@ -1167,9 +1180,9 @@ void gText::CursorToXY( uint8_t x, uint8_t y)
  *
  * @param type type of line erase
  *
- * @arg 0 Erase from cursor to end of line
- * @arg 1 Erase from cursor to begining of line
- * @arg 2 Erase entire line
+ * @arg eraseTO_EOL Erase from cursor to end of line
+ * @arg eraseFROM_BOL Erase from cursor to begining of line
+ * @arg eraseFULL_LINE Erase entire line
  *
  * Erases all or part of a line of text depending on the type
  * of erase specified.
@@ -1191,7 +1204,7 @@ void gText::EraseTextLine( eraseLine_t type)
 
 	switch(type)
 	{
-		case eraseFROM_EOL:
+		case eraseTO_EOL:
 				device->SetPixels(x, y, this->tarea.x2, y+height, color);
 				break;
 		case eraseFROM_BOL:
@@ -1214,7 +1227,8 @@ void gText::EraseTextLine( eraseLine_t type)
  * @param row row # of text to earase
  *
  * Erases a line of text and moves the cursor
- * to the begining of the line.
+ * to the begining of the line. Rows are zero based so
+ * the top line/row of a text area is 0.
  *
  * @see ClearArea()
  */
@@ -1222,7 +1236,7 @@ void gText::EraseTextLine( eraseLine_t type)
 void gText::EraseTextLine( uint8_t row)
 {
    this->CursorTo(0, row);
-   EraseTextLine(eraseFROM_EOL);	
+   EraseTextLine(eraseTO_EOL);	
 }
 
 
@@ -1390,3 +1404,58 @@ void gText::write(uint8_t c)
 } 
 
  
+#ifndef GLCD_NO_PRINTF
+/*
+ * Support for printf().
+ * This code plays a few games with the AVR stdio routines.
+ *
+ * It fudges up a STDIO stream to point back to a C callable function
+ * Which recovers the C++ text area object and the prints the character
+ * using the C++ text area object.
+ */
+
+extern "C"
+{
+  int glcdputc(char c, FILE *fp)
+  {
+  gText *gtp;
+
+	gtp = (gText *) fdev_get_udata(fp);
+	gtp->write((uint8_t) c);
+	return(0);
+  }
+}
+
+/**
+ * print formatted data
+ *
+ * @param format string that contains text or optional embedded format tags
+ * @param ... Depending on the format string, the function may expect a sequence of additional arguments.
+ *
+ * Writes a sequence of data formatted as the @em format argument specifies.
+ * After the @em format parameter, the function expects at least as many additional
+ * arguments as specified in @em format.
+ * The format string supports all standard @em printf() formating % tags.
+ *
+ * @note
+ *	By default @em printf() has no floating support in AVR enviornments.
+ *	In order to enable this, a linker option must be changed. Currenly,
+ *	the Arduino IDE does not support modifying the linker options.
+ *
+ */ 
+
+
+void gText::Printf(const char *format, ...)
+{
+static FILE stdiostr;
+
+	va_list ap;
+
+	fdev_setup_stream(&stdiostr, glcdputc, NULL, _FDEV_SETUP_WRITE);
+	fdev_set_udata(&stdiostr, this);
+
+	va_start(ap, format);
+	vfprintf(&stdiostr, format, ap);
+	va_end(ap);
+}
+#endif

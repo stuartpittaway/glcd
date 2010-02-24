@@ -26,7 +26,7 @@ extern "C" {
 #endif
 
 static char buf[64];
-#define printf(...)                                             \
+#define bapprintf(...)                                             \
         do {                                                    \
                 sprintf(buf, __VA_ARGS__); Serial.write(buf);   \
         } while (0)
@@ -34,11 +34,11 @@ static char buf[64];
 
 #define kbwait() \
         do {                                                    \
-                printf("Press any key to contiue....");         \
+                bapprintf("Press any key to contiue....");         \
                 Serial.flush();                                 \
                 while(Serial.available() == 0)                  \
 					;											\
                 Serial.flush();                                 \
-                printf("\n");                                   \
+                bapprintf("\n");                                   \
         } while (0)
 

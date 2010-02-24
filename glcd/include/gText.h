@@ -102,7 +102,7 @@ typedef enum  {
   * enums for ansi style erase function
   * These values match the ANSI EraseInLine terminal primitive: CSI n K
 */  
-typedef enum {eraseFROM_EOL, eraseFROM_BOL, eraseFULL_LINE} eraseLine_t;  	
+typedef enum {eraseTO_EOL, eraseFROM_BOL, eraseFULL_LINE} eraseLine_t;  	
 
 
 uint8_t ReadPgmData(const uint8_t* ptr);	//Standard Read Callback
@@ -168,9 +168,13 @@ class gText : public Print
 	uint16_t StringWidth(const char* str);
 	uint16_t StringWidth_P(PGM_P str);
 
-	//void EraseInLine( uint8_t type=eraseFROM_EOL); //ansi like line erase function 
-	void EraseTextLine( eraseLine_t type=eraseFROM_EOL); //ansi like line erase function 
-	void EraseTextLine( uint8_t row); // erase the entire text line in the given row
+	void EraseTextLine( eraseLine_t type=eraseTO_EOL); //ansi like line erase function 
+	void EraseTextLine( uint8_t row); // erase the entire text line in the given row and move cursor to left position
+
+#ifndef GLCD_NO_PRINTF
+	void Printf(const char *format, ...);
+#endif
+
 };
 
 #endif
