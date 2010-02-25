@@ -1,10 +1,11 @@
 /*
  * glcd_Config.h - User specific configuration for Arduino GLCD library
- * Copyright (c)2008 Michael Margolis All right reserved
  *
  * vi:ts=4
  *
  * Use this file to set io pins and LCD panel parameters
+ * This version is for a standard ks0108 display
+ * connected using the default Arduino wiring
  *
 */
 
@@ -35,7 +36,7 @@
 #define glcdDI				17
 #define glcdEN				18
 // Reset Bit  - uncomment the next line if reset is connected to an output pin
-#define glcdRES		    19	// Reset Bit 
+//#define glcdRES	        19	// Reset Bit 
 
 // Data pin definitions
 #define glcdData0Pin		8
@@ -47,26 +48,27 @@
 #define glcdData6Pin		6
 #define glcdData7Pin		7
 
+/*
+ * Optional bitmasks to sequence chip select 
+ * each bit corresponds to a chip select line
+ * you can swap around the elements below if your display is not in the correct sequence
+ *
+ * if glcd_USE_CHIP_BITMASK is not defined then chip1 uses CSEL1, chip2 uses CSEL2
+ */
 
-// bitmask to sequence chip select 
-// you can swap around the elements below if your display is reversed
+//#define glcd_USE_CHIP_BITMASK   // un-comment this line for displays with more than 2 chips 
+
+#ifdef glcd_USE_CHIP_BITMASK 
 #define glcd_CHIP1  1
 #define glcd_CHIP2  2
-#define glcd_CHIP3  0 // used only for a three chip (192 pixel) panel (0, 1, 2)
+#define glcd_CHIP3  4 // used only for a three chip (192 pixel) panel 
+#define glcd_CHIP4  8 // used only for a four chip (> 192 pixel) panel 
+#endif
 
-
-
-// defines for panel specific timing 
 /*
- *	Nov 2009
- *	Low level additions added by Bill Perry
- *	bill@billsworld.billandterrie.com
+ * The following defines are for panel spefici low level timing.
  *
- * The following defines are for low level timing.
- * They have been derived from looking at many ks0108 data sheets.
- * Nearly all of the datasheets have the same low level timing.
- * The names used here were derived from the AGM1264F series graphic module.
- * See the data sheet for the exact timing and waveforms.
+ * See your data sheet for the exact timing and waveforms.
  * All defines below are in nanoseconds.
  */
 
