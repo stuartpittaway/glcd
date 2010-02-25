@@ -1,6 +1,6 @@
 /*
   glcd_Device.cpp - Arduino library support for graphic LCDs 
-  Copyright (c)2008 Michael Margolis All right reserved
+  Copyright (c) 2009 Michael Margolis and Bill Perry 
 
  vi:ts=4
   
