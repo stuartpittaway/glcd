@@ -21,9 +21,11 @@
 #include "include/glcd_io.h"
 
 
-#ifdef glcd_CHIP1
+
 #define glcd_CHIP_COUNT ((DISPLAY_WIDTH + CHIP_WIDTH - 1)  / CHIP_WIDTH) // round up if width is not evenly divisable
-static uint8_t chipSelect[glcd_CHIP_COUNT] ; //static array for sequencing chip, order is given in config file
+
+#ifdef glcd_USE_CHIP_BITMASK  // use the chipSelect array if this is defined in the config file
+static uint8_t chipSelect[glcd_CHIP_COUNT] ; //static array for sequencing chip, order given in config file
 #endif
 
 /*
@@ -237,16 +239,24 @@ void glcd_Device::GotoXY(uint8_t x, uint8_t y)
 
 void glcd_Device::Init(uint8_t invert)
 {  
-    // initialize the chip select array, this provides the select sequence as defined in glcd_Config.h
-#ifdef glcd_CHIP1
+
+#ifdef glcd_USE_CHIP_BITMASK	
+    /*
+	 * initialize the chip select array, this provides the select sequence as defined in the configuration header file
+	 * glcd_CHIPx is a mask where each bit corresponds to a chip select line
+	 */
+#ifdef glcd_CHIP1 && glcd_CHIP_COUNT > 0
     chipSelect[0] =  glcd_CHIP1;
-    chipSelect[1] =  glcd_CHIP2;
 #endif	
-#ifdef  glcd_CHIP3
+#ifdef glcd_CHIP2 && glcd_CHIP_COUNT > 1	
+    chipSelect[1] =  glcd_CHIP2;	
+#endif	
+#ifdef  glcd_CHIP3 && glcd_CHIP_COUNT > 2
 	chipSelect[2] =  glcd_CHIP3;  // displays that are larger than 128 pixels
 #endif
-#ifdef  glcd_CHIP4
+#ifdef  glcd_CHIP4 && glcd_CHIP_COUNT > 3
 	chipSelect[3] =  glcd_CHIP4;  // displays that are larger than 192 pixels
+#endif
 #endif
 
 	/*
@@ -254,38 +264,48 @@ void glcd_Device::Init(uint8_t invert)
 	 * The data lines will be configured as necessary when needed.
 	 */
 
-	lcdPinMode(glcdDI,1); 	
-	lcdPinMode(glcdRW,1); 	
+	lcdPinMode(glcdDI,OUTPUT);	
+	lcdPinMode(glcdRW,OUTPUT);	
 
 #ifdef glcdE1
-	lcdPinMode(glcdE1,1); 	
+	lcdPinMode(glcdE1,OUTPUT);	
 	lcdfastWrite(glcdE1,LOW); 	
 #endif
 #ifdef glcdE2
-	lcdPinMode(glcdE2,1); 	
+	lcdPinMode(glcdE2,OUTPUT);	
 	lcdfastWrite(glcdE2,LOW); 	
 #endif
 
 #ifdef glcdEN
-	lcdPinMode(glcdEN,1); 	
+	lcdPinMode(glcdEN,OUTPUT);	
 	lcdfastWrite(glcdEN, LOW);
 #endif
 
 #ifdef glcdCSEL1
-	lcdPinMode(glcdCSEL1,1);
+	lcdPinMode(glcdCSEL1,OUTPUT);
 	lcdfastWrite(glcdCSEL1, LOW);
 #endif
 
 #ifdef glcdCSEL2
-	lcdPinMode(glcdCSEL2,1);
+	lcdPinMode(glcdCSEL2,OUTPUT);
 	lcdfastWrite(glcdCSEL2, LOW);
+#endif
+
+#ifdef glcdCSEL3
+	lcdPinMode(glcdCSEL3,OUTPUT);
+	lcdfastWrite(glcdCSEL3, LOW);
+#endif
+
+#ifdef glcdCSEL4
+	lcdPinMode(glcdCSEL4,OUTPUT);
+	lcdfastWrite(glcdCSEL4, LOW);
 #endif
 
 	/*
 	 * If reset control
 	 */
 #ifdef glcdRES
-	lcdPinMode(glcdRES,1);
+	lcdPinMode(glcdRES,OUTPUT);
 #endif
 
 
@@ -309,7 +329,7 @@ void glcd_Device::Init(uint8_t invert)
 	
 #ifdef glcd_DeviceInit // this provides override for chip specific init -  mem 8 Dec 09
 	
-	for(uint8_t chip=0; chip < DISPLAY_WIDTH/CHIP_WIDTH; chip++){
+	for(uint8_t chip=0; chip < glcd_CHIP_COUNT; chip++){
 
 		/*
 		 * flush out internal state to force first GotoXY() to work
@@ -321,7 +341,7 @@ void glcd_Device::Init(uint8_t invert)
         glcd_DeviceInit(chip);  // call device specific initialization if defined    
 	}
 #else
-	for(uint8_t chip=0; chip < DISPLAY_WIDTH/CHIP_WIDTH; chip++){
+	for(uint8_t chip=0; chip < glcd_CHIP_COUNT; chip++){
        		delay(10);  
 
 		/*
@@ -353,21 +373,37 @@ void glcd_Device::Init(uint8_t invert)
 }
 
 
-#ifdef glcd_CHIP1
 __inline__ void glcd_Device::SelectChip(uint8_t chip)
 {  
-#ifndef NEW_CHIPSELECT  // bill is this define now obsolete??
-
-	if(chipSelect[chip] & 1)
+#ifdef glcd_USE_CHIP_BITMASK 
+// use bitmask
+#ifdef  glcdCSEL1
+    if(chipSelect[chip] & 1)
        lcdfastWrite(glcdCSEL1, HIGH);
 	else
 	   lcdfastWrite(glcdCSEL1, LOW);
-
+#endif
+#ifdef  glcdCSEL2
 	if(chipSelect[chip] & 2)
        lcdfastWrite(glcdCSEL2, HIGH);
 	else
 	   lcdfastWrite(glcdCSEL2, LOW);
+#endif	   
+#ifdef  glcdCSEL3
+	if(chipSelect[chip] & 4)
+       lcdfastWrite(glcdCSEL3, HIGH);
+	else
+	   lcdfastWrite(glcdCSEL3, LOW);
+#endif
+#ifdef  glcdCSEL4
+	if(chipSelect[chip] & 8)
+       lcdfastWrite(glcdCSEL4, HIGH);
+	else
+	   lcdfastWrite(glcdCSEL4, LOW);
+#endif
+
 #else
+// use default hard coded chip select (faster but less flexible)
 	if(chip)
 	{
        lcdfastWrite(glcdCSEL2, HIGH);
@@ -378,11 +414,9 @@ __inline__ void glcd_Device::SelectChip(uint8_t chip)
        lcdfastWrite(glcdCSEL1, HIGH);
 	   lcdfastWrite(glcdCSEL2, LOW);
 	}
-		
-
 #endif
 }
-#endif
+
 
 void glcd_Device::WaitReady( uint8_t chip)
 {
