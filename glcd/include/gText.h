@@ -1,8 +1,8 @@
 /*
-  gText.h - Support for Text output on a grpahical device
+  gText.h - Support for Text output on a graphical device
   vi:ts=4
 
-  The routines in this file are Copyright (c) Bill Perry 2009
+  The routines in this file are Copyright (c) Bill Perry and Michael Margolis 2009
 
 
   This version is free software; you can redistribute it and/or
@@ -17,6 +17,7 @@
 #include <inttypes.h>
 #include <avr/pgmspace.h>
 
+#include "include/streaming.h" 
 #include "include/glcd_Device.h"
 
 
