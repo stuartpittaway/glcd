@@ -1,6 +1,6 @@
 /*
   glcd_Device.h - support for specific graphical LCDs
-  Copyright (c)2008 Michael Margolis All right reserved
+  Copyright (c) 2009 Michael Margolis and Bill Perry
   
  vi:ts=4
 
@@ -56,7 +56,7 @@ class glcd_Device : public Print
 	friend class gText;  // give gText access to private data - (only use Coord)
   public:
     glcd_Device();
-    void Init(uint8_t invert);      // now public
+    void Init(uint8_t invert = false);      // now public, default is non-inverted
 	void GotoXY(uint8_t x, uint8_t y);   
 	void SetDot(uint8_t x, uint8_t y, uint8_t color);
 	void SetPixels(uint8_t x, uint8_t y,uint8_t x1, uint8_t y1, uint8_t color);
