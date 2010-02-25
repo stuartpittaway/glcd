@@ -1,6 +1,6 @@
 /*
-  gText.cpp - Support for Text output on a grpahical device 
-  The routines in this file are Copyright (c) Bill Perry 2009
+  gText.cpp - Support for Text output on a graphical device 
+  The routines in this file are Copyright (c) Bill Perry 2009 and Michael Margolis 2009
 
   vi:ts=4
   
