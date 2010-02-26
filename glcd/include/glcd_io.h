@@ -1,11 +1,27 @@
 /*
- * glcd_io.h
- *
- * vi:ts=4
- *
- *	This file maps abstract io requests from glcd_Device to AVR port and pin abstractions
- *  arduino_avrio.h maps arduino pins to avr ports and pins.
- *  The physical io is handled by macros in avrio.h
+  glcd_io.h
+  Copyright (c) 2009 Bill Perry
+  
+  This file is part of the Arduino GLCD library.
+
+  GLCD is free software: you can redistribute it and/or modify
+  it under the terms of the GNU Lesser General Public License as published by
+  the Free Software Foundation, either version 2.1 of the License, or
+  (at your option) any later version.
+
+  GLCD is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU Lesser General Public License for more details.
+
+  You should have received a copy of the GNU Lesser General Public License
+  along with GLCD.  If not, see <http://www.gnu.org/licenses/>.
+
+  This file maps abstract io requests from glcd_Device to AVR port and pin abstractions
+  arduino_avrio.h maps arduino pins to avr ports and pins.
+  The physical io is handled by macros in avrio.h
+ 
+  vi:ts=4
  */
 
 #ifndef	GLCD_IO_H
