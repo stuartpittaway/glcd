@@ -1,11 +1,24 @@
 /*
   glcd.cpp - Arduino library support for graphic LCDs 
-  Copyright (c)2008, 2009, 2010 Michael Margolis & Bill Perry All right reserved
+  Copyright (c) 2008,2009,2010 Michael Margolis and Bill Perry
+  
+  This file is part of the Arduino GLCD library.
 
-  vi:ts=4
-    
-  This file contains high level functions based on the previous ks0108 library
-  The routines were dervived from code written and copyright by Fabian Maximilian Thiele.
+  GLCD is free software: you can redistribute it and/or modify
+  it under the terms of the GNU Lesser General Public License as published by
+  the Free Software Foundation, either version 2.1 of the License, or
+  (at your option) any later version.
+
+  GLCD is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU Lesser General Public License for more details.
+
+  You should have received a copy of the GNU Lesser General Public License
+  along with GLCD.  If not, see <http://www.gnu.org/licenses/>.
+
+  This file contains high level functions based on the previous ks0108 library.
+  The functions were inspired from code written and copyright by Fabian Maximilian Thiele.
   you can obtain a copy of his original work here:
   http://www.scienceprog.com/wp-content/uploads/2007/07/glcd_ks0108.zip
  
@@ -13,16 +26,12 @@
   It is derived from the glcd_Device class that impliments the protocol for sending and
   receiving data and commands to a GLCD device
   
-  This library is distributed in the hope that it will be useful,
-  but WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
-
+  vi:ts=4
 */
 
 #include <avr/pgmspace.h>
 #include "glcd.h"
 #include "glcd_Config.h" 
-
 
 #define BITMAP_FIX // enables a bitmap rendering fix/patch
 
