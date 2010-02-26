@@ -1,11 +1,26 @@
 /*
   glcd_Device.h - support for specific graphical LCDs
-  Copyright (c) 2009 Michael Margolis and Bill Perry
+  Copyright (c) 2009, 2010 Michael Margolis and Bill Perry
   
- vi:ts=4
+  This file is part of the Arduino GLCD library.
+
+  GLCD is free software: you can redistribute it and/or modify
+  it under the terms of the GNU Lesser General Public License as published by
+  the Free Software Foundation, either version 2.1 of the License, or
+  (at your option) any later version.
+
+  GLCD is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU Lesser General Public License for more details.
+
+  You should have received a copy of the GNU Lesser General Public License
+  along with GLCD.  If not, see <http://www.gnu.org/licenses/>.
 
   the glcd_Device class impliments the protocol for sending and receiving data and commands to a GLCD device.
-     
+
+ vi:ts=4
+  
 */
 
 #ifndef	GLCD_DEVICE_H
