@@ -1,24 +1,27 @@
 /************************************************************************************************
- *	AVRIO
- * Copyright (C) 2009 Bill Perry. (bill@billsworld.billandterrie.com)
- *
+  avrio.h
+  Copyright (C) 2009 Bill Perry. (bill@billsworld.billandterrie.com)
+  
+  This file is part of the Arduino GLCD library.
+
+  GLCD is free software: you can redistribute it and/or modify
+  it under the terms of the GNU Lesser General Public License as published by
+  the Free Software Foundation, either version 2.1 of the License, or
+  (at your option) any later version.
+
+  GLCD is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU Lesser General Public License for more details.
+
+  You should have received a copy of the GNU Lesser General Public License
+  along with GLCD.  If not, see <http://www.gnu.org/licenses/>.
+
+  This version of avrio.h is intended only for use with GLCD. You can download
+  a version that can be used with other code from : (bill - add a link here !!!!)    
+  
  * vi:ts=4
- *
- *  AVRIO is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser General Public License (or the Lesser GPL).
- *  as published by the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  AVRIO is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser General Public License for more details.
- *  You should have received a copy of the GNU Lesser General Public License
- *  along with AVRIO.  If not, see:
- *	http://www.gnu.org/licenses/lgpl-3.0-standalone.html
- *	http://www.gnu.org/licenses/lgpl-3.0.txt
- *
- *
+
  *	AVRIO defines a set of i/o primitives that work on AVR pins.
  *
  *
