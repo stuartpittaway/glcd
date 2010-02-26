@@ -1,8 +1,8 @@
 /*
  *  delay.h
  *
- *  Accurate delays ranging from a single CPU cycle up to
- *  more 64 milliseconds (e.g. with 8MHz device):
+ *  Provides accurate delays for a given number of nanoseconds
+ *  This version is part of the Arduino GLCD library.
  *
  *  This file is based on code by Copyright Hans-Juergen Heinrichs (c) 2005
  *
@@ -252,6 +252,5 @@ _delay_cycles(const double __ticks_d)
  *
  */
 #define _delayNanoseconds(__ns)     _delay_cycles( (double)(F_CPU)*((double)__ns)/1.0e9 + 0.5 )
-#define _delayMicroseconds(__us)     _delay_cycles( (double)(F_CPU)*((double)__us)/1.0e6 + 0.5 )
 
 #endif /* _ARDUINO_DELAY_H_ */
