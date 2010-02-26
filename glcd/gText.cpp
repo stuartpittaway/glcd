@@ -1,13 +1,23 @@
 /*
   gText.cpp - Support for Text output on a graphical device 
-  The routines in this file are Copyright (c) Bill Perry 2009 and Michael Margolis 2009
+  Copyright (c) 2009,2010  Bill Perry and Michael Margolis
+
+  This file is part of the Arduino GLCD library.
+
+  GLCD is free software: you can redistribute it and/or modify
+  it under the terms of the GNU Lesser General Public License as published by
+  the Free Software Foundation, either version 2.1 of the License, or
+  (at your option) any later version.
+
+  GLCD is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU Lesser General Public License for more details.
+
+  You should have received a copy of the GNU Lesser General Public License
+  along with GLCD.  If not, see <http://www.gnu.org/licenses/>.
 
   vi:ts=4
-  
-  This version is free software; you can redistribute it and/or
-  modify it under the terms of the GNU Lesser General Public
-  License as published by the Free Software Foundation; either
-  version 2.1 of the License, or (at your option) any later version.
 */
 
 #include <avr/pgmspace.h>
