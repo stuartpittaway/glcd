@@ -2,6 +2,8 @@
   glcd_io.h
   Copyright (c) 2009 Bill Perry
   
+  vi:ts=4
+
   This file is part of the Arduino GLCD library.
 
   GLCD is free software: you can redistribute it and/or modify
@@ -21,7 +23,6 @@
   arduino_avrio.h maps arduino pins to avr ports and pins.
   The physical io is handled by macros in avrio.h
  
-  vi:ts=4
  */
 
 #ifndef	GLCD_IO_H

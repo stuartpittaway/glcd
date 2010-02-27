@@ -2,6 +2,8 @@
   gText.cpp - Support for Text output on a graphical device 
   Copyright (c) 2009,2010  Bill Perry and Michael Margolis
 
+  vi:ts=4
+ 
   This file is part of the Arduino GLCD library.
 
   GLCD is free software: you can redistribute it and/or modify
@@ -17,7 +19,6 @@
   You should have received a copy of the GNU Lesser General Public License
   along with GLCD.  If not, see <http://www.gnu.org/licenses/>.
 
-  vi:ts=4
 */
 
 #include <avr/pgmspace.h>
@@ -187,7 +188,7 @@ uint8_t ret = false;
 		this->tarea.x2 = DISPLAY_WIDTH -1;
 		this->tarea.y2 = DISPLAY_HEIGHT -1;
 		this->tarea.mode = DEFAULT_SCROLLDIR;
-    } 		
+	} 		
 	else
 	{  
 	    this->tarea.x1 = x1; 
@@ -196,7 +197,7 @@ uint8_t ret = false;
 	    this->tarea.y2 = y2; 		
 		this->tarea.mode = mode; // not yet sanity checked
 		ret = true;
-    }		
+	}		
 	/*
 	 * set cursor position for the area
 	 */

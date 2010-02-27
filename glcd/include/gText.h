@@ -2,6 +2,8 @@
   gText.h - Support for Text output on a graphical device
   Copyright (c) 2009,2010  Bill Perry and Michael Margolis
 
+  vi:ts=4
+
   This file is part of the Arduino GLCD library.
 
   GLCD is free software: you can redistribute it and/or modify
@@ -17,7 +19,6 @@
   You should have received a copy of the GNU Lesser General Public License
   along with GLCD.  If not, see <http://www.gnu.org/licenses/>.
   
-  vi:ts=4
 */
 
 #ifndef	GTEXT_H

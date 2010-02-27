@@ -1,28 +1,33 @@
 /************************************************************************************************
-  avrio.h
-  Copyright (C) 2009 Bill Perry. (bill@billsworld.billandterrie.com)
-  
-  This file is part of the Arduino GLCD library.
-
-  GLCD is free software: you can redistribute it and/or modify
-  it under the terms of the GNU Lesser General Public License as published by
-  the Free Software Foundation, either version 2.1 of the License, or
-  (at your option) any later version.
-
-  GLCD is distributed in the hope that it will be useful,
-  but WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  GNU Lesser General Public License for more details.
-
-  You should have received a copy of the GNU Lesser General Public License
-  along with GLCD.  If not, see <http://www.gnu.org/licenses/>.
-
-  This version of avrio.h is intended only for use with GLCD. You can download
-  a version that can be used with other code from : (bill - add a link here !!!!)    
-  
+ * avrio.h 
+ *		AVRIO defines a set of i/o primitives that work on AVR pins.
+ *
  * vi:ts=4
-
- *	AVRIO defines a set of i/o primitives that work on AVR pins.
+ *
+ *	Copyright (C) 2009 Bill Perry. (bill@billsworld.billandterrie.com)
+ *
+ * 	This file is included as part of the Arduino GLCD library.
+ *
+ *	This version of avrio.h is licensed only for use with the Arduino
+ *	GLCD Library.
+ *	You can download a version that can be used with other code from : 
+ *	(FIXME - Need a server location for this)
+ *
+ * GLCD is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 2.1 of the License, or
+ * (at your option) any later version.
+ *
+ * GLCD is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with GLCD.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ *
+ ************************************************************************************************
  *
  *
  *	These primitives are for setting/reading digital levels on the pins.

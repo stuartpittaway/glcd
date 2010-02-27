@@ -1,6 +1,8 @@
 /*
   glcd_Device.h - support for specific graphical LCDs
   Copyright (c) 2009, 2010 Michael Margolis and Bill Perry
+
+  vi:ts=4
   
   This file is part of the Arduino GLCD library.
 
@@ -19,7 +21,6 @@
 
   the glcd_Device class impliments the protocol for sending and receiving data and commands to a GLCD device.
 
- vi:ts=4
   
 */
 

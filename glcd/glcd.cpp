@@ -1,6 +1,8 @@
 /*
   glcd.cpp - Arduino library support for graphic LCDs 
   Copyright (c) 2008,2009,2010 Michael Margolis and Bill Perry
+
+  vi:ts=4
   
   This file is part of the Arduino GLCD library.
 
@@ -26,7 +28,6 @@
   It is derived from the glcd_Device class that impliments the protocol for sending and
   receiving data and commands to a GLCD device
   
-  vi:ts=4
 */
 
 #include <avr/pgmspace.h>

@@ -2,6 +2,8 @@
   glcd_Device.cpp - Arduino library support for graphic LCDs 
   Copyright (c) 2009, 2010 Michael Margolis and Bill Perry 
   
+  vi:ts=4  
+
   This file is part of the Arduino GLCD library.
 
   GLCD is free software: you can redistribute it and/or modify
@@ -20,7 +22,6 @@
   The glcd_Device class impliments the protocol for sending and receiving data and commands to a GLCD device.
   It uses glcd_io.h to for the io primitives and glcd_COnfig.h for user specific configuration.
 
-  vi:ts=4  
 */
 
 #include <avr/io.h>
@@ -43,18 +44,18 @@ static uint8_t chipSelect[glcd_CHIP_COUNT] ; //static array for sequencing chip,
  */
 
 //#define TRUE_WRITE	// does writes to glcd memory on page crossings vs ORs
-			// This option only affects writes that span LCD pages.
-			// None of the graphic rouintes nor the NEW_FONTDRAW rendering option do this.
-			// Only the old font rendering and bitmap rendering do unaligned PAGE writes.
-			// While this fixes a few issus for the old routines,
-			// it also creates new ones.
-			// The issue is routines like the bitmap rendering
-			// routine attempt to use a drawing method that does not work.
-			// when this is on, pixels are no longer ORd in but are written in.
-			// so all the good/desired pixels get set, but then so do some
-			// undesired pixels.
-			//
-			// current RECOMMENDED setting: OFF
+						// This option only affects writes that span LCD pages.
+						// None of the graphic rouintes nor the NEW_FONTDRAW rendering option do this.
+						// Only the old font rendering and bitmap rendering do unaligned PAGE writes.
+						// While this fixes a few issus for the old routines,
+						// it also creates new ones.
+						// The issue is routines like the bitmap rendering
+						// routine attempt to use a drawing method that does not work.
+						// when this is on, pixels are no longer ORd in but are written in.
+						// so all the good/desired pixels get set, but then so do some
+						// undesired pixels.
+						//
+						// current RECOMMENDED setting: OFF
 
 	
 glcd_Device::glcd_Device(){

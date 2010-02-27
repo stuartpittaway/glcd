@@ -2,6 +2,8 @@
   glcd.h - Arduino library support for graphic LCDs 
   Copyright (c)2008,2009,2010 Michael Margolis and Bill Perry
    
+  vi:ts=4
+
   This file is part of the Arduino GLCD library.
 
   GLCD is free software: you can redistribute it and/or modify
@@ -26,7 +28,6 @@
   It is derived from the glcd_Device class that impliments the protocol for sending and
   receiving data and commands to a GLCD device
 
-  vi:ts=4
 */
 
 /**
@@ -64,7 +65,7 @@ class glcd : public glcd_Device  // glcd_Device has low level device access rout
 	void ClearPage(uint8_t page, uint8_t startX, uint8_t length, uint8_t color = WHITE); 
 	void write(uint8_t c);  // character output for print base class
   public:
-    glcd();
+	glcd();
 	
 	// Control functions
 	void Init(uint8_t invert = NON_INVERTED);
@@ -75,11 +76,11 @@ class glcd : public glcd_Device  // glcd_Device has low level device access rout
 	void ClearPage(uint8_t page, uint8_t color = WHITE); // bill, this was public in ks0108, why did we make it private?
 	void DrawVLine(uint8_t x, uint8_t y, uint8_t height, uint8_t color= BLACK);
 	void DrawHLine(uint8_t x, uint8_t y, uint8_t width, uint8_t color= BLACK);
-    void DrawLine(uint8_t x1, uint8_t y1, uint8_t x2, uint8_t y2, uint8_t color= BLACK);
-    void DrawRect(uint8_t x, uint8_t y, uint8_t width, uint8_t height, uint8_t color= BLACK);
+	void DrawLine(uint8_t x1, uint8_t y1, uint8_t x2, uint8_t y2, uint8_t color= BLACK);
+	void DrawRect(uint8_t x, uint8_t y, uint8_t width, uint8_t height, uint8_t color= BLACK);
 	void DrawRoundRect(uint8_t x, uint8_t y, uint8_t width, uint8_t height, uint8_t radius, uint8_t color= BLACK);
-    void FillRect(uint8_t x, uint8_t y, uint8_t width, uint8_t height, uint8_t color= BLACK);
-    void InvertRect(uint8_t x, uint8_t y, uint8_t width, uint8_t height);
+	void FillRect(uint8_t x, uint8_t y, uint8_t width, uint8_t height, uint8_t color= BLACK);
+	void InvertRect(uint8_t x, uint8_t y, uint8_t width, uint8_t height);
 	void DrawCircle(uint8_t xCenter, uint8_t yCenter, uint8_t radius, uint8_t color= BLACK);	
 	void FillCircle(uint8_t xCenter, uint8_t yCenter, uint8_t radius, uint8_t color= BLACK);	
 	void DrawBitmap(const uint8_t * bitmap, uint8_t x, uint8_t y, uint8_t color= BLACK);
@@ -92,10 +93,10 @@ class glcd : public glcd_Device  // glcd_Device has low level device access rout
 
     // Font Functions - this is public API for functionality in the Text class:
 
-    void SelectFont(const uint8_t* font, uint8_t color=BLACK); // default arguments added, callback removed from public method
+	void SelectFont(const uint8_t* font, uint8_t color=BLACK); // default arguments added, callback removed from public method
 	void SetFontColor(uint8_t color); // new method to change the selected fonts color
 	void SetTextMode(textMode mode);  // change to the given text mode (currently only scroll direction is supported)
-    void Puts_P(PGM_P str);  // this prints a string defined explicitly as a constant in program memory
+	void Puts_P(PGM_P str);  // this prints a string defined explicitly as a constant in program memory
 
 	void CursorTo( uint8_t column, uint8_t row); // 0 based coordinates for character columns and rows
 	void GotoXY(uint8_t x, uint8_t y);  // overrride for GotoXY in device class
@@ -106,12 +107,12 @@ class glcd : public glcd_Device  // glcd_Device has low level device access rout
 	
 	// legacy text output functions 
 	int PutChar(char c);
-    void Puts(char* str);
+	void Puts(char* str);
 	void PrintNumber(long n);
 
-    uint8_t CharWidth(char c);
-    uint16_t StringWidth(const char* str);
-    uint16_t StringWidth_P(PGM_P str);
+	uint8_t CharWidth(char c);
+	uint16_t StringWidth(const char* str);
+	uint16_t StringWidth_P(PGM_P str);
 /// @endcond
 
 	//Device Properties - these are read only constants	 
