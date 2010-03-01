@@ -113,4 +113,28 @@
 
 #endif // _AVRIO_AVRIO_
 
+/*
+ * Delay functions
+ */
+
+/*
+ * For nano second delays there are two real options:
+ * The AVR libC supplied <util/delay.h> is not good eough,
+ * there is too much error in their calculations.
+ *
+ * - Hans Heinrichs _delay_cycles()
+ * - avr-gcc __builtin_avr_delay_cycles() routine.
+ *
+ * The two generate very similar code, however the gcc
+ * builtin function is only avialable in newer gcc revisions
+ * (some older linux avr-gcc revisions don't have it) and Hans' code
+ * is sometimes smaller and doesn't use loops which require a
+ * a register when the number cycles is less than 12.
+ */
+#include "include/delay.h" // Hans' Heirichs delay macros
+
+#define lcdDelayNanoseconds(__ns) _delay_cycles( (double)(F_CPU)*((double)__ns)/1.0e9 + 0.5 ) // Hans Heinrichs delay cycle routine
+
+#define lcdDelayMilliseconds(__ms) delay(__ms)	// Arduino delay function
+
 #endif // GLCD_IO_H

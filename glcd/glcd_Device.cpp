@@ -26,7 +26,6 @@
 
 #include <avr/io.h>
 #include <wiring.h> // needed for arduino io methods
-#include "include/delay.h"  /* for _delayNanoseconds() functionality */
 
 #include "include/glcd_Device.h"
 #include "include/glcd_io.h"
@@ -333,9 +332,9 @@ void glcd_Device::Init(uint8_t invert)
 	 */ 
 #ifdef glcdRES
 	lcdReset();
-	delay(2);  
+	lcdDelayMilliseconds(2);  
 	lcdUnReset();
-	delay(5);
+	lcdDelayMilliseconds(5);
 #endif
 	
 #ifdef glcd_DeviceInit // this provides override for chip specific init -  mem 8 Dec 09
@@ -348,12 +347,12 @@ void glcd_Device::Init(uint8_t invert)
 		this->Coord.chip[chip].page = 0xff;
 		//this->Coord.chip[chip].col = 0xff; // not used yet
 
-       	delay(10);  			
+       	lcdDelayMilliseconds(10);  			
         glcd_DeviceInit(chip);  // call device specific initialization if defined    
 	}
 #else
 	for(uint8_t chip=0; chip < glcd_CHIP_COUNT; chip++){
-       		delay(10);  
+       		lcdDelayMilliseconds(10);  
 
 		/*
 		 * flush out internal state to force first GotoXY() to work
@@ -436,9 +435,9 @@ void glcd_Device::WaitReady( uint8_t chip)
 	lcdDataDir(0x00);
 	lcdfastWrite(glcdDI, LOW);	
 	lcdfastWrite(glcdRW, HIGH);	
-	_delayNanoseconds(GLCD_tAS);
+	lcdDelayNanoseconds(GLCD_tAS);
 	glcd_DevENstrobeHi(chip);
-	_delayNanoseconds(GLCD_tDDR);
+	lcdDelayNanoseconds(GLCD_tDDR);
 
 	while(lcdIsBusy()){
        ;
@@ -455,9 +454,9 @@ uint8_t glcd_Device::DoReadData(uint8_t first)
 	lcdfastWrite(glcdDI, HIGH);		// D/I = 1
 	lcdfastWrite(glcdRW, HIGH);		// R/W = 1
 	
-	_delayNanoseconds(GLCD_tAS);
+	lcdDelayNanoseconds(GLCD_tAS);
 	glcd_DevENstrobeHi(chip);
-	_delayNanoseconds(GLCD_tDDR);
+	lcdDelayNanoseconds(GLCD_tDDR);
 
 	data = lcdDataIn();	// Read the data bits from the LCD
 
@@ -498,9 +497,9 @@ void glcd_Device::WriteCommand(uint8_t cmd, uint8_t chip)
 	lcdDataDir(0xFF);
 
 	lcdDataOut(cmd);		/* This could be done before or after raising E */
-	_delayNanoseconds(GLCD_tAS);
+	lcdDelayNanoseconds(GLCD_tAS);
 	glcd_DevENstrobeHi(chip);
-	_delayNanoseconds(GLCD_tWH);
+	lcdDelayNanoseconds(GLCD_tWH);
 	glcd_DevENstrobeLo(chip);
 }
 
@@ -553,7 +552,7 @@ void glcd_Device::WriteData(uint8_t data) {
    	    lcdfastWrite(glcdDI, HIGH);				// D/I = 1
 	    lcdfastWrite(glcdRW, LOW);				// R/W = 0
 		lcdDataDir(0xFF);						// data port is output
-		_delayNanoseconds(GLCD_tAS);
+		lcdDelayNanoseconds(GLCD_tAS);
 		glcd_DevENstrobeHi(chip);
 		
 #ifdef TRUE_WRITE
@@ -569,7 +568,7 @@ void glcd_Device::WriteData(uint8_t data) {
 			displayData = ~displayData;
 		}
 		lcdDataOut( displayData);					// write data
-		_delayNanoseconds(GLCD_tWH);
+		lcdDelayNanoseconds(GLCD_tWH);
 		glcd_DevENstrobeLo(chip);
 
 		// second page
@@ -593,7 +592,7 @@ void glcd_Device::WriteData(uint8_t data) {
    	    lcdfastWrite(glcdDI, HIGH);					// D/I = 1
 	    lcdfastWrite(glcdRW, LOW); 					// R/W = 0	
 		lcdDataDir(0xFF);				// data port is output
-		_delayNanoseconds(GLCD_tAS);
+		lcdDelayNanoseconds(GLCD_tAS);
 		glcd_DevENstrobeHi(chip);
 
 #ifdef TRUE_WRITE
@@ -608,7 +607,7 @@ void glcd_Device::WriteData(uint8_t data) {
 			displayData = ~displayData;
 		}
 		lcdDataOut(displayData);		// write data
-		_delayNanoseconds(GLCD_tWH);
+		lcdDelayNanoseconds(GLCD_tWH);
 		glcd_DevENstrobeLo(chip);
 		this->GotoXY(this->Coord.x+1, ysave);
 	}else 
@@ -623,12 +622,12 @@ void glcd_Device::WriteData(uint8_t data) {
 		if(this->Inverted)
 			data = ~data;	  
 
-		_delayNanoseconds(GLCD_tAS);
+		lcdDelayNanoseconds(GLCD_tAS);
 		glcd_DevENstrobeHi(chip);
 	
 		lcdDataOut(data);				// write data
 
-		_delayNanoseconds(GLCD_tWH);
+		lcdDelayNanoseconds(GLCD_tWH);
 
 		glcd_DevENstrobeLo(chip);
 
