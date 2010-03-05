@@ -26,6 +26,7 @@
 
 #include <avr/io.h>
 #include <wiring.h> // needed for arduino io methods
+//#define _delayNanoseconds(__ns)     __builtin_avr_delay_cycles( (double)(F_CPU)*((double)__ns)/1.0e9 + 0.5 )
 
 #include "include/glcd_Device.h"
 #include "include/glcd_io.h"
@@ -382,11 +383,11 @@ void glcd_Device::Init(uint8_t invert)
 	this->GotoXY(0,0);
 }
 
-
+#ifdef glcd_CHIP1
 __inline__ void glcd_Device::SelectChip(uint8_t chip)
 {  
 #ifdef glcd_USE_CHIP_BITMASK 
-// use bitmask
+// use bitmask  
 #ifdef  glcdCSEL1
     if(chipSelect[chip] & 1)
        lcdfastWrite(glcdCSEL1, HIGH);
@@ -426,7 +427,7 @@ __inline__ void glcd_Device::SelectChip(uint8_t chip)
 	}
 #endif
 }
-
+#endif
 
 void glcd_Device::WaitReady( uint8_t chip)
 {
