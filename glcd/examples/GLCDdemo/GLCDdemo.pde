@@ -52,10 +52,13 @@ void  loop()
   int fps = 10000 / duration;
   int fps_fract = (10000 % duration) / 10;
   GLCD.ClearScreen();               // clear the screen  
-  GLCD.CursorToXY(GLCD.CenterX + 16, 8);
+  GLCD.CursorToXY(GLCD.CenterX + 16, 9);
   GLCD.print("GLCD ");
   GLCD.print(GLCD_VERSION, DEC);
-  GLCD.CursorToXY(GLCD.CenterX + 4, 24);
+  if(GLCD.Height <= 32)
+    GLCD.CursorToXY(GLCD.CenterX + 4, 1);
+  else  
+    GLCD.CursorToXY(GLCD.CenterX + 4, 24);
   GLCD.print("FPS=");               // print a text string
   GLCD.print(fps);                  // print an integer value
   GLCD.print(".");
@@ -78,7 +81,7 @@ void introScreen(){
   countdown(3);  
   GLCD.ClearScreen(); 
   scribble(5000);  // run for 5 seconds
-  moveBall(8,5000); // kick ball of radius 8 for 5 seconds
+  moveBall(GLCD.Height/8 ,5000); // kick ball for 5 seconds
   GLCD.SelectFont(System5x7, BLACK);
   GLCD.ClearScreen();  
   showCharacters();
