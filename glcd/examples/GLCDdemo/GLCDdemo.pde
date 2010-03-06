@@ -81,7 +81,7 @@ void introScreen(){
   countdown(3);  
   GLCD.ClearScreen(); 
   scribble(5000);  // run for 5 seconds
-  moveBall(GLCD.Height/8 ,5000); // kick ball for 5 seconds
+  moveBall(6000); // kick ball for 6 seconds
   GLCD.SelectFont(System5x7, BLACK);
   GLCD.ClearScreen();  
   showCharacters();
@@ -277,9 +277,10 @@ byte fn_y( float tick )
 }
 
 
-void moveBall(int ballR, unsigned int duration) 
+void moveBall(unsigned int duration) 
 {
 
+const byte ballR = 4;
 int ballX = GLCD.CenterX + 5;   // X position of the ball 
 int ballY = GLCD.CenterY;       // Y position of the ball
 int ballDirectionY = 1;        // X direction of the ball
@@ -297,14 +298,15 @@ int ballDirectionX = 1;        // Y direction of the ball
       ballDirectionX = -ballDirectionX; 
 	  
      // clear the ball's previous position:
-    GLCD.DrawCircle(ballX, ballY,ballR, WHITE);
+    //GLCD.DrawCircle(ballX, ballY,ballR, WHITE);
+    GLCD.FillRect(ballX-ballR-1, ballY-ballR-1, ballX+ballR, ballY+ballR, WHITE);
    
      // increment the ball's position in both directions:
-    ballX = ballX + 4 * ballDirectionX;
-    ballY = ballY + 4 * ballDirectionY;
+    ballX = ballX + 2 * ballDirectionX;
+    ballY = ballY + 2 * ballDirectionY;
 	  
-    GLCD.DrawCircle(ballX, ballY, ballR, BLACK);
-    delay(50 );
+    GLCD.FillCircle(ballX, ballY, ballR, BLACK);
+    delay(30 );
   }
 }
 
