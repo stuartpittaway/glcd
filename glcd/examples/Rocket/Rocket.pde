@@ -126,7 +126,7 @@ void  loop(){
 void drawLives(){
   GLCD.DrawBitmap(heart, 0, 0, BLACK);
   GLCD.CursorTo(1,0);
-  GLCD.print(lives);
+  GLCD.print((int)lives);
 }
 
 
@@ -139,7 +139,7 @@ void drawLives(){
 void drawScore(){
   GLCD.CursorTo(0,7);
   GLCD.print('S');
-  GLCD.print(score);
+  GLCD.print((int)score);
 }
 
 
