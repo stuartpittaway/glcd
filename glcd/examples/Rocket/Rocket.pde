@@ -4,24 +4,28 @@
  * An asteroid type game made by biegematchbox
  * http://www.beigematchbox.co.uk/site/BeigeMatchbox.co.uk/Electronics/Electronics.html
  *
- * Connect a variable resistor to analog input pin 5 to control rocket position
- * A piezo (or speaker through a series resistor) can be connected to pin 2 for sound 
+ * Connect a variable resistor to analog input pin (potPin) to control rocket position
+ * A piezo (or speaker through a series resistor) can be connected to (speakerPin) for sound 
  *
  * Arduino forum discussion thread here: http://www.arduino.cc/cgi-bin/yabb2/YaBB.pl?num=1265067548
  *
  */
 
 
-
-
-
 #include <glcd.h>
 #include "fonts/SystemFont5x7.h"   // font
 #include "bitmaps.h"         // bitmaps
 
+/*
+******************************
+*  A few pin defines         *
+******************************
+*/
+
+
 #define potPin        5   // analog input pin connected to a variable resistor   
-#define speakerPin    2   // digital pin that can optionally connected to a piezo or speaker for sound
-#define brightnessPin 3   // optional output that can be used to control backlight
+//#define speakerPin    2   // digital pin that can optionally connected to a piezo or speaker for sound
+//#define brightnessPin 3   // optional output that can be used to control backlight
 
 byte brightness = 64;
 
@@ -85,9 +89,12 @@ char trackerOld[8][5] = {
 
 void setup(){
   GLCD.Init();
-  pinMode(13, OUTPUT);
+#ifdef brightnessPin
   analogWrite(brightnessPin, brightness);
+#endif
+#ifdef speakerPin
   pinMode(speakerPin, OUTPUT);
+#endif
     
   GLCD.SelectFont(System5x7);
   randomSeed(analogRead(potPin));
@@ -274,11 +281,24 @@ void gameOver(){
 */
 void explosionAnim(char xPos, char yPos){
   GLCD.DrawBitmap(ex1, xPos, yPos, BLACK);
+#ifdef speakerPin
   noise(175);
+#else
+  delay(175);
+#endif
   GLCD.DrawBitmap(ex2, xPos, yPos, BLACK);
+#ifdef speakerPin
   noise(175);
+#else
+  delay(175);
+#endif
   GLCD.DrawBitmap(ex3, xPos, yPos, BLACK);
+#ifdef speakerPin
   noise(175);
+#else
+  delay(175);
+#endif
+
 }
 
 
@@ -322,6 +342,7 @@ void drawRock(char entity){
   }
 }
 
+#ifdef speakerPin
 /*
 ******************************
 *  make noise for the given
@@ -341,5 +362,4 @@ void noise(int duration)
     delay(period);
   }
 }  
-
-
+#endif
