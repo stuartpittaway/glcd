@@ -140,6 +140,9 @@ class gText : public Print
 	struct tarea tarea;
 	uint8_t			x;
 	uint8_t			y;
+#ifndef GLCD_NODEFER_SCROLL
+	uint8_t			need_scroll; // set when text scroll has been defered
+#endif
 
 	void SpecialChar(char c);
 

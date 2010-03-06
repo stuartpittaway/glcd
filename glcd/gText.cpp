@@ -204,6 +204,12 @@ uint8_t ret = false;
 	this->x = x1;
 	this->y = y1;	
 	
+#ifndef GLCD_NODEFER_SCROLL
+	/*
+	 * Make sure to clear a deferred scroll operation when re defining areas.
+	 */
+	this->need_scroll = 0;
+#endif
     return ret;
 }
 
@@ -511,6 +517,7 @@ void gText::SpecialChar(char c)
 		 *
 		 */
 
+
 		if(this->x < this->tarea.x2)
 			device->SetPixels(this->x, this->y, this->tarea.x2, this->y+height, this->FontColor == BLACK ? WHITE : BLACK);
 
@@ -521,6 +528,7 @@ void gText::SpecialChar(char c)
 		if(this->tarea.mode == SCROLL_UP)
 #endif
 		{
+
 			/*
 			 * Normal/up scroll
 			 */
@@ -533,6 +541,14 @@ void gText::SpecialChar(char c)
 			 */
 			if(this->y + 2*height >= this->tarea.y2)
 			{
+#ifndef GLCD_NODEFER_SCROLL
+					if(!this->need_scroll)
+					{
+						this->need_scroll = 1;
+						return;
+					}
+#endif
+
 				/*
 				 * forumula for pixels to scroll is:
 				 *	(assumes "height" is one less than rendered height)
@@ -611,6 +627,14 @@ void gText::SpecialChar(char c)
 			}
 			else
 			{
+#ifndef GLCD_NODEFER_SCROLL
+					if(!this->need_scroll)
+					{
+						this->need_scroll = 1;
+						return;
+					}
+#endif
+
 				/*
 				 * Scroll down everything to make room for new line
 				 *	(assumes "height" is one less than rendered height)
@@ -716,6 +740,20 @@ int gText::PutChar(char c)
 	   width = FontRead(this->Font+FONT_WIDTH_TABLE+c);
     }
 
+#ifndef GLCD_NODEFER_SCROLL
+	/*
+	 * check for a defered scroll
+	 * If there is a deferred scroll,
+	 * Fake a newline to complete it.
+	 */
+
+	if(this->need_scroll)
+	{
+		this->PutChar('\n'); // fake a newline to cause wrap/scroll
+		this->need_scroll = 0;
+	}
+#endif
+
 	/*
 	 * If the character won't fit in the text area,
 	 * fake a newline to get the text area to wrap and 
@@ -726,6 +764,17 @@ int gText::PutChar(char c)
 	if(this->x + width > this->tarea.x2)
 	{
 		this->PutChar('\n'); // fake a newline to cause wrap/scroll
+#ifndef GLCD_NODEFER_SCROLL
+		/*
+		 * We can't defer a scroll at this point since we need to ouput
+		 * a character right now.
+		 */
+		if(this->need_scroll)
+		{
+			this->PutChar('\n'); // fake a newline to cause wrap/scroll
+			this->need_scroll = 0;
+		}
+#endif
 	}
 
 	// last but not least, draw the character
@@ -1126,6 +1175,13 @@ void gText::CursorTo( uint8_t column, uint8_t row)
 
 	this->x = column * (FontRead(this->Font+FONT_FIXED_WIDTH)+1) + this->tarea.x1;
 	this->y = row * (FontRead(this->Font+FONT_HEIGHT)+1) + this->tarea.y1;
+
+#ifndef GLCD_NODEFER_SCROLL
+	/*
+	 * Make sure to clear a deferred scroll operation when repositioning
+	 */
+	this->need_scroll = 0;
+#endif
 }
 
 // Bill, I think the following would be a useful addition to the API
@@ -1161,6 +1217,13 @@ void gText::CursorTo( int8_t column)
 	  this->x = column * (FontRead(this->Font+FONT_FIXED_WIDTH)+1) + this->tarea.x1;
 	else
    	  this->x -= column * (FontRead(this->Font+FONT_FIXED_WIDTH)+1);   	
+
+#ifndef GLCD_NODEFER_SCROLL
+	/*
+	 * Make sure to clear a deferred scroll operation when repositioning
+	 */
+	this->need_scroll = 0;
+#endif
 }
 
 
@@ -1184,6 +1247,13 @@ void gText::CursorToXY( uint8_t x, uint8_t y)
 	 */
 	this->x = this->tarea.x1 + x;
 	this->y = this->tarea.y1 + y;
+
+#ifndef GLCD_NODEFER_SCROLL
+	/*
+	 * Make sure to clear a deferred scroll operation when repositioning
+	 */
+	this->need_scroll = 0;
+#endif
 }
 
 /**

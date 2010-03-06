@@ -135,6 +135,13 @@ void DefRowColtest(void)
 
 	delay(2000);
 
+	for(uint8_t x = 0; x < 5; x++)
+	{
+		GLCD.Text.Printf("line%d\n", x);
+		delay(750);
+	}
+	delay(2000);
+
 	/*
 	 * Restore default text area
 	 */
@@ -161,14 +168,14 @@ uint8_t a;
 		textArea[a].Printf("Area: %d", a);
 	}
 
-	for(uint8_t y = 0; y < 6; y++)
+	for(uint8_t y = 0; y < 3; y++)
 	{
 		for(uint8_t x = 0; x < 100; x++)
 		{
 			for(a = 0; a < 3; a++)
 			{
 				/*
-				 * Can use overstrike instead of cleararea() with fixed widh fonts
+				 * Can use overstrike instead of cleararea() with fixed width fonts
 				 */
 				textArea[a].CursorTo(0,0);
 				textArea[a].Printf("a:%d:%d:%02d", a, y,x);
@@ -421,8 +428,13 @@ void scrollingDemo()
       // you lose a line in the text area because of the scroll
       // and it no longer works with only a 2 line text area.
 
+#ifdef XXX
        textArea[area].print("\nline ");
        textArea[area].print(x);
+#else
+       textArea[area].print("line ");
+       textArea[area].println(x);
+#endif
        delay(100);
     }
   }
