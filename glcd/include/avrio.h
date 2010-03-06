@@ -4,14 +4,15 @@
  *
  * vi:ts=4
  *
- *	Copyright (C) 2009 Bill Perry. (bill@billsworld.billandterrie.com)
+ *	Copyright (C) 2009,2010 Bill Perry. (bill@billsworld.billandterrie.com)
  *
  * 	This file is included as part of the Arduino GLCD library.
  *
  *	This version of avrio.h is licensed only for use with the Arduino
- *	GLCD Library.
- *	You can download a version that can be used with other code from : 
- *	(FIXME - Need a server location for this)
+ *	GLCD Library when used in Arduino environments.
+ *
+ *	You can download a version of AVRIO that can be used with other code from: 
+ *	http://www.billsworld.billandterrie.com/opensource/avr/avrio
  *
  * GLCD is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -61,7 +62,7 @@
  *
  *	In native AVR (non arduino) enviroments, the pin parameter should be specified using the
  *	pin defintions near the end of this header file.
- *  These pin definitions allow directly specifying a specific AVR pin using a PIN_Pb syntax.
+ *	These pin definitions allow directly specifying a specific AVR pin using a PIN_Pb syntax.
  *	where Pb represents a PORT and a pin#.
  *	This means to specify port D bit 3 would be PIN_D3
  *
