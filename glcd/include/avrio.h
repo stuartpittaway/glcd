@@ -8,8 +8,8 @@
  *
  * 	This file is included as part of the Arduino GLCD library.
  *
- *	This version of avrio.h is licensed only for use with the Arduino
- *	GLCD Library when used in Arduino environments.
+ *	This version of avrio.h is licensed only for use in the Arduino software environment
+ *  with the GLCD Library.
  *
  *	You can download a version of AVRIO that can be used with other code from: 
  *	http://www.billsworld.billandterrie.com/opensource/avr/avrio
