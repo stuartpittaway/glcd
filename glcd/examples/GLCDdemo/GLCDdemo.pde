@@ -223,15 +223,8 @@ void scrollingDemo()
   {
     for(byte area = 0; area < 3; area++)
     {
-      // The newline needs to be sent just before the string to make
-      // the scrolling look correct. It can be moved below
-      // the delay but it won't look as good.
-      // if the newline is done while printing the number,
-      // you lose a line in the text area because of the scroll
-      // and it no longer works with only a 2 line text area.
-
-      textAreaArray[area].print("\nline ");
-      textAreaArray[area].print(x);
+      textAreaArray[area].print("line ");
+      textAreaArray[area].println(x);
       delay(50);
     }
   } 
