@@ -79,8 +79,10 @@
  *
  */
 
-#ifndef	glcd_KS0108_CONFIG_H
-#define glcd_KS0108_CONFIG_H
+#ifndef	GLCD_GLCD_CONFIG_H
+#define GLCD_GLCD_CONFIG_H
+
+#define glcd_ConfigName "Bills-Teensy++-BGMicro"
 
 /*********************************************************/
 /*  Configuration for LCD panel specific configuration   */

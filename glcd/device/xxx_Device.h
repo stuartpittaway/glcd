@@ -21,6 +21,13 @@ The following lcd primitives must be defined
   
 */
 
+#ifndef GLCD_GLCD_DEVICE_H
+#define GLCD_GLCD_DEVICE_H
+
+/*
+ * define name for Device
+ */
+#define glcd_DeviceName "xxx"
 
 /*
  * Sanity check XXX config pins
@@ -105,3 +112,5 @@ The following lcd primitives must be defined
 
 #define glcd_DevCol2addrlo(x)
 #define glcd_DevCol2addrhi(x)
+
+#endif //GLCD_GLCD_DEVICE_H

@@ -5,6 +5,13 @@
   
 */
 
+#ifndef GLCD_GLCD_DEVICE_H
+#define GLCD_GLCD_DEVICE_H
+
+/*
+ * define name for Device
+ */
+#define glcd_DeviceName "sed1520"
 
 /*
  * Sanity check SED1520 config info
@@ -114,3 +121,5 @@ do									\
 #endif
 
 #define glcd_DevXval2ChipCol(x)		((x) < CHIP_WIDTH ? x : (x - CHIP_WIDTH))
+
+#endif //GLCD_GLCD_DEVICE_H

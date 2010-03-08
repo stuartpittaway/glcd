@@ -10,8 +10,13 @@
  *
 */
 
-#ifndef	glcd_KS0108_SANGUINO_CONFIG_H
-#define glcd_KS0108_SANGUINO_CONFIG_H
+#ifndef	GLCD_GLCD_CONFIG_H
+#define GLCD_GLCD_CONFIG_H
+
+/*
+ * define name for configuration
+ */
+#define glcd_ConfigName "Sanguino-ks0108"
 
 /*********************************************************/
 /*  Configuration for LCD panel specific configuration   */
@@ -72,4 +77,4 @@
 
 
 #include "device/ks0108_Device.h"
-#endif
+#endif //GLCD_GLCD_CONFIG_H

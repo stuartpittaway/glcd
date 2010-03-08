@@ -79,8 +79,9 @@
  *
  */
 
-#ifndef	glcd_SED1520_CONFIG_H
-#define glcd_SED1520_CONFIG_H	
+#ifndef	GLCD_GLCD_CONFIG_H
+#define GLCD_GLCD_CONFIG_H
+#define glcd_ConfigName "Bills-BBB-vk5121"
 
 /*********************************************************/
 /*  Configuration for LCD panel specific configuration   */
@@ -132,7 +133,7 @@
 #define GLCD_tDDR	290	/* tACC6: Data Delay time (E high to valid read data) 			*/
 #define GLCD_tAS	20	/* tAW6:  Address setup time (ctrl line changes to E high)		*/
 #define GLCD_tDSW	200	/* tDS6:  Data setup time (Write data lines setup to dropping E)*/
-#define GLCD_tWH    450	/* tEW:   E hi level width (minimum E hi pulse width)			*/ 
+#define GLCD_tWH	450	/* tEW:   E hi level width (minimum E hi pulse width)			*/ 
 						/* NOTE: this probably violate tCYC6, it needs to be tested in	*/
 						/* an environment with full byte accesses  to see if it matters	*/
 						/* If it doesn't work, set it back to 450						*/

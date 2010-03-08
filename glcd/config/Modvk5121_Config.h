@@ -79,8 +79,13 @@
  *
  */
 
-#ifndef	glcd_SED1520_CONFIG_H
-#define glcd_SED1520_CONFIG_H	
+#ifndef	GLCD_GLCD_CONFIG_H
+#define GLCD_GLCD_CONFIG_H
+
+/*
+ * define name for configuration
+ */
+#define glcd_ConfigName "Generic-vk5121"
 
 /*********************************************************/
 /*  Configuration for LCD panel specific configuration   */
@@ -135,4 +140,4 @@
 
 
 #include "device/sed1520_Device.h"
-#endif
+#endif //GLCD_GLCD_CONFIG_H

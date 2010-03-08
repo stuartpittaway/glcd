@@ -5,6 +5,15 @@
   
 */
 
+#ifndef GLCD_GLCD_DEVICE_H
+#define GLCD_GLCD_DEVICE_H
+
+/*
+ * define name for Device
+ */
+#define glcd_DeviceName "hd44102"
+
+
 /*
  * Place holder file - NEEDS to FIXED 
  */
@@ -77,3 +86,5 @@
 
 #define glcd_DevCol2addrlo(x)
 #define glcd_DevCol2addrhi(x)
+
+#endif //GLCD_GLCD_DEVICE_H

@@ -5,6 +5,13 @@
   
 */
 
+#ifndef GLCD_GLCD_DEVICE_H
+#define GLCD_GLCD_DEVICE_H
+
+/*
+ * define name for Device
+ */
+#define glcd_DeviceName "ks0108"
 
 /*
  * Sanity check KS0108 config pins
@@ -71,3 +78,5 @@
 #endif
 
 #define glcd_DevXval2ChipCol(x)		((x) % CHIP_WIDTH)
+
+#endif //GLCD_GLCD_DEVICE_H

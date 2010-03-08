@@ -28,10 +28,15 @@
 #include <avr/pgmspace.h>
 #define P(name)   static const prog_char name[] PROGMEM   // declare a static string in Progmem
 
-#define countdown(x) delay(x * 1000)
-
 #define glcd_CHIP_COUNT ((DISPLAY_WIDTH + CHIP_WIDTH - 1)  / CHIP_WIDTH) // round up if width is not evenly divisable
 #define MAX_ERRORS 10
+
+#ifdef _AVRIO_AVRIO_
+#define GLCDdiagsPIN2STR(x) \
+  glcdpin2str(x, AVRIO_PIN2AVRPORT(AVRIO_PIN2AVRPIN(x)), AVRIO_PIN2AVRBIT(AVRIO_PIN2AVRPIN(x)))
+#else
+#define GLCDdiagsPIN2STR(x) glcdpin2str(x)
+#endif
 
  P(hline) = "-----------------------------------------------------\n";  // declare hline as string in progmem
 
@@ -60,9 +65,8 @@ extern "C" {
 
 void SerialPrintf(const char *fmt, ...)
 {
-  FILE stdiostr;
-
-  va_list ap;
+FILE stdiostr;
+va_list ap;
 
   fdev_setup_stream(&stdiostr, serialputc, NULL, _FDEV_SETUP_WRITE);
 
@@ -88,6 +92,19 @@ void setup()
 
   SerialPrintP(PSTR("Serial initialized\n"));
   delay(5);    // allow the hardware time settle
+
+  /*
+   * Dump GLCD config information *before* trying to talk to the GLCD
+   * in case there is a problem talking to the GLCD.
+   * This way ensure the GLCD information is always available.
+   */
+
+  /*
+   * dump the GLCD library configuration information to
+   * the serial port.
+   */
+  showGLCDconfig();
+
   GLCD.Init();   // initialise the library, non inverted writes pixels onto a clear screen
   GLCD.SelectFont(System5x7, BLACK);
 
@@ -108,13 +125,9 @@ void setup()
   {
      GLCD.print(char('A' + i)); // show the ascii character
   }
+  GLCD.print('\n');
   delay(5000);
 
-  /*
-   * dump the GLCD library configuration information to
-   * the serial port.
-   */
-  showGLCDconfig();
 }
 
 void  loop()
@@ -152,13 +165,13 @@ uint8_t lcdmemtest(void)
 {
   uint8_t errors = 0;
 
-  SerialPrintf("Walking 1s data test\n");
+  SerialPrintP(PSTR("Walking 1s data test\n"));
 
   errors = lcdw1test();
   if(errors)
     return(errors);
 
-  SerialPrintP(PSTR("Write/Read Chip Select Test\n"));
+  SerialPrintP(PSTR("Wr/Rd Chip Select Test\n"));
 
   errors = lcdw1test();
   if(errors)
@@ -480,58 +493,69 @@ int lcdvpagetest(uint8_t x1, uint8_t x2, uint8_t spage, uint8_t epage, uint8_t s
 void showGLCDconfig(void)
 {
   SerialPrintP(hline);
-  SerialPrintP( PSTR("GLCD Library Configuration: Library VER: "));
+  SerialPrintP( PSTR("GLCD Lib Configuration: Library VER: "));
   SerialPrintf("%d\n", GLCD_VERSION);
   SerialPrintP(hline);
-  SerialPrintf("DisplayWidth:%3d DisplayHeight:%2d\n", GLCD.Height, GLCD.Width);
-  SerialPrintf("ChipWidth:%3d ChipHeight:%2d\n", CHIP_WIDTH, CHIP_HEIGHT);
-  SerialPrintf("#Chips:%d", glcd_CHIP_COUNT);
+  SerialPrintP( PSTR("Configuration:"));
+  SerialPrintP( PSTR(glcd_ConfigName));
+  SerialPrintP( PSTR(" GLCD:"));
+  SerialPrintP( PSTR(glcd_DeviceName));
+  SerialPrintf("\n");
 
+  SerialPrintf("DisplayWidth:%d DisplayHeight:%d\n", GLCD.Height, GLCD.Width);
+  SerialPrintf("Chips:%d", glcd_CHIP_COUNT);
+  SerialPrintf(" ChipWidth:%3d ChipHeight:%2d\n", CHIP_WIDTH, CHIP_HEIGHT);
+
+#ifdef glcdRES
+  SerialPrintf("RES:%s", GLCDdiagsPIN2STR(glcdRES));
+#endif
 #ifdef glcdCSEL1
-  SerialPrintf(" CSEL1:%s", glcdpin2str(glcdCSEL1));
+  SerialPrintf(" CSEL1:%s", GLCDdiagsPIN2STR(glcdCSEL1));
 #endif
 #ifdef glcdCSEL2
-  SerialPrintf(" CSEL2:%s", glcdpin2str(glcdCSEL2));
+  SerialPrintf(" CSEL2:%s", GLCDdiagsPIN2STR(glcdCSEL2));
 #endif
 #ifdef glcdCSEL3
-  SerialPrintf(" CSEL3:%s", glcdpin2str(glcdCSEL3));
+  SerialPrintf(" CSEL3:%s", GLCDdiagsPIN2STR(glcdCSEL3));
 #endif
 #ifdef glcdCSEL4
-  SerialPrintf(" CSEL4:%s", glcdpin2str(glcdCSEL4));
+  SerialPrintf(" CSEL4:%s", GLCDdiagsPIN2STR(glcdCSEL4));
 #endif
 
-  SerialPrintf(" RW:%s", glcdpin2str(glcdRW));
-  SerialPrintf(" DI:%s", glcdpin2str(glcdDI));
+  SerialPrintf(" RW:%s", GLCDdiagsPIN2STR(glcdRW));
+  SerialPrintf(" DI:%s", GLCDdiagsPIN2STR(glcdDI));
 
 #ifdef glcdEN
-  SerialPrintf(" EN:%s", glcdpin2str(glcdEN));
+  SerialPrintf(" EN:%s", GLCDdiagsPIN2STR(glcdEN));
 #endif
 
 #ifdef glcdE1
-  SerialPrintf(" E1:%s", glcdpin2str(glcdE1));
+  SerialPrintf(" E1:%s", GLCDdiagsPIN2STR(glcdE1));
 #endif
 #ifdef glcdE2
-  SerialPrintf(" E2:%s", glcdpin2str(glcdE2));
+  SerialPrintf(" E2:%s", GLCDdiagsPIN2STR(glcdE2));
 #endif
 
   SerialPrintf("\n");
 
-  SerialPrintf("D0:%s", glcdpin2str(glcdData0Pin));
-  SerialPrintf(" D1:%s", glcdpin2str(glcdData1Pin));
-  SerialPrintf(" D2:%s", glcdpin2str(glcdData2Pin));
-  SerialPrintf(" D3:%s", glcdpin2str(glcdData3Pin));
-  SerialPrintf(" D4:%s", glcdpin2str(glcdData4Pin));
-  SerialPrintf(" D5:%s", glcdpin2str(glcdData5Pin));
-  SerialPrintf(" D6:%s", glcdpin2str(glcdData6Pin));
-  SerialPrintf(" D7:%s", glcdpin2str(glcdData7Pin));
+  SerialPrintf("D0:%s", GLCDdiagsPIN2STR(glcdData0Pin));
+  SerialPrintf(" D1:%s", GLCDdiagsPIN2STR(glcdData1Pin));
+  SerialPrintf(" D2:%s", GLCDdiagsPIN2STR(glcdData2Pin));
+  SerialPrintf(" D3:%s", GLCDdiagsPIN2STR(glcdData3Pin));
+  SerialPrintf(" D4:%s", GLCDdiagsPIN2STR(glcdData4Pin));
+  SerialPrintf(" D5:%s", GLCDdiagsPIN2STR(glcdData5Pin));
+  SerialPrintf(" D6:%s", GLCDdiagsPIN2STR(glcdData6Pin));
+  SerialPrintf(" D7:%s", GLCDdiagsPIN2STR(glcdData7Pin));
 
   SerialPrintf("\n");
 
 
-  SerialPrintf("tDDR:%d tAS:%d tDSW:%d tWH:%d tWL: %d\n",
+  SerialPrintf("Delays: tDDR:%d tAS:%d tDSW:%d tWH:%d tWL: %d\n",
   GLCD_tDDR, GLCD_tAS, GLCD_tDSW, GLCD_tWH, GLCD_tWL);
+
+#ifdef _AVRIO_AVRIO_
   /*
-   * Show GLCD data mode
+   * Show AVRIO GLCD data mode
    *
    * Requires getting down and dirty and mucking around done
    * in avrio land.
@@ -552,7 +576,7 @@ void showGLCDconfig(void)
   }
   else
   {
-    SerialPrintf("\n d0-d3:");
+    SerialPrintP(PSTR("\n d0-d3:"));
     if(AVRDATA_4BITHI(glcdData0Pin, glcdData1Pin, glcdData2Pin, glcdData3Pin) ||
       AVRDATA_4BITLO(glcdData0Pin, glcdData1Pin, glcdData2Pin, glcdData3Pin))
     {
@@ -587,15 +611,15 @@ void showGLCDconfig(void)
     SerialPrintf("\n");
   }
 
+#endif // _AVRIO_AVRIO_
+
   /*
    * Show font rendering:
    */
 
-  SerialPrintP(PSTR("Text Render: "));
 #ifdef GLCD_OLD_FONTDRAW
+  SerialPrintP(PSTR("Text Render: "));
   SerialPrintP(PSTR("OLD\n"));
-#else
-  SerialPrintP(PSTR("NEW\n"));
 #endif
 
   /*
@@ -608,23 +632,37 @@ void showGLCDconfig(void)
 
 }
 
-char *
-glcdpin2str(uint16_t pin)
-{
-  static char buf[8];
-
 #ifdef _AVRIO_AVRIO_
+/*
+ * The avrio version of the pin string will also contain
+ * the AVR port and bit number of the pin.
+ * The format is PIN_Pb where P is the port A-Z 
+ * and b is the bit number within the port 0-7
+ */
+char *
+glcdpin2str(uint8_t pin, uint8_t avrport, uint8_t avrbit)
+{
+static char buf[15];
 
   if(pin >= AVRIO_PIN(AVRIO_PORTA, 0))
   {
-    sprintf(buf, "0x%x", pin);
+    sprintf(buf, "0x%x(PIN_%c%d)", pin, 'A'-AVRIO_PORTA+avrport, avrbit);
   }
   else
-#endif
   {
-    sprintf(buf, "%d", pin);
+    sprintf(buf, "%d(PIN_%c%d)", pin, 'A'-AVRIO_PORTA+avrport, avrbit);
   }
   return(buf);
 }
+#else
+char *
+glcdpin2str(uint16_t pin)
+{
+static char buf[8];
+
+  sprintf(buf, "%d", pin);
+  return(buf);
+}
+#endif
 
 

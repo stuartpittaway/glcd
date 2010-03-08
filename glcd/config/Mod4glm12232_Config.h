@@ -92,8 +92,13 @@
  *
  */
 
-#ifndef	glcd_SED1520_CONFIG_H
-#define glcd_SED1520_CONFIG_H	
+#ifndef	GLCD_GLCD_CONFIG_H
+#define GLCD_GLCD_CONFIG_H
+
+/*
+ * define name for configuration
+ */
+#define glcd_ConfigName	"Generic-4GLM12232"
 
 /*********************************************************/
 /*  Configuration for LCD panel specific configuration   */
@@ -140,9 +145,9 @@
 #define GLCD_tDDR	320	/* tACC6: Data Delay time (E high to valid read data) 			*/
 #define GLCD_tAS	20	/* tAW6:  Address setup time (ctrl line changes to E high)		*/
 #define GLCD_tDSW	200	/* tDS6:  Data setup time (Write data lines setup to dropping E)*/
-#define GLCD_tWH    450	/* tEW:   E hi level width (minimum E hi pulse width)			*/ 
+#define GLCD_tWH	450	/* tEW:   E hi level width (minimum E hi pulse width)			*/ 
 #define GLCD_tWL	450	/* E lo level width (minimum E lo pulse width)					*/
 
 
 #include "device/sed1520_Device.h"
-#endif
+#endif //GLCD_GLCD_CONFIG_H

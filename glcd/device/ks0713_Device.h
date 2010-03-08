@@ -5,6 +5,13 @@
 
 */
 
+#ifndef GLCD_GLCD_DEVICE_H
+#define GLCD_GLCD_DEVICE_H
+
+/*
+ * define name for Device
+ */
+#define glcd_DeviceName "ks0713"
 
 /*
  * Sanity check KS0713 config pins
@@ -97,3 +104,5 @@
 
 #define glcd_DevCol2addrlo(x)		(x & 0xf)	// lo nibble
 #define glcd_DevCol2addrhi(x)		(x & 0xf0)	// hi nibble
+
+#endif //GLCD_GLCD_DEVICE_H

@@ -16,9 +16,13 @@
  *	CS2		- Strap to Vcc
  */
 
-#ifndef	glcd_KS0713_CONFIG_H
-#define glcd_KS0713_CONFIG_H	
+#ifndef	GLCD_GLCD_CONFIG_H
+#define GLCD_GLCD_CONFIG_H
 
+/*
+ * define name for configuration
+ */
+#define glcd_ConfigFile "Generic-ks0713"
 
 /*********************************************************/
 /*  Configuration for LCD panel specific configuration   */
@@ -59,4 +63,4 @@
 #define GLCD_tWL	450	/* E lo level width (minimum E lo pulse width)		*/
 
 #include "device/ks0713_Device.h"
-#endif
+#endif //GLCD_GLCD_CONFIG_H

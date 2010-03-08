@@ -79,8 +79,10 @@
  *
  */
 
-#ifndef	glcd_KS0108_CONFIG_H
-#define glcd_KS0108_CONFIG_H
+#ifndef	GLCD_GLCD_CONFIG_H
+#define GLCD_GLCD_CONFIG_H
+
+#define glcd_ConfigName "Bills-BBB-BGMicro"
 
 /*********************************************************/
 /*  Configuration for LCD panel specific configuration   */
@@ -115,7 +117,7 @@
 #define glcdRW			    2
 #define glcdEN			    3
 
-#define glcdData0Pin		4
+#define glcdData0Pin		0xd4
 #define glcdData1Pin		5
 #define glcdData2Pin		6
 #define glcdData3Pin		7
@@ -154,9 +156,9 @@
 #define GLCD_tDDR	320	/* Data Delay time (E high to valid read data) 		*/
 #define GLCD_tAS	140	/* Address setup time (ctrl line changes to E high)	*/
 #define GLCD_tDSW	200	/* Data setup time (data lines setup to dropping E)	*/
-#define GLCD_tWH    450	/* E hi level width (minimum E hi pulse width)		*/
+#define GLCD_tWH	450	/* E hi level width (minimum E hi pulse width)		*/
 #define GLCD_tWL	450	/* E lo level width (minimum E lo pulse width)		*/
 
 
 #include "device/ks0108_Device.h"
-#endif
+#endif //GLCD_GLCD_CONFIG_H
