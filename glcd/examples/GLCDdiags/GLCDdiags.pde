@@ -502,7 +502,7 @@ void showGLCDconfig(void)
   SerialPrintP( PSTR(glcd_DeviceName));
   SerialPrintf("\n");
 
-  SerialPrintf("DisplayWidth:%d DisplayHeight:%d\n", GLCD.Height, GLCD.Width);
+  SerialPrintf("DisplayWidth:%d DisplayHeight:%d\n", GLCD.Width, GLCD.Height);
   SerialPrintf("Chips:%d", glcd_CHIP_COUNT);
   SerialPrintf(" ChipWidth:%3d ChipHeight:%2d\n", CHIP_WIDTH, CHIP_HEIGHT);
 
@@ -664,5 +664,4 @@ static char buf[8];
   return(buf);
 }
 #endif
-
 
