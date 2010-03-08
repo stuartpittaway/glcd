@@ -383,7 +383,7 @@ void glcd_Device::Init(uint8_t invert)
 	this->GotoXY(0,0);
 }
 
-#ifdef glcd_CHIP1
+#ifdef glcdCSEL1  // if at least one chip select pin is defined
 __inline__ void glcd_Device::SelectChip(uint8_t chip)
 {  
 #ifdef glcd_USE_CHIP_BITMASK 
