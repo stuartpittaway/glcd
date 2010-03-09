@@ -304,7 +304,7 @@ volatile void *avrportaddr = digitalPinToPortReg(pin);
  */
 #define avrio_PinMode(pin, dir) 		avrio_WriteBit(AVRIO_DDRREG, pin, dir)
 #define avrio_PinMode8Pins(pin0, pin1, pin2, pin3, pin4, pin5, pin6, pin7) \
- 	 avrio_WriteBits(AVRIO_DDRREG, pin0, pin1, pin2, pin3, pin4, pin5, pin6, pin7)
+ 	 avrio_Write8Bits(AVRIO_DDRREG, pin0, pin1, pin2, pin3, pin4, pin5, pin6, pin7)
 
 #define avrio_ReadPin(pin) 			avrio_ReadBit(AVRIO_PINREG, pin)
 #define avrio_Read8Pins(pin0, pin1, pin2, pin3, pin4, pin5, pin6, pin7) \
@@ -312,7 +312,7 @@ volatile void *avrportaddr = digitalPinToPortReg(pin);
 
 #define avrio_WritePin(pin, data)		avrio_WriteBit(AVRIO_PORTREG, pin, data)
 #define avrio_Write8Pins(pin0, pin1, pin2, pin3, pin4, pin5, pin6, pin7) \
- 	 avrio_WriteBits(AVRIO_PORTREG, pin0, pin1, pin2, pin3, pin4, pin5, pin6, pin7)
+ 	 avrio_Write8Bits(AVRIO_PORTREG, pin0, pin1, pin2, pin3, pin4, pin5, pin6, pin7)
 
 
 /*
