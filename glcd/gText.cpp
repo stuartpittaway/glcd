@@ -502,7 +502,7 @@ uint8_t col;
 /*
  * Handle all special processing characters
  */
-void gText::SpecialChar(char c)
+void gText::SpecialChar(uint8_t c)
 {
 
 
@@ -675,7 +675,7 @@ void gText::SpecialChar(char c)
  * @see write()
  */
 
-int gText::PutChar(char c)
+int gText::PutChar(uint8_t c)
 {
     if(this->Font == 0)
 	  return 0; // no font selected
@@ -1114,7 +1114,7 @@ void gText::Puts(char* str)
 {
     while(*str)
 	{
-        this->PutChar(*str);
+        this->PutChar((uint8_t)*str);
         str++;
     }
 }
@@ -1136,7 +1136,7 @@ void gText::Puts(char* str)
 
 void gText::Puts_P(PGM_P str)
 {
-char c;
+uint8_t c;
 
     while((c = pgm_read_byte(str)) != 0)
 	{

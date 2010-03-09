@@ -144,7 +144,7 @@ class gText : public Print
 	uint8_t			need_scroll; // set when text scroll has been defered
 #endif
 
-	void SpecialChar(char c);
+	void SpecialChar(uint8_t c);
 
 	// Scroll routines are private for now
 	void ScrollUp(uint8_t x1, uint8_t y1, uint8_t x2, uint8_t y2, uint8_t pixels, uint8_t color);
@@ -169,7 +169,7 @@ class gText : public Print
 	// Font Functions
 	void SelectFont(const uint8_t* font, uint8_t color=BLACK, FontCallback callback=ReadPgmData); // default arguments added, callback now last arg
 	void SetFontColor(uint8_t color); // new method
-	int PutChar(char c);
+	int PutChar(uint8_t c);
 	void Puts(char *str);
 	void Puts_P(PGM_P str);
 
