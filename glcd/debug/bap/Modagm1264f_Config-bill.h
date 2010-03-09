@@ -92,7 +92,7 @@
 
 // panel controller chips
 #define CHIP_WIDTH     64 	// pixels per chip 
-#define CHIP_HEIGHT    128	// pixels per chip 
+#define CHIP_HEIGHT    64	// pixels per chip 
 
 /*********************************************************/
 /*  Configuration for assigning LCD bits to Arduino Pins */
