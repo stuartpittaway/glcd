@@ -26,18 +26,11 @@
 
 #include <avr/io.h>
 #include <wiring.h> // needed for arduino io methods
-//#define _delayNanoseconds(__ns)     __builtin_avr_delay_cycles( (double)(F_CPU)*((double)__ns)/1.0e9 + 0.5 )
 
 #include "include/glcd_Device.h"
 #include "include/glcd_io.h"
 
 
-
-#define glcd_CHIP_COUNT ((DISPLAY_WIDTH + CHIP_WIDTH - 1)  / CHIP_WIDTH) // round up if width is not evenly divisable
-
-#ifdef glcd_USE_CHIP_BITMASK  // use the chipSelect array if this is defined in the config file
-static uint8_t chipSelect[glcd_CHIP_COUNT] ; //static array for sequencing chip, order given in config file
-#endif
 
 /*
  * Experimental define
@@ -251,25 +244,6 @@ void glcd_Device::GotoXY(uint8_t x, uint8_t y)
 void glcd_Device::Init(uint8_t invert)
 {  
 
-#ifdef glcd_USE_CHIP_BITMASK	
-    /*
-	 * initialize the chip select array, this provides the select sequence as defined in the configuration header file
-	 * glcd_CHIPx is a mask where each bit corresponds to a chip select line
-	 */
-#ifdef glcd_CHIP1 && glcd_CHIP_COUNT > 0
-    chipSelect[0] =  glcd_CHIP1;
-#endif	
-#ifdef glcd_CHIP2 && glcd_CHIP_COUNT > 1	
-    chipSelect[1] =  glcd_CHIP2;	
-#endif	
-#ifdef  glcd_CHIP3 && glcd_CHIP_COUNT > 2
-	chipSelect[2] =  glcd_CHIP3;  // displays that are larger than 128 pixels
-#endif
-#ifdef  glcd_CHIP4 && glcd_CHIP_COUNT > 3
-	chipSelect[3] =  glcd_CHIP4;  // displays that are larger than 192 pixels
-#endif
-#endif
-
 	/*
 	 * Now setup the pinmode for all of our control pins.
 	 * The data lines will be configured as necessary when needed.
@@ -383,49 +357,30 @@ void glcd_Device::Init(uint8_t invert)
 	this->GotoXY(0,0);
 }
 
-#ifdef glcdCSEL1  // if at least one chip select pin is defined
+#ifdef glcd_CHIP0  // if at least one chip select string
 __inline__ void glcd_Device::SelectChip(uint8_t chip)
 {  
-#ifdef glcd_USE_CHIP_BITMASK 
-// use bitmask  
-#ifdef  glcdCSEL1
-    if(chipSelect[chip] & 1)
-       lcdfastWrite(glcdCSEL1, HIGH);
-	else
-	   lcdfastWrite(glcdCSEL1, LOW);
+
+#ifdef XXX
+	if(chip == 0) lcdChipSelect(glcd_CHIP0);
+	else lcdChipSelect(glcd_CHIP1);
 #endif
-#ifdef  glcdCSEL2
-	if(chipSelect[chip] & 2)
-       lcdfastWrite(glcdCSEL2, HIGH);
-	else
-	   lcdfastWrite(glcdCSEL2, LOW);
-#endif	   
-#ifdef  glcdCSEL3
-	if(chipSelect[chip] & 4)
-       lcdfastWrite(glcdCSEL3, HIGH);
-	else
-	   lcdfastWrite(glcdCSEL3, LOW);
+	
+
+	if(chip == 0) lcdChipSelect(glcd_CHIP0);
+#ifdef glcd_CHIP1
+	else if(chip == 1) lcdChipSelect(glcd_CHIP1);
 #endif
-#ifdef  glcdCSEL4
-	if(chipSelect[chip] & 8)
-       lcdfastWrite(glcdCSEL4, HIGH);
-	else
-	   lcdfastWrite(glcdCSEL4, LOW);
+#ifdef glcd_CHIP2
+	else if(chip == 2) lcdChipSelect(glcd_CHIP2);
+#endif
+#ifdef glcd_CHIP3
+	else if(chip == 3) lcdChipSelect(glcd_CHIP3);
+#endif
+#ifdef glcd_CHIP4
+	else if(chip == 4) lcdChipSelect(glcd_CHIP4);
 #endif
 
-#else
-// use default hard coded chip select (faster but less flexible)
-	if(chip)
-	{
-       lcdfastWrite(glcdCSEL2, HIGH);
-	   lcdfastWrite(glcdCSEL1, LOW);
-	}
-	else
-	{
-       lcdfastWrite(glcdCSEL1, HIGH);
-	   lcdfastWrite(glcdCSEL2, LOW);
-	}
-#endif
 }
 #endif
 

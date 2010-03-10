@@ -17,8 +17,8 @@
 
 #define PULL_UP  HIGH
 
-const int  btnForward = 2;  // buttons to set clock hands
-const int  btnBack = 3;
+const int  btnForward = 16;  // buttons to set clock hands
+const int  btnBack = 17;
 
 AnalogClock analogClock = AnalogClock();  // this creates an instance of the analog clock display. 
 

@@ -79,8 +79,8 @@
  *
  */
 
-#ifndef	GLCD_GLCD_CONFIG_H
-#define GLCD_GLCD_CONFIG_H
+#ifndef	GLCD_PANEL_CONFIG_H
+#define GLCD_PANEL_CONFIG_H
 
 #define glcd_ConfigName "Bills-Teensy++-BGMicro"
 

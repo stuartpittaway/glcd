@@ -79,8 +79,8 @@
  *
  */
 
-#ifndef	GLCD_GLCD_CONFIG_H
-#define GLCD_GLCD_CONFIG_H
+#ifndef	GLCD_PANEL_CONFIG_H
+#define GLCD_PANEL_CONFIG_H
 
 #define glcd_ConfigName "Bills-BBB-BGMicro"
 
@@ -93,6 +93,10 @@
 // panel controller chips
 #define CHIP_WIDTH     64 	// pixels per chip 
 #define CHIP_HEIGHT    64	// pixels per chip 
+
+// calculate number of chips & round up if width is not evenly divisable
+#define glcd_CHIP_COUNT ((DISPLAY_WIDTH + CHIP_WIDTH - 1)  / CHIP_WIDTH)
+
 
 /*********************************************************/
 /*  Configuration for assigning LCD bits to Arduino Pins */
@@ -131,11 +135,8 @@
 
 #define glcdRES 		    15
 
-// bitmask to sequence chip select 
-// you can swap around the elements below if your display is reversed
-#define glcd_CHIP1  1
-#define glcd_CHIP2  2
-//#define glcd_CHIP3  0 // used only for a three chip (192 pixel) panel (0, 1, 2)
+#define glcd_CHIP0	glcdCSEL1,HIGH, glcdCSEL2,LOW
+#define glcd_CHIP1  glcdCSEL1,LOW, glcdCSEL2,HIGH
 
 
 
@@ -161,4 +162,4 @@
 
 
 #include "device/ks0108_Device.h"
-#endif //GLCD_GLCD_CONFIG_H
+#endif //GLCD_PANEL_CONFIG_H

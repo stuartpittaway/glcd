@@ -92,8 +92,8 @@
  *
  */
 
-#ifndef	GLCD_GLCD_CONFIG_H
-#define GLCD_GLCD_CONFIG_H
+#ifndef	GLCD_PANEL_CONFIG_H
+#define GLCD_PANEL_CONFIG_H
 
 /*
  * define name for configuration
@@ -150,4 +150,4 @@
 
 
 #include "device/sed1520_Device.h"
-#endif //GLCD_GLCD_CONFIG_H
+#endif //GLCD_PANEL_CONFIG_H

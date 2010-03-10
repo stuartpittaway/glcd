@@ -28,7 +28,6 @@
 #include <avr/pgmspace.h>
 #define P(name)   static const prog_char name[] PROGMEM   // declare a static string in Progmem
 
-#define glcd_CHIP_COUNT ((DISPLAY_WIDTH + CHIP_WIDTH - 1)  / CHIP_WIDTH) // round up if width is not evenly divisable
 #define MAX_ERRORS 10
 
 #ifdef _AVRIO_AVRIO_
@@ -39,6 +38,10 @@
 #endif
 
  P(hline) = "-----------------------------------------------------\n";  // declare hline as string in progmem
+
+
+#define xstr(s) str(s)
+#define str(...) #__VA_ARGS__
 
 /*
  * print Progmem string to the serial port
@@ -522,6 +525,7 @@ void showGLCDconfig(void)
   SerialPrintf(" CSEL4:%s", GLCDdiagsPIN2STR(glcdCSEL4));
 #endif
 
+
   SerialPrintf(" RW:%s", GLCDdiagsPIN2STR(glcdRW));
   SerialPrintf(" DI:%s", GLCDdiagsPIN2STR(glcdDI));
 
@@ -547,11 +551,33 @@ void showGLCDconfig(void)
   SerialPrintf(" D6:%s", GLCDdiagsPIN2STR(glcdData6Pin));
   SerialPrintf(" D7:%s", GLCDdiagsPIN2STR(glcdData7Pin));
 
-  SerialPrintf("\n");
+  SerialPrintP(PSTR("\n"));
 
 
   SerialPrintf("Delays: tDDR:%d tAS:%d tDSW:%d tWH:%d tWL: %d\n",
   GLCD_tDDR, GLCD_tAS, GLCD_tDSW, GLCD_tWH, GLCD_tWL);
+
+  SerialPrintP(PSTR("ChipSelects:"));
+
+#ifdef glcd_CHIP0
+  SerialPrintP(PSTR(" CHIP0:"));
+  SerialPrintP(PSTR(xstr(glcd_CHIP0)));
+#endif
+#ifdef glcd_CHIP1
+  SerialPrintP(PSTR(" CHIP1:"));
+  SerialPrintP(PSTR(xstr(glcd_CHIP1)));
+#endif
+#ifdef glcd_CHIP2
+  SerialPrintP(PSTR(" CHIP2:"));
+  SerialPrintP(PSTR(xstr(glcd_CHIP2)));
+#endif
+#ifdef glcd_CHIP3
+  SerialPrintP(PSTR(" CHIP3:"));
+  SerialPrintP(PSTR(xstr(glcd_CHIP3)));
+#endif
+  SerialPrintP(PSTR("\n"));
+
+
 
 #ifdef _AVRIO_AVRIO_
   /*

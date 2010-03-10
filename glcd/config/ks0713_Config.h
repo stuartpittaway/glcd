@@ -16,8 +16,8 @@
  *	CS2		- Strap to Vcc
  */
 
-#ifndef	GLCD_GLCD_CONFIG_H
-#define GLCD_GLCD_CONFIG_H
+#ifndef	GLCD_PANEL_CONFIG_H
+#define GLCD_PANEL_CONFIG_H
 
 /*
  * define name for configuration
@@ -63,4 +63,4 @@
 #define GLCD_tWL	450	/* E lo level width (minimum E lo pulse width)		*/
 
 #include "device/ks0713_Device.h"
-#endif //GLCD_GLCD_CONFIG_H
+#endif //GLCD_PANEL_CONFIG_H

@@ -5,8 +5,8 @@
 
 */
 
-#ifndef GLCD_GLCD_DEVICE_H
-#define GLCD_GLCD_DEVICE_H
+#ifndef GLCD_PANEL_DEVICE_H
+#define GLCD_PANEL_DEVICE_H
 
 /*
  * define name for Device
@@ -105,4 +105,4 @@
 #define glcd_DevCol2addrlo(x)		(x & 0xf)	// lo nibble
 #define glcd_DevCol2addrhi(x)		(x & 0xf0)	// hi nibble
 
-#endif //GLCD_GLCD_DEVICE_H
+#endif //GLCD_PANEL_DEVICE_H

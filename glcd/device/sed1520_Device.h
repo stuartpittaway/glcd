@@ -5,8 +5,8 @@
   
 */
 
-#ifndef GLCD_GLCD_DEVICE_H
-#define GLCD_GLCD_DEVICE_H
+#ifndef GLCD_PANEL_DEVICE_H
+#define GLCD_PANEL_DEVICE_H
 
 /*
  * define name for Device
@@ -39,11 +39,12 @@
 #error "SED1520 configuration does not use glcdEN"
 #endif
 
-#ifdef glcdCSEL1
-#error "SED1520 configuration does not use glcdCSEL1"
+#ifdef glcd_CHIP0
+#error "SED1520 configuration does not use glcd_CHIP0"
 #endif
-#ifdef glcdCSEL1
-#error "SED1520 configuration does not use glcdCSEL2"
+
+#ifdef glcd_CHIP2
+#error "SED1520 configuration does not use glcd_CHIP0"
 #endif
 
 /*
@@ -122,4 +123,4 @@ do									\
 
 #define glcd_DevXval2ChipCol(x)		((x) < CHIP_WIDTH ? x : (x - CHIP_WIDTH))
 
-#endif //GLCD_GLCD_DEVICE_H
+#endif //GLCD_PANEL_DEVICE_H

@@ -79,8 +79,9 @@
  *
  */
 
-#ifndef	GLCD_GLCD_CONFIG_H
-#define GLCD_GLCD_CONFIG_H
+#ifndef	GLCD_PANEL_CONFIG_H
+#define GLCD_PANEL_CONFIG_H
+
 #define glcd_ConfigName "Bills-BBB-vk5121"
 
 /*********************************************************/
@@ -92,6 +93,9 @@
 // panel controller chips
 #define CHIP_WIDTH     60  // pixels per chip 
 #define CHIP_HEIGHT    32  // pixels per chip 
+
+// calculate number of chips & round up if width is not evenly divisable
+#define glcd_CHIP_COUNT ((DISPLAY_WIDTH + CHIP_WIDTH - 1)  / CHIP_WIDTH)
 
 /*********************************************************/
 /*  Configuration for assigning LCD bits to Arduino Pins */

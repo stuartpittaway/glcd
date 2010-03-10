@@ -137,4 +137,56 @@
 
 #define lcdDelayMilliseconds(__ms) delay(__ms)	// Arduino delay function
 
+
+/*
+ * functions to perform chip selects on panel configurations
+ * that use them.
+ */
+
+#ifdef glcd_CHIP0 // check to see if panel uses chip selects
+
+
+/*
+ * First some sanity checks
+ */
+
+#ifndef glcd_CHIP_COUNT
+#error glcd_CHIP_COUNT not defined
+#endif
+
+/*
+ * The actual functions/macros that do the chip selects.
+ * each macro is passed a chipselect string defined
+ * in the config file. This string has 1, 2, 3, 4, ....
+ * pairs of data that define pins that need to be set to
+ * a high/low value.
+ * These macros rip those strings apart and generate the
+ * functions to set the pin values.
+ */
+
+#if (glcd_CHIP_COUNT > 4)
+#error GLCD chip count beyond max of 4
+#elif (glcd_CHIP_COUNT == 4)
+#define lcdChipSelect(cselstr) lcdChipSelect4(cselstr)
+#elif (glcd_CHIP_COUNT == 3)
+#define lcdChipSelect(cselstr) lcdChipSelect3(cselstr)
+#elif (glcd_CHIP_COUNT == 2)
+#define lcdChipSelect(cselstr) lcdChipSelect2(cselstr)
+#elif (glcd_CHIP_COUNT == 1)
+#define lcdChipSelect(cselstr) lcdChipSelect1(cselstr)
+#endif
+
+#define lcdChipSelect1(p,v) lcdfastWrite(p,v)
+
+#define lcdChipSelect2(p1,v1, p2,v2) \
+ do {lcdChipSelect1(p1, v1); lcdChipSelect1(p2,v2);} while(0)
+
+#define lcdChipSelect3(p1,v1, p2,v2, p3,v3) \
+ do {lcdChipSelect1(p1, v1); lcdChipSelect1(p2,v2); lcdChipSelect1(p3,v3);} while(0)
+
+#define lcdChipSelect4(p1,v1, p2,v2, p3,v3, p4,v4) \
+ do {lcdChipSelect1(p1, v1); lcdChipSelect1(p2,v2); lcdChipSelect1(p3,v3); lcdChipSelect1(p4,v4);} while(0)
+
+#endif // glcd_CHIP0
+
 #endif // GLCD_IO_H

@@ -5,8 +5,8 @@
   
 */
 
-#ifndef GLCD_GLCD_DEVICE_H
-#define GLCD_GLCD_DEVICE_H
+#ifndef GLCD_PANEL_DEVICE_H
+#define GLCD_PANEL_DEVICE_H
 
 /*
  * define name for Device
@@ -15,14 +15,30 @@
 
 /*
  * Sanity check KS0108 config pins
+ *
+ *	Help the user detect pin configuration errors by
+ *	detecting when defines are missing or are incorrect.
+ *
  */
 
-#ifndef glcdCSEL1
-#error "KS0108 configuration missing glcdCSEL1"
+#if glcd_CHIP_COUNT == 2 && !defined(glcd_CHIP1)
+#error "2 chips defined but glcd_CHIP1 chip selects not defined"
 #endif
-#ifndef glcdCSEL2
-#error "KS0108 configuration missing glcdCSEL2"
+
+#if glcd_CHIP_COUNT == 3 && !defined(glcd_CHIP2)
+#error "3 chips defined but glcd_CHIP2 chip selects not defined"
 #endif
+
+#if glcd_CHIP_COUNT == 4 && !defined(glcd_CHIP3)
+#error "4 chips defined but glcd_CHIP3 chip selects not defined"
+#endif
+
+#if DISPLAY_WIDTH > 255
+#warning "Current ks0108 code only suports up to 255 pixels, downsizing width to 255"
+#undef DISPLAY_WIDTH
+#define DISPLAY_WIDTH 255
+#endif
+
 
 #ifndef glcdEN
 #error "KS0108 configuration missing glcdEN"
@@ -66,6 +82,15 @@
 
 /*
  * Convert X & Y coordinates to chip values
+ * The macros below assume that chips are either
+ * horizontal (normal) or vertical.
+ * Horizontal has never been tested and while close
+ * the DevXval2ChipCol() macro is currently incorrect for
+ * this configuration.
+ *
+ * If a module does both say for something like a 128x128
+ * with 64 pixels each, then the macros below will have
+ * to be corrected to acccount for this.
  *
  * While it looks like espensive divides, it will
  * actually map to masking because chip widths/heights
@@ -79,4 +104,4 @@
 
 #define glcd_DevXval2ChipCol(x)		((x) % CHIP_WIDTH)
 
-#endif //GLCD_GLCD_DEVICE_H
+#endif //GLCD_PANEL_DEVICE_H
