@@ -166,42 +166,28 @@
 
 #if (glcd_CHIP_COUNT > 4)
 #error GLCD chip count beyond max of 4
-#elif (glcd_CHIP_COUNT == 4)
+#endif
+
+#if defined(glcdCSEL4)
 #define lcdChipSelect(cselstr) lcdChipSelect4(cselstr)
-#elif (glcd_CHIP_COUNT == 3)
+#elif defined(glcdCSEL3)
 #define lcdChipSelect(cselstr) lcdChipSelect3(cselstr)
-#elif (glcd_CHIP_COUNT == 2)
+#elif defined(glcdCSEL2)
 #define lcdChipSelect(cselstr) lcdChipSelect2(cselstr)
-#elif (glcd_CHIP_COUNT == 1)
+#elif defined(glcdCSEL1)
 #define lcdChipSelect(cselstr) lcdChipSelect1(cselstr)
 #endif
 
 #define lcdChipSelect1(p,v) lcdfastWrite(p,v)
 
-#ifdef glcdCSEL2	
 #define lcdChipSelect2(p1,v1, p2,v2) \
  do {lcdChipSelect1(p1, v1); lcdChipSelect1(p2,v2);} while(0)
-#endif 
 
-#ifdef glcdCSEL3	 
 #define lcdChipSelect3(p1,v1, p2,v2, p3,v3) \
  do {lcdChipSelect1(p1, v1); lcdChipSelect1(p2,v2); lcdChipSelect1(p3,v3);} while(0)
-#else
-// assume a two pin chip select if CS3 is not defined
-#define lcdChipSelect3(p1,v1, p2,v2) \
- do {lcdChipSelect1(p1, v1); lcdChipSelect1(p2,v2);} while(0)
-#endif
 
-#ifdef glcdCSEL3 && if defined glcdCSEL4	
 #define lcdChipSelect4(p1,v1, p2,v2, p3,v3, p4,v4) \
  do {lcdChipSelect1(p1, v1); lcdChipSelect1(p2,v2); lcdChipSelect1(p3,v3); lcdChipSelect1(p4,v4);} while(0)
-#else
-// assume a two pin chip select if CS3 and CS4 are not defined
-#define lcdChipSelect3(p1,v1, p2,v2) \
- do {lcdChipSelect1(p1, v1); lcdChipSelect1(p2,v2);} while(0)
-#define lcdChipSelect4(p1,v1, p2,v2) \
- do {lcdChipSelect1(p1, v1); lcdChipSelect1(p2,v2);} while(0)
-#endif
 
 #endif // glcd_CHIP0
 

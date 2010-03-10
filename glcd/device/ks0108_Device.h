@@ -33,6 +33,19 @@
 #error "4 chips defined but glcd_CHIP3 chip selects not defined"
 #endif
 
+#if defined(glcd_CHIP3) && glcd_CHIP_COUNT < 4
+#error "glcd_CHIP3 defined for less than 4 chips"
+#endif
+
+#if defined(glcd_CHIP2) && glcd_CHIP_COUNT < 3
+#error "glcd_CHIP2 defined for less than 3 chips"
+#endif
+
+#if defined(glcd_CHIP1) && glcd_CHIP_COUNT < 2
+#error "glcd_CHIP1 defined for less than 2 chips"
+#endif
+
+
 #if DISPLAY_WIDTH > 255
 #warning "Current ks0108 code only suports up to 255 pixels, downsizing width to 255"
 #undef DISPLAY_WIDTH
