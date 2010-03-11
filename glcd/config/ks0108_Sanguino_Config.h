@@ -35,11 +35,11 @@
  * pins used for Commands
  */
 
-#define CSEL1				24 		// CS1 Bit   // swap pin assignments with CSEL2 if left/right image is reversed
-#define CSEL2				25 		// CS2 Bit
-#define R_W					26 		// R/W Bit
-#define D_I					27 		// D/I Bit 
-#define EN					28 		// EN Bit
+#define glcdCSEL1			24 		// CS1 Bit   // swap pin assignments with CSEL2 if left/right image is reversed
+#define glcdCSEL2			25 		// CS2 Bit
+#define glcdRW				26 		// R/W Bit
+#define glcdDI				27 		// D/I Bit 
+#define glcdEN				28 		// EN Bit
 
 /*
  * Data pin definitions
@@ -57,10 +57,6 @@
 
 // defines for panel specific timing 
 /*
- *	Nov 2009
- *	Low level additions added by Bill Perry
- *	bill@billsworld.billandterrie.com
- *
  * The following defines are for low level timing.
  * They have been derived from looking at many ks0108 data sheets.
  * Nearly all of the datasheets have the same low level timing.
