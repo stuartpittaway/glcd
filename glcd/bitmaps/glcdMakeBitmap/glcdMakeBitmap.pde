@@ -4,7 +4,7 @@
  * Creates a bitmap definition file that can be included in an Arduino sketch
  * to display a bitmap image on a graphics LCD using the Arduino GLCD library.
  *
- * Created  6 Nov  2008  Copyright Michael Margolis 2008
+ * Created  6 Nov  2008  Copyright Michael Margolis 2008,2010
  * updated  14 Feb 2010  
  */
 
@@ -43,7 +43,7 @@ void clearWindow()
   fill(255);
   rect(0,0, width, height);
   fill(0); // font in black
-  text("Drop image file (gif, jpg, tga, png) here", 10 ,height - 40);
+  text("Drop image file (gif, jpg, bmp, tga, png) here", 10 ,height - 40);
   bitmap = null;  
 }
 
