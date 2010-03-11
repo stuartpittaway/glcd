@@ -130,7 +130,15 @@ void setup()
   }
   GLCD.print('\n');
   delay(5000);
-
+  // show chips
+  GLCD.ClearScreen();
+  for(int chip = 0; chip < glcd_CHIP_COUNT; chip++)
+  {
+    GLCD.CursorToXY(chip * CHIP_WIDTH,0);
+    GLCD.print("Chip:");
+    GLCD.print(chip);
+  }
+  delay(5000);
 }
 
 void  loop()
@@ -690,4 +698,3 @@ static char buf[8];
   return(buf);
 }
 #endif
-
