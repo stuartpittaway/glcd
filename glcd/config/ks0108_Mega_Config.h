@@ -28,17 +28,20 @@
 #define CHIP_WIDTH     64  // pixels per chip 
 #define CHIP_HEIGHT    64  // pixels per chip 
 
+// calculate number of chips & round up if width is not evenly divisable
+#define glcd_CHIP_COUNT ((DISPLAY_WIDTH + CHIP_WIDTH - 1)  / CHIP_WIDTH)
+
 /*********************************************************/
 /*  Configuration for assigning LCD bits to Arduino Pins */
 /*********************************************************/
 /*
- * Pns used for Commands
+ * Pins used for Commands
  */
-#define CSEL1				33		// CS1 Bit  
-#define CSEL2				34		// CS2 Bit
-#define R_W					35		// R/W Bit
-#define D_I					36		// D/I Bit 
-#define EN					37		// EN Bit
+#define glcdCSEL1			33		// CS1 Bit  
+#define glcdCSEL2			35		// CS2 Bit
+#define glcdRW				35		// R/W Bit
+#define glcdDI				36		// D/I Bit 
+#define glcdEN				37		// EN Bit
 
 /*
  * Data pin definitions
@@ -53,13 +56,23 @@
 #define glcdData6Pin		28
 #define glcdData7Pin		29
 
+/*********************************************************/
+/*  Chip Select pin assignments                          */
+/*********************************************************/
+#define CS_2Chips_2Pins    // default has two chips selected using two pins
+
+/*
+ * Two Chip panels using two select pins
+ * you can swap the HIGH and LOW values if you need to reverse chip order
+ */
+
+#ifdef CS_2Chips_2Pins
+#define glcd_CHIP0 glcdCSEL1,HIGH, glcdCSEL2,LOW
+#define glcd_CHIP1 glcdCSEL1,LOW, glcdCSEL2,HIGH
+#endif
 
 // defines for panel specific timing 
 /*
- *	Nov 2009
- *	Low level additions added by Bill Perry
- *	bill@billsworld.billandterrie.com
- *
  * The following defines are for low level timing.
  * They have been derived from looking at many ks0108 data sheets.
  * Nearly all of the datasheets have the same low level timing.
