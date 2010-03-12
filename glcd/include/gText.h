@@ -27,7 +27,7 @@
 #include <inttypes.h>
 #include <avr/pgmspace.h>
 
-#include "include/streaming.h" 
+#include "include/Streaming.h" 
 #include "include/glcd_Device.h"
 
 
