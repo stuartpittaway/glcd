@@ -1,11 +1,11 @@
 /*
- * glcd_Arduino_Config.h - User specific configuration for Arduino GLCD library
+ * glcd_Config.h - User specific configuration for Arduino GLCD library
  *
  * vi:ts=4
  *
  * Use this file to set io pins and LCD panel parameters
- * This version is for a standard ks0108 display
- * connected using the default Arduino wiring
+ * This a version is for a standard ks0108 display
+ * that can be customized for your controller chip
  *
 */
 
@@ -15,7 +15,7 @@
 /*
  * define name for configuration
  */
-#define glcd_ConfigName "Arduino-ks0108"
+#define glcd_ConfigName "custom-ks0108"
 
 /*********************************************************/
 /*  Configuration for LCD panel specific configuration   */
@@ -27,11 +27,14 @@
 #define CHIP_WIDTH     64  // pixels per chip 
 #define CHIP_HEIGHT    64  // pixels per chip 
 
+// calculate number of chips & round up if width is not evenly divisable
+#define glcd_CHIP_COUNT ((DISPLAY_WIDTH + CHIP_WIDTH - 1)  / CHIP_WIDTH)
+
 /*********************************************************/
 /*  Configuration for assigning LCD bits to Arduino Pins */
 /*********************************************************/
-/* Arduino pins used for Commands
- * default assignment uses the first five analog pins
+/* pins used for Commands 
+ * set these to match your wiring
  */
 
  // control pins
@@ -53,25 +56,19 @@
 #define glcdData6Pin		6
 #define glcdData7Pin		7
 
-/*
- * Optional bitmasks to sequence chip select 
- * each bit corresponds to a chip select line
- * you can swap around the elements below if your display is not in the correct sequence
- *
- * if glcd_USE_CHIP_BITMASK is not defined then chip1 uses CSEL1, chip2 uses CSEL2
- */
+/*********************************************************/
+/*  Chip Select pin assignments                          */
+/*********************************************************/
 
-//#define glcd_USE_CHIP_BITMASK   // un-comment this line for displays with more than 2 chips 
+ /*
+  * Panels with two chips selected using two select pins
+  */
+#define glcd_CHIP0 glcdCSEL1,HIGH, glcdCSEL2,LOW
+#define glcd_CHIP1 glcdCSEL1,LOW, glcdCSEL2,HIGH
 
-#ifdef glcd_USE_CHIP_BITMASK 
-#define glcd_CHIP1  1
-#define glcd_CHIP2  2
-#define glcd_CHIP3  4 // used only for a three chip (192 pixel) panel 
-#define glcd_CHIP4  8 // used only for a four chip (> 192 pixel) panel 
-#endif
 
 /*
- * The following defines are for panel spefici low level timing.
+ * The following defines are for panel specific low level timing.
  *
  * See your data sheet for the exact timing and waveforms.
  * All defines below are in nanoseconds.
