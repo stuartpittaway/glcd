@@ -19,6 +19,9 @@
 
 #define ARDUINOICON_GLCD_HEIGHT 64 
 #define ARDUINOICON_GLCD_WIDTH  64 
+
+#define ArduinoIcon64x64 ArduinoIcon
+
 static unsigned char ArduinoIcon[] PROGMEM = {
 	64, // width
 	64, // height
