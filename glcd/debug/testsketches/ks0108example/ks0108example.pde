@@ -11,8 +11,8 @@
 #include <glcd.h>
 #include "fonts/Arial14.h"         // proportional font
 #include "fonts/SystemFont5x7.h"   // system font
-#include "bitmaps/ArduinoIcon64x64.h"     // bitmap 
-#include "include/glcd_Deprecated.h"
+#include "bitmaps/ArduinoIcon.h"     // bitmap 
+//#include "include/glcd_Deprecated.h"
 
 unsigned long startMillis;
 unsigned int loops = 0;
