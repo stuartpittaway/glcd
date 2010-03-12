@@ -46,10 +46,6 @@
 // zero length is flag indicating fixed width font (array does not contain width data entries)
 #define isFixedWidtFont(font)  (FontRead(font+FONT_LENGTH) == 0 && FontRead(font+FONT_LENGTH+1) == 0))
 
-
-typedef uint8_t (*FontCallback)(const uint8_t*);
-
-
 /*
  * Coodinates for predefined areas are compressed into a single 32 bit token.
  *
@@ -113,8 +109,9 @@ typedef enum  {
   * enums for ansi style erase function
   * These values match the ANSI EraseInLine terminal primitive: CSI n K
 */  
-typedef enum {eraseTO_EOL, eraseFROM_BOL, eraseFULL_LINE} eraseLine_t;  	
-
+typedef enum {eraseTO_EOL, eraseFROM_BOL, eraseFULL_LINE} eraseLine_t;
+typedef const uint8_t* Font_t;  	
+typedef uint8_t (*FontCallback)(Font_t);
 
 uint8_t ReadPgmData(const uint8_t* ptr);	//Standard Read Callback
 static glcd_Device    *device;              // static pointer to the device instance
@@ -136,7 +133,7 @@ class gText : public Print
   private:
     //FontCallback	FontRead;     // now static, move back here if each instance needs its own callback
 	uint8_t			FontColor;
-	const uint8_t*	Font;
+	Font_t			Font;
 	struct tarea tarea;
 	uint8_t			x;
 	uint8_t			y;
@@ -155,19 +152,19 @@ class gText : public Print
     gText(uint8_t x1, uint8_t y1, uint8_t x2, uint8_t y2, textMode mode=DEFAULT_SCROLLDIR);
 	// 4 Feb - added two constuctors (and SetFontColor below) 
 	gText(predefinedArea selection, textMode mode=DEFAULT_SCROLLDIR);
-	gText(uint8_t x1, uint8_t y1, uint8_t columns, uint8_t rows, const uint8_t* font, textMode mode=DEFAULT_SCROLLDIR);
+	gText(uint8_t x1, uint8_t y1, uint8_t columns, uint8_t rows, Font_t font, textMode mode=DEFAULT_SCROLLDIR);
 
 	//void Init(glcd_Device* _device); // no longer used
 
 	// Text area functions
 	uint8_t DefineArea(uint8_t x1, uint8_t y1, uint8_t x2, uint8_t y2, textMode mode=DEFAULT_SCROLLDIR);
-	uint8_t DefineArea(uint8_t x1, uint8_t y1, uint8_t columns, uint8_t rows, const uint8_t* font, textMode mode=DEFAULT_SCROLLDIR);
+	uint8_t DefineArea(uint8_t x1, uint8_t y1, uint8_t columns, uint8_t rows, Font_t font, textMode mode=DEFAULT_SCROLLDIR);
 	uint8_t DefineArea(predefinedArea selection, textMode mode=DEFAULT_SCROLLDIR);
 	void SetTextMode(textMode mode); // change to the given text mode
 	void ClearArea(void);
 
 	// Font Functions
-	void SelectFont(const uint8_t* font, uint8_t color=BLACK, FontCallback callback=ReadPgmData); // default arguments added, callback now last arg
+	void SelectFont(Font_t font, uint8_t color=BLACK, FontCallback callback=ReadPgmData); // default arguments added, callback now last arg
 	void SetFontColor(uint8_t color); // new method
 	int PutChar(uint8_t c);
 	void Puts(char *str);
