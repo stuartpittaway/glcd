@@ -59,6 +59,12 @@
 #define NON_INVERTED false
 #define INVERTED     true
 
+typedef const uint8_t* Image_t;
+
+// the first two bytes of bitmap data are the width and height
+#define bitmapWidth(bitmap)  (*bitmap)  
+#define bitmapHeight(bitmap)  (*(bitmap+1))  
+
 class glcd : public glcd_Device  // glcd_Device has low level device access routines
 {
   private:
@@ -83,7 +89,7 @@ class glcd : public glcd_Device  // glcd_Device has low level device access rout
 	void InvertRect(uint8_t x, uint8_t y, uint8_t width, uint8_t height);
 	void DrawCircle(uint8_t xCenter, uint8_t yCenter, uint8_t radius, uint8_t color= BLACK);	
 	void FillCircle(uint8_t xCenter, uint8_t yCenter, uint8_t radius, uint8_t color= BLACK);	
-	void DrawBitmap(const uint8_t * bitmap, uint8_t x, uint8_t y, uint8_t color= BLACK);
+	void DrawBitmap(Image_t bitmap, uint8_t x, uint8_t y, uint8_t color= BLACK);
 	
 	// Text class
 	gText Text; // making this class public allows access to undocumented functions, not sure if we should allow that.
