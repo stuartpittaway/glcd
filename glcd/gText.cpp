@@ -62,7 +62,7 @@ gText::gText(predefinedArea selection, textMode mode)
 
 }
 
-gText::gText(uint8_t x1, uint8_t y1, uint8_t columns, uint8_t rows, const uint8_t* font, textMode mode)
+gText::gText(uint8_t x1, uint8_t y1, uint8_t columns, uint8_t rows, Font_t font, textMode mode)
 {
    device = (glcd_Device*)&GLCD; 
    if( ! this->DefineArea(x1,y1,columns,rows,font, mode))
@@ -128,7 +128,7 @@ void gText::ClearArea(void)
  */
 
 uint8_t
-gText::DefineArea(uint8_t x, uint8_t y, uint8_t columns, uint8_t rows, const uint8_t* font, textMode mode)
+gText::DefineArea(uint8_t x, uint8_t y, uint8_t columns, uint8_t rows, Font_t font, textMode mode)
 {
 uint8_t x2,y2;
 
@@ -1348,7 +1348,7 @@ void gText::EraseTextLine( uint8_t row)
  *
  */
 
-void gText::SelectFont(const uint8_t* font,uint8_t color, FontCallback callback)
+void gText::SelectFont(Font_t font,uint8_t color, FontCallback callback)
 {
 	this->Font = font;
 	FontRead = callback;  // this sets the callback that will be used by all instances of gText
