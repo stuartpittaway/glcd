@@ -28,6 +28,9 @@
 #define CHIP_WIDTH     64  // pixels per chip 
 #define CHIP_HEIGHT    64  // pixels per chip 
 
+// calculate number of chips & round up if width is not evenly divisable
+#define glcd_CHIP_COUNT ((DISPLAY_WIDTH + CHIP_WIDTH - 1)  / CHIP_WIDTH)
+
 /*********************************************************/
 /*  Configuration for assigning LCD bits to Arduino Pins */
 /*********************************************************/
@@ -53,6 +56,13 @@
 #define glcdData5Pin		5
 #define glcdData6Pin		6
 #define glcdData7Pin		7
+
+
+/*
+ * Two Chip panel using two select pins
+ */
+#define glcd_CHIP0 glcdCSEL1,HIGH, glcdCSEL2,LOW
+#define glcd_CHIP1 glcdCSEL1,LOW, glcdCSEL2,HIGH
 
 
 // defines for panel specific timing 
