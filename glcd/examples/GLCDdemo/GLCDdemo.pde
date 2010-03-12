@@ -126,9 +126,9 @@ void  textAreaDemo()
   showArea( textAreaRIGHT,      "Right");
   showArea( textAreaLEFT,       "Left"); 
   showArea( textAreaTOPLEFT,    "Top Left");
-  showArea( textAreaTOPRIGHT,   "Top Rright");
-  showArea( textAreaBOTTOMLEFT, "Bottom Left"); 
-  showArea( textAreaBOTTOMRIGHT,"Bottom Right ");  
+  showArea( textAreaTOPRIGHT,   "Top Right");
+  showArea( textAreaBOTTOMLEFT, "Bot Left"); 
+  showArea( textAreaBOTTOMRIGHT,"Bot Right");  
 }
 
 void showArea(predefinedArea area, char *description)
@@ -148,8 +148,8 @@ void showArea(predefinedArea area, char *description)
   textArea.SelectFont(System5x7);
   textArea.SetFontColor(WHITE); 
   textArea.ClearArea(); 
-  textArea.print(description);
-  textArea.print("  text area");
+  textArea.println(description);
+  textArea.print("text area");
   delay(1000);
   textArea.SetFontColor(WHITE); 
   textArea.ClearArea();
