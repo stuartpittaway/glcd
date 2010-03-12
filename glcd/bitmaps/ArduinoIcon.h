@@ -1,6 +1,6 @@
 /* ArduinoIcon.h bitmap file for GLCD library              */
 /* This header file is provided mainly for backward        */
-/* compability with the ks0108 library.                    */
+/* compatibility with the ks0108 library.                  */
 /*                                                         */
 /* It also provides for a "default" Arduino icon which is  */
 /* 64 by 64 pixels.                                        */
