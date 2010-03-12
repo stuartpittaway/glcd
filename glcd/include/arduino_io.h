@@ -53,11 +53,12 @@
 #elif defined(__AVR_ATmega644P__) || defined(__AVR_ATmega644__)  
 // Sanguino or other ATmega644 controller
 #define digitalPinToPortReg(P) \   
-    (((P) >= 0 && (P) <= 7)   ? &PORTB : (((P) >= 8 && (P) <= 15) ? &PORTD : \
+    (((P) >= 0 && (P) <= 7)   ? &PORTB : \
+	(((P) >= 8 && (P) <= 15)  ? &PORTD : \
  	(((P) >= 16 && (P) <= 23) ? &PORTC : &PORTA)))
 #define digitalPinToBit(P) \
-     (((P) >= 0 && (P) <= 23) ? (P) : (P) - 7 )
-#error "ATmega644 has not been tested"
+     (((P) >= 0 && (P) <= 23) ? (P%8) : (P%8) - 7 )
+//#error "ATmega644 has not been tested"
 #else	
 #error "Arduino pin mapping not defined for this board"
 #endif
