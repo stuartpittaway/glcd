@@ -121,9 +121,10 @@ void setup()
   /*
    * show sequential ascii characters 
    */
-  GLCD.CursorTo(0,3); 
+  GLCD.CursorTo(0,2); 
   GLCD.print("GLCD ver ");
-  GLCD.println(GLCD_VERSION, DEC);
+  GLCD.print(GLCD_VERSION, DEC); // no newline to prevent erase EOL
+  GLCD.CursorTo(0,3); 
   for(int i=0; i  < GLCD.Width / GLCD.CharWidth(' '); i++ )
   {
      GLCD.print(char('A' + i)); // show the ascii character
@@ -565,9 +566,8 @@ void showGLCDconfig(void)
   SerialPrintf("Delays: tDDR:%d tAS:%d tDSW:%d tWH:%d tWL: %d\n",
   GLCD_tDDR, GLCD_tAS, GLCD_tDSW, GLCD_tWH, GLCD_tWL);
 
-  SerialPrintP(PSTR("ChipSelects:"));
-
 #ifdef glcd_CHIP0
+  SerialPrintP(PSTR("ChipSelects:"));
   SerialPrintP(PSTR(" CHIP0:"));
   SerialPrintP(PSTR(xstr(glcd_CHIP0)));
 #endif
@@ -583,7 +583,10 @@ void showGLCDconfig(void)
   SerialPrintP(PSTR(" CHIP3:"));
   SerialPrintP(PSTR(xstr(glcd_CHIP3)));
 #endif
+
+#ifdef glcd_CHIP0
   SerialPrintP(PSTR("\n"));
+#endif
 
 
 
