@@ -475,7 +475,7 @@ void glcd::SetDisplayMode(uint8_t invert) {  // was named SetInverted
  *
  */
 
-void glcd::DrawBitmap(const uint8_t * bitmap, uint8_t x, uint8_t y, uint8_t color){
+void glcd::DrawBitmap(Image_t bitmap, uint8_t x, uint8_t y, uint8_t color){
 uint8_t width, height;
 uint8_t i, j;
 
