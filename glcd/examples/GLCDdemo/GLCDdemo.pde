@@ -15,6 +15,8 @@
 #include "bitmaps/ArduinoIcon64x64.h"  // 64x64 pixel bitmap 
 #include "bitmaps/ArduinoIcon64x32.h"  // 32 pixel high bitmap  
 
+Image_t ArduinoIcon;
+
 gText textArea;              // a text area to be defined later in the sketch
 gText textAreaArray[3];      // an array of text areas  
 gText countdownArea =  gText(GLCD.CenterX, GLCD.CenterY,1,1,Arial_14); // text area for countdown digits
@@ -27,6 +29,10 @@ unsigned int  iter = 0;
 void setup()
 {
   GLCD.Init();   // initialise the library, non inverted writes pixels onto a clear screen
+  if(GLCD.Height >= 64)   
+    ArduinoIcon = ArduinoIcon64x64;  // the 64 pixel high icon
+  else
+    ArduinoIcon = ArduinoIcon64x32;  // the 32 pixel high icon
   introScreen();
   GLCD.ClearScreen();    
   GLCD.SelectFont(System5x7, BLACK); // font for the default text area
@@ -67,10 +73,7 @@ void  loop()
 
 
 void introScreen(){  
-  if(GLCD.Height >= 64)   
-    GLCD.DrawBitmap(ArduinoIcon, 32,0); //draw the bitmap at the given x,y position
-  else
-    GLCD.DrawBitmap(ArduinoIcon64x32, 32,0); // 32 pixel high bitmap for smaller displays
+  GLCD.DrawBitmap(ArduinoIcon, 32,0); //draw the bitmap at the given x,y position
   countdown(3);
   GLCD.ClearScreen();
   GLCD.SelectFont(Arial_14); // you can also make your own fonts, see playground for details   
@@ -134,16 +137,8 @@ void  textAreaDemo()
 void showArea(predefinedArea area, char *description)
 {
   GLCD.ClearScreen(); 
-  if(GLCD.Height >= 64) 
-  {  
-    GLCD.DrawBitmap(ArduinoIcon, 0,0); 
-    GLCD.DrawBitmap(ArduinoIcon, 64, 0); 
-  }
-  else
-  {
-    GLCD.DrawBitmap(ArduinoIcon64x32, 0,0); 
-    GLCD.DrawBitmap(ArduinoIcon64x32, 64,0); 
-  }
+  GLCD.DrawBitmap(ArduinoIcon, 0,  0); 
+  GLCD.DrawBitmap(ArduinoIcon, 64, 0); 
   textArea.DefineArea(area);
   textArea.SelectFont(System5x7);
   textArea.SetFontColor(WHITE); 
@@ -302,6 +297,5 @@ int ballDirectionX = 1;        // Y direction of the ball
     delay(30 );
   }
 }
-
 
 
