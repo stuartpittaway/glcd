@@ -11,10 +11,8 @@
 #include <Time.h>  // download from: http://www.arduino.cc/playground/Code/Time
 #include <glcd.h>
 
-#include "fonts/SystemFont5x7.h"       // system font
-#include "fonts/Arial14.h"             // proportional font
-#include "bitmaps/ArduinoIcon64x64.h"  // 64x64 pixel bitmap 
-#include "bitmaps/ArduinoIcon64x32.h"  // 32 pixel high bitmap  
+#include "fonts/allFonts.h"         // system and arial14 fonts are used
+#include "bitmaps/allBitmaps.h"   // all images in the bitmap dir 
 
 Image_t ArduinoIcon;
 
@@ -311,5 +309,4 @@ void FPS( const byte width, const byte height)
   GLCD.print(".");
   GLCD.print(fps_fract);  
 }
-
 
