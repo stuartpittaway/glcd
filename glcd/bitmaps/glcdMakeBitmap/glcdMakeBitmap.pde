@@ -12,9 +12,8 @@ import java.awt.dnd.*;
 import java.awt.datatransfer.*;
 
 String sourceImage;
-String destinationOffset = "../"; // for gui 
-//String destinationOffset = "../../";  // use this if making the exe version
-
+String destinationOffset  ;
+String aggregateHeader = "allBitmaps.h";
 
 PImage bitmap;
 PFont aFont;
@@ -32,10 +31,18 @@ void setup()
   aFont   = createFont("Arial.bold", 12);
   textFont(aFont) ; 
   clearWindow();
+  destinationOffset =  sketchPath("") + ".." + File.separator ; // up one directory when running from Processing IDE
+  // use the following only when making the EXE versions 
+  //destinationOffset = sketchPath("") + ".." + File.separator + ".." + File.separator ;  
+
 }
 
 void draw()
 {
+}
+
+void mousePressed() {  
+  listImageHeaderFiles( destinationOffset, aggregateHeader );
 }
 
 void clearWindow()
@@ -43,7 +50,8 @@ void clearWindow()
   fill(255);
   rect(0,0, width, height);
   fill(0); // font in black
-  text("Drop image file (gif, jpg, bmp, tga, png) here", 10 ,height - 40);
+  text("Drop image file (gif, jpg, bmp, tga, png) here", 10 ,height - 50);
+  text("Click window to refresh " + aggregateHeader, 20 ,height - 30);
   bitmap = null;  
 }
 
@@ -72,12 +80,14 @@ void convert(String sourceImage)
     String baseName = getBaseName(sourceImage);
     writeFile(sourceImage, baseName);    
     println("created header file for " + sourceImage);  
-    text("Created file: " + baseName + ".h", 20 ,height - 20);
+    text("Created file: " + baseName + ".h", 20 ,height - 10);
+    // now update the headernts.h file so the new image is included
+    listImageHeaderFiles(destinationOffset, aggregateHeader);
   }
   else
   {
     println("Unable to load image");  
-    text("Unable to load image", 20 ,height - 20);
+    text("Unable to load image", 20 ,height - 10);
   }
 }
 
@@ -86,17 +96,17 @@ void writeFile(String inFileName, String baseName)
   print("basename = "); 
   println(baseName);  
   String outFileName = destinationOffset + baseName + ".h"; 
- // String outFileName = baseName + ".h"; 
+  // String outFileName = baseName + ".h"; 
   print("Output file name = "); 
   println(outFileName);
-  
+
   PrintWriter output;
   output = createWriter(outFileName);
 
   output.println("/* " + outFileName + " bitmap file for GLCD library */");
   output.println("/* Bitmap created from " + inFileName + "        */");
   String[] monthName = {
-    "","Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"    };
+    "","Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"      };
   output.println("/* Date: " +  day() + " " + monthName[month()] +  " " +  year() + "                             */" ); 
   output.println();
 
@@ -218,6 +228,60 @@ DropTarget dt = new DropTarget(this, new DropTargetListener() {
 }
 );
 
+
+// this routine creates a file that lists all the H file in destination
+void listImageHeaderFiles(String destination, String outFilename)
+{  
+
+  String outPath = destination + outFilename;
+  PrintWriter output;
+  output = createWriter(outPath);
+  output.println("/* " + outFilename + " bitmap header for GLCD library */");
+  output.println("/* This file is created automatically by the glcdMakeBitmap utility */");
+  output.println("/* Any edits to this file will be lost when glcdMakeBitmap is next run */");
+  output.println();
+  
+  println("\nCreating header file " + outFilename + " that includes : ");
+  File dir = new File(destination);
+  if (dir.isDirectory()) {
+    File[] files = dir.listFiles();
+    for (int i = 0; i < files.length; i++) {
+      if( files[i].isDirectory() == false){        
+        String name = files[i].getName();
+        if(name.endsWith(".h") && ! name.equals(outFilename)){        
+           output.println("#include " + '\"' + name + '\"' );
+           println(name);
+        }
+      }
+    }
+  }
+  else
+     println(destination + " is not a directory");
+
+  output.flush(); // Write the remaining data
+  output.close(); // Finish the file     
+}
+
+
+// this routine creates a file that lists all the H file in destination
+void listImageHeaderFilesX(String destination, String outFileName)
+{  
+ 
+  File dir = new File(destination);
+  if (dir.isDirectory()) {
+    File[] files = dir.listFiles();
+    for (int i = 0; i < files.length; i++) {
+      File f = files[i];    
+      if( f.isDirectory() == false){        
+        String name = f.getName();
+        if(name.endsWith(".h"))        
+          println("Name: " + name);
+      }
+    }
+  }
+  else
+     println(destination + " is not a directory");
+}
 
 
 
