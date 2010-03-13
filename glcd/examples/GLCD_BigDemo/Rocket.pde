@@ -22,9 +22,8 @@
 ******************************
 */
 
+#include "BigDemo.h"
 
-#define potPin        0   // analog input pin connected to a variable resistor   
-#define speakerPin    19   // digital pin that can optionally connected to a piezo or speaker for sound
 //#define brightnessPin 3   // optional output that can be used to control backlight
 
 byte brightness = 64;
@@ -89,8 +88,8 @@ char trackerOld[8][5] = {
 
 void rocket(int duration)
 {
-#ifdef speakerPin
-  pinMode(speakerPin, OUTPUT);
+#ifdef speakerAPin
+  pinMode(speakerAPin, OUTPUT);
 #endif
   GLCD.SelectFont(System5x7);
   randomSeed(analogRead(potPin));
@@ -278,19 +277,19 @@ void gameOver(){
 */
 void explosionAnim(char xPos, char yPos){
   GLCD.DrawBitmap(ex1, xPos, yPos, BLACK);
-#ifdef speakerPin
+#ifdef speakerAPin
   noise(175);
 #else
   delay(175);
 #endif
   GLCD.DrawBitmap(ex2, xPos, yPos, BLACK);
-#ifdef speakerPin
+#ifdef speakerAPin
   noise(175);
 #else
   delay(175);
 #endif
   GLCD.DrawBitmap(ex3, xPos, yPos, BLACK);
-#ifdef speakerPin
+#ifdef speakerAPin
   noise(175);
 #else
   delay(175);
@@ -339,7 +338,7 @@ void drawRock(char entity){
   }
 }
 
-#ifdef speakerPin
+#ifdef speakerAPin
 /*
 ******************************
 *  make noise for the given
@@ -353,9 +352,9 @@ void noise(int duration)
   while( millis() - start < duration)
   {
     int period = random(8,25); 
-    digitalWrite(speakerPin, HIGH);
+    digitalWrite(speakerAPin, HIGH);
     delay(period);
-    digitalWrite(speakerPin, LOW);      
+    digitalWrite(speakerAPin, LOW);      
     delay(period);
   }
 }  

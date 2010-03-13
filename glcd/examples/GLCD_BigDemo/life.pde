@@ -27,8 +27,15 @@
 
 #define BITVAL(_pos) (1<< (7-(_pos % 8)))  // macro to get a bitfield value
 
+
 #define ALIVE true
 #define DEAD false
+
+// used for sound effects
+
+             //  A   A#   B     C   C#    D   D#   E    F    F#   G    G#
+int tones[] =  {2273,2145,2025,1911,1804,1703,1607,1517,1432,1351,1276,1204,
+                1136,1073,1012, 956, 902, 851, 804, 758, 716, 676, 638, 603 };
 
 /* ========   Life Objects   ========
  * these objects  can be displayed on the Arduino life screen
@@ -148,6 +155,9 @@ void life(unsigned long duration)
 }   
 
 unsigned int generate(){
+  byte births; // counters for births and deaths used for sound effects only
+  byte deaths;
+  
   unsigned int iteration = 0;
   byte thisGeneration,nextGeneration, previousGeneration;  
   thisGeneration = nextGeneration  = 0;
@@ -173,6 +183,7 @@ unsigned int generate(){
        delay(DELAY);     
     memset(generations[nextGeneration],0,sizeof(generations[0])); // clear the array for the next generation
     //see who lives and who dies
+    births = deaths = 0;
     for(int row = 0; row < ROWS; row++){       
       for(int column = 0; column < COLUMNS; column++){
         boolean cell =  isAlive(thisGeneration,row,column);
@@ -180,6 +191,7 @@ unsigned int generate(){
         if(cell == DEAD){
           if(n==3) {
             setLife(nextGeneration,row,column,ALIVE); // birth     
+            births++;
           }
         }
         else{
@@ -187,10 +199,14 @@ unsigned int generate(){
             setLife(nextGeneration,row,column,ALIVE);  //survival
           else { 
             setLife(nextGeneration,row,column,DEAD); //death 
+            deaths++;
           }
         }
       }
+      tone( speakerAPin, tones[births], DELAY);
+      tone( speakerBPin, tones[deaths], DELAY);
     } 
+
   }
   while(isStable(thisGeneration) == false  && ++iteration < MAX_ITERATIONS ) ;
   return iteration;

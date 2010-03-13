@@ -14,16 +14,14 @@
 #include "fonts/SystemFont5x7.h"       // system font
 #include "AnalogClock.h"  // header file for the analog clock class
 
-#define PULL_UP  HIGH
+#include "BigDemo.h"
 
-#define  btnSet 15     // button to read pot value to set the clock
-#define  potPin  0
 
 AnalogClock analogClock = AnalogClock();  // this creates an instance of the analog clock display. 
 
 void clockBegin(){
-#ifdef btnSet
-  digitalWrite(btnSet, PULL_UP);  // enable internal pull-up resistor
+#ifdef buttonPin
+  digitalWrite(buttonPin, PULL_UP);  // enable internal pull-up resistor
 #endif  
 
   setTime(10,20,0,1,1,10); // set time to 7:20 am Jan 1 2010  
@@ -45,8 +43,8 @@ void  clock( int duration)
     while( prevtime == now() )
     {
       // check if set buttons pressed while waiting for second to rollover
-#ifdef btnSet      
-      if(checkSetButton(btnSet, potPin))
+#ifdef buttonPin      
+      if(checkSetButton(buttonPin, potPin))
           startTime = now();   //  time changed so reset start time
 #endif#      
     }    
