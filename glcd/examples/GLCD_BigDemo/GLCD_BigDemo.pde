@@ -50,7 +50,7 @@ void  loop()
 
   clock(8); // show the clock given number of seconds
   
- life(20000); // 20 seconds
+  life(20000); // 20 seconds
 
   GLCD.ClearScreen();   
   textAreaDemo();
@@ -62,13 +62,13 @@ void  loop()
   scrollingDemo();
 
   GLCD.ClearScreen();   
-  for(int i=0; i < 4; i++)  
+  int fpsRepeats = GLCD.Width <=128 ? 10 : 5;
+  for(int i=0; i < fpsRepeats; i++)  
      FPS(GLCD.Width, GLCD.Height);
-
   if(GLCD.Width >= 192)
   {         
     GLCD.ClearScreen();   
-    for(int i=0; i < 4; i++)
+    for(int i=0; i < fpsRepeats; i++)
        FPS(GLCD.Width/2, GLCD.Height);         
   }
 }
