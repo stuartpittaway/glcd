@@ -10,10 +10,8 @@
 
 #include <glcd.h>
 
-#include "fonts/SystemFont5x7.h"       // system font
-#include "fonts/Arial14.h"             // proportional font
-#include "bitmaps/ArduinoIcon64x64.h"  // 64x64 pixel bitmap 
-#include "bitmaps/ArduinoIcon64x32.h"  // 32 pixel high bitmap  
+#include "fonts/allFonts.h"         // system and arial14 fonts are used
+#include "bitmaps/allBitmaps.h"       // all images in the bitmap dir 
 
 Image_t ArduinoIcon;
 
@@ -129,9 +127,9 @@ void  textAreaDemo()
   showArea( textAreaRIGHT,      "Right");
   showArea( textAreaLEFT,       "Left"); 
   showArea( textAreaTOPLEFT,    "Top Left");
-  showArea( textAreaTOPRIGHT,   "Top Right");
-  showArea( textAreaBOTTOMLEFT, "Bot Left"); 
-  showArea( textAreaBOTTOMRIGHT,"Bot Right");  
+  showArea( textAreaTOPRIGHT,   "Top Rright");
+  showArea( textAreaBOTTOMLEFT, "Bottom Left"); 
+  showArea( textAreaBOTTOMRIGHT,"Bottom Right ");  
 }
 
 void showArea(predefinedArea area, char *description)
@@ -143,8 +141,8 @@ void showArea(predefinedArea area, char *description)
   textArea.SelectFont(System5x7);
   textArea.SetFontColor(WHITE); 
   textArea.ClearArea(); 
-  textArea.println(description);
-  textArea.print("text area");
+  textArea.print(description);
+  textArea.print("  text area");
   delay(1000);
   textArea.SetFontColor(WHITE); 
   textArea.ClearArea();
