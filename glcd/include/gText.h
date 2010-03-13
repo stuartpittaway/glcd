@@ -146,6 +146,21 @@ class gText : public Print
 	// Scroll routines are private for now
 	void ScrollUp(uint8_t x1, uint8_t y1, uint8_t x2, uint8_t y2, uint8_t pixels, uint8_t color);
 	void ScrollDown(uint8_t x1, uint8_t y1, uint8_t x2, uint8_t y2, uint8_t pixels, uint8_t color);
+
+/*
+ * Put all public functions into glcd_gText doxygen group
+ */
+
+/**
+ * @defgroup glcd_gText glcd Text Functions
+ *
+ * The following functions are to configure and display text
+ * in text areas.
+ */
+
+/** @ingroup glcd_gText
+ */
+/*@{*/
 	
   public:
 	gText(); // default - uses the entire display
@@ -185,6 +200,8 @@ class gText : public Print
 #ifndef GLCD_NO_PRINTF
 	void Printf(const char *format, ...);
 #endif
+
+/*@}*/ // part of doxygen don't remove
 
 };
 

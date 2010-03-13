@@ -73,6 +73,19 @@ class glcd : public glcd_Device  // glcd_Device has low level device access rout
   public:
 	glcd();
 	
+/*
+ * Put functions into glcd_graphics doxygen group
+ */
+
+/**
+ * @defgroup glcd_graphics glcd Graphic Functions
+ *
+ * The following functions are configure and draw graphics.
+ */
+
+/** @ingroup glcd_graphics
+ */
+/*@{*/
 	// Control functions
 	void Init(uint8_t invert = NON_INVERTED);
 	void SetDisplayMode(uint8_t mode); //NON_INVERTED or INVERTED,   was SetInverted(uint8_t invert);
