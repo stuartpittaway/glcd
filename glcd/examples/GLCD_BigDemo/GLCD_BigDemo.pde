@@ -37,6 +37,7 @@ void setup()
   GLCD.ClearScreen();    
   GLCD.SelectFont(System5x7, BLACK); // font for the default text area
   clockBegin(); // start the clock
+  clock(10); // show the clock to allow it to be set
 }
 
 void  loop()
@@ -48,7 +49,7 @@ void  loop()
   showCharacters();
   countdown(3);
 
-  clock(8); // show the clock given number of seconds
+  clock(10); // show the clock given number of seconds
   
   life(20000); // 20 seconds
 
@@ -62,13 +63,13 @@ void  loop()
   scrollingDemo();
 
   GLCD.ClearScreen();   
-  int fpsRepeats = GLCD.Width <=128 ? 10 : 5;
-  for(int i=0; i < fpsRepeats; i++)  
+  for(int i=0; i < 4; i++)  
      FPS(GLCD.Width, GLCD.Height);
+
   if(GLCD.Width >= 192)
   {         
     GLCD.ClearScreen();   
-    for(int i=0; i < fpsRepeats; i++)
+    for(int i=0; i < 4; i++)
        FPS(GLCD.Width/2, GLCD.Height);         
   }
 }

@@ -3,10 +3,9 @@
  *
  * analog clock using the GLCD library
  *
- * uses pushbuttons to set the time
- * defualt connections are pins 2 and 3
- * connect one side of a button to a pin, the other side to ground
- * one button advances time forward, the other moves it back
+ * Sets time using Pot (analog pin 0) and pushbutton (analog pin 1, digital pin 15)
+ * Pressing the button when clock is displayed moves hands forward or backwards
+ * direction and speed of hands is determined by pot position 
  *
  */
  
@@ -17,14 +16,15 @@
 
 #define PULL_UP  HIGH
 
-const int  btnForward = 31;  // buttons to set clock hands
-const int  btnBack = 32;
+#define  btnSet 15     // button to read pot value to set the clock
+#define  potPin  0
 
 AnalogClock analogClock = AnalogClock();  // this creates an instance of the analog clock display. 
 
 void clockBegin(){
-  //digitalWrite(btnForward, PULL_UP);  // enable internal pull-up resistors
-  //digitalWrite(btnBack, PULL_UP);  
+#ifdef btnSet
+  digitalWrite(btnSet, PULL_UP);  // enable internal pull-up resistor
+#endif  
 
   setTime(10,20,0,1,1,10); // set time to 7:20 am Jan 1 2010  
 }
@@ -45,38 +45,38 @@ void  clock( int duration)
     while( prevtime == now() )
     {
       // check if set buttons pressed while waiting for second to rollover
-      //checkSetButton(btnForward, 1);    
-      //checkSetButton(btnBack, -1);
+#ifdef btnSet      
+      if(checkSetButton(btnSet, potPin))
+          startTime = now();   //  time changed so reset start time
+#endif#      
     }    
   }
 }
 
 
-void checkSetButton(int button, int direction)
+boolean checkSetButton(int button, int pot)
 {
-const int stepSecs[] = {1,30,300};  // values used to accelerate movement when button held down
-int stepIndex = 0; // the index to determine accelartion value
-int step = 0; // counts steps between each index increment
+int step;
+boolean ret = false;
 
-  if(digitalRead(button)== LOW)
+  while(digitalRead(button)== LOW)
   {
-     delay(50);  // debounce time     
-     unsigned long startTime = millis() + 1000;
-     while(digitalRead(button)== LOW)
-     {
-       if(millis() - startTime > 100){
-         startTime = millis();
-         adjustTime(stepSecs[stepIndex] * direction);
-         analogClock.DisplayTime(hour(), minute(), second() ); // update analog clock  
-         if( ++step > 30){
-            step=0;
-            if(stepIndex < 2){
-               stepIndex++; 
-            }
-         }        
-       }
+     int value = analogRead(pot);
+     value = map(value, 0,1023, 10, -10);  // change the output range sense if the pot needs reversing
+     int absVal = abs(value);
+     if(absVal > 0)
+     {    
+        for(step=1; --absVal; step*=2)
+           ;
+        if(value < 0)
+           step = -step;   
+        adjustTime(step);
+        ret = true; // flag to indicate the the time has been changed
+        analogClock.DisplayTime(hour(), minute(), second() ); // update analog clock          
      } 
+     delay(100); 
   }   
+  return ret;
 }
 
 

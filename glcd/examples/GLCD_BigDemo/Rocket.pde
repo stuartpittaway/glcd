@@ -24,7 +24,7 @@
 
 
 #define potPin        0   // analog input pin connected to a variable resistor   
-//#define speakerPin    2   // digital pin that can optionally connected to a piezo or speaker for sound
+#define speakerPin    19   // digital pin that can optionally connected to a piezo or speaker for sound
 //#define brightnessPin 3   // optional output that can be used to control backlight
 
 byte brightness = 64;
@@ -269,9 +269,6 @@ void gameOver(){
   score = 0;
   GLCD.ClearScreen();
 }
-
-
-
 
 /*
 ******************************
