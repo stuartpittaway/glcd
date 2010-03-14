@@ -1152,8 +1152,8 @@ uint8_t c;
  * output a character string at x,y coordinate
  *
  * @param str pointer to a null terminated character string
- * @param x specifies the horizontal locaion
- * @param y specifies the vertical locaion
+ * @param x specifies the horizontal location
+ * @param y specifies the vertical location
  *
  *
  * Outputs all the characters in the string to the text area. 
@@ -1181,8 +1181,8 @@ void gText::DrawString(char *str, uint8_t x, uint8_t y)
  * output a program memory character string at x,y coordinate
  *
  * @param str pointer to a null terminated character string stored in program memory
- * @param x specifies the horizontal locaion
- * @param y specifies the vertical locaion
+ * @param x specifies the horizontal location
+ * @param y specifies the vertical location
  *
  *
  * Outputs all the characters in the string to the text area. 
@@ -1297,8 +1297,8 @@ void gText::CursorTo( int8_t column)
 /**
  * Positions cursor to a X,Y position
  *
- * @param x specifies the horizontal locaion
- * @param y specifies the vertical locaion
+ * @param x specifies the horizontal location
+ * @param y specifies the vertical location
  *
  *	X & Y are zero based pixel coordinates and are relative to 
  *	the upper left corner of the text area.
