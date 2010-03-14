@@ -90,7 +90,8 @@ void setup()
   Serial.begin(9600);
 
 #ifdef CORE_TEENSY
-  delay(500);    // allow USB time to come up.
+  delay(2000);    // allow USB time to come up.
+                  // plus give user time to start serial monitor
 #endif
 
   SerialPrintP(PSTR("Serial initialized\n"));
@@ -99,7 +100,7 @@ void setup()
   /*
    * Dump GLCD config information *before* trying to talk to the GLCD
    * in case there is a problem talking to the GLCD.
-   * This way ensure the GLCD information is always available.
+   * This way ensures the GLCD information is always available.
    */
 
   /*
@@ -111,6 +112,11 @@ void setup()
   GLCD.Init();   // initialise the library, non inverted writes pixels onto a clear screen
   GLCD.SelectFont(System5x7, BLACK);
 
+}
+
+
+void showchipselscreen(void)
+{
   /*
    * draw a trangle
    */
@@ -145,10 +151,11 @@ void setup()
 void  loop()
 {   // run over and over again
 
-  int lcount = 0;
+  int lcount = 1;
 
   while(1)
   {
+    showchipselscreen();
     SerialPrintP(hline);
     SerialPrintf("Diag Loop: %d\n", lcount);
     if( lcdmemtest())
@@ -163,12 +170,20 @@ void  loop()
       SerialPrintP(PSTR("Tests PASSED\n"));
       GLCD.ClearScreen();
       GLCD.CursorTo(0,0);
-      GLCD.print("Tests PASSED");
+      GLCD.println("Tests PASSED");
+      GLCD.print("Diag Loop: ");
+      GLCD.print(lcount);
     }
 
     delay(5000);
     lcount++;
     GLCD.ClearScreen();
+    /*
+     * dump the GLCD library configuration information to
+     * the serial port each loop in case it was missed the
+     * the first time around.
+     */
+    showGLCDconfig();
   }
 }
 

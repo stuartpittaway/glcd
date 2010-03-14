@@ -1,5 +1,5 @@
 /*
- * GLCDexample
+ * GLCDexample (Bills test version)
  *
  * Basic test code for the Arduino GLCD library.
  * This code exercises a range of graphic functions supported
@@ -222,7 +222,7 @@ bapprintf("Serial initialized\n");
 
 void introScreen(){  
   if(GLCD.Height >= 64)   
-    GLCD.DrawBitmap(ArduinoIcon, 32,0); //draw the bitmap at the given x,y position
+    GLCD.DrawBitmap(ArduinoIcon64x64, 32,0); //draw the bitmap at the given x,y position
   else
     GLCD.DrawBitmap(ArduinoIcon64x32, 32,0); //draw the bitmap at the given x,y position
 
@@ -346,7 +346,7 @@ void scrollingDemo()
   for(x = 0; x < 8; x++)
   {
     if(GLCD.Height > 32)
-      GLCD.DrawBitmap(ArduinoIcon64x32, x, 0, BLACK);
+      GLCD.DrawBitmap(ArduinoIcon64x64, x, 0, BLACK);
     else
       GLCD.DrawBitmap(ArduinoIcon64x32, x, x, BLACK);
     delay(50);

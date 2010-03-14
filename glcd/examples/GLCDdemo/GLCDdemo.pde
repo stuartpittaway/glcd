@@ -75,29 +75,31 @@ void introScreen(){
   countdown(3);
   GLCD.ClearScreen();
   GLCD.SelectFont(Arial_14); // you can also make your own fonts, see playground for details   
-  GLCD.GotoXY(10, 2);
+  GLCD.GotoXY(10, 3);
   GLCD.print("GLCD ver ");
   GLCD.print(GLCD_VERSION, DEC);
-  GLCD.DrawRoundRect(8,0,GLCD.Width-9,18, 5);  // rounded rectangle around text area   
+  GLCD.DrawRoundRect(8,0,GLCD.Width-9,17, 5);  // rounded rectangle around text area   
   countdown(3);  
   GLCD.ClearScreen(); 
   scribble(5000);  // run for 5 seconds
   moveBall(6000); // kick ball for 6 seconds
   GLCD.SelectFont(System5x7, BLACK);
-  GLCD.ClearScreen();  
-  showCharacters();
+  showCharacters("5x7 font:", System5x7);
+  countdown(3);
+  showCharacters("Arial_14:", Arial_14);
   countdown(3);
   textAreaDemo();
   scrollingDemo();
 }
 
-void showCharacters(){
-  // this displays the fixed width system font  
+void showCharacters(char * title, Font_t font) {
+  // this displays the desired font
+  GLCD.ClearScreen();  
   GLCD.CursorTo(0,0);
-  GLCD.print("5x7 font:");
+  GLCD.print(title);
   GLCD.DrawRoundRect(GLCD.CenterX + 2, 0, GLCD.CenterX -3, GLCD.Bottom, 5);  // rounded rectangle around text area 
-  textArea.DefineArea( GLCD.CenterX + 5, 3, GLCD.Right-2, GLCD.Bottom-4, 1); 
-  textArea.SelectFont(System5x7, BLACK);
+  textArea.DefineArea(GLCD.CenterX + 5, 3, GLCD.Right-2, GLCD.Bottom-4, 1); 
+  textArea.SelectFont(font, BLACK);
   textArea.CursorTo(0,0);
   for(byte c = 32; c <=127; c++){
     textArea.print(c);  
@@ -127,9 +129,9 @@ void  textAreaDemo()
   showArea( textAreaRIGHT,      "Right");
   showArea( textAreaLEFT,       "Left"); 
   showArea( textAreaTOPLEFT,    "Top Left");
-  showArea( textAreaTOPRIGHT,   "Top Rright");
-  showArea( textAreaBOTTOMLEFT, "Bottom Left"); 
-  showArea( textAreaBOTTOMRIGHT,"Bottom Right ");  
+  showArea( textAreaTOPRIGHT,   "Top Right");
+  showArea( textAreaBOTTOMLEFT, "Bot Left"); 
+  showArea( textAreaBOTTOMRIGHT,"Bot Right");  
 }
 
 void showArea(predefinedArea area, char *description)
@@ -141,8 +143,8 @@ void showArea(predefinedArea area, char *description)
   textArea.SelectFont(System5x7);
   textArea.SetFontColor(WHITE); 
   textArea.ClearArea(); 
-  textArea.print(description);
-  textArea.print("  text area");
+  textArea.println(description);
+  textArea.print("text area");
   delay(1000);
   textArea.SetFontColor(WHITE); 
   textArea.ClearArea();
