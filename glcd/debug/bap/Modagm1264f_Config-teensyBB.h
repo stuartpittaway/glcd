@@ -4,6 +4,7 @@
  * vi:ts=4
  *
  * Use this file to set io pins and LCD panel parameters
+ * (Combo Teensy/Teensy++ Breadboard configuration)
  *
  *	This configuration file is for the AGM1264F module manufactured by AZ Displays.
  *	This module uses 2 ks0108 chips each controlling one half of the display.
@@ -82,7 +83,6 @@
 #ifndef	GLCD_PANEL_CONFIG_H
 #define GLCD_PANEL_CONFIG_H
 
-#define glcd_ConfigName "Bills-Teensy++-BGMicro"
 
 /*********************************************************/
 /*  Configuration for LCD panel specific configuration   */
@@ -111,10 +111,19 @@
 
 
 /*
- * Bill's avrio pin assignments 
- * for the Teensy++
- * Uses all forms of avrio pin definitions.
+ * Bill's Combination BreadBoard pin assignments 
+ * for the Teensy or Teensy++ 
+ * Using these pins, the teensy and Teensy++ can be
+ * interhanged on the breadboard.
  */
+
+
+/*
+ * Pin definitions for Teensy++ v2
+ */
+#if defined(__AVR_AT90USB1286__)
+
+#define glcd_ConfigName "Bills-BB-v2Teensy++-BGMicro"
 
 #define glcdDI			    PIN_D7
 #define glcdRW			    PIN_E0
@@ -129,10 +138,41 @@
 #define glcdData6Pin		PIN_C6
 #define glcdData7Pin		PIN_C7
 
-#define glcdCSEL1		    PIN_F7
-#define glcdCSEL2		    PIN_F6
+// skipped F7 to share config with teensyV2 and avoid LED on V2
+#define glcdCSEL1		    PIN_F6
+#define glcdCSEL2		    PIN_F5
 
-#define glcdRES 		    PIN_F5
+#define glcdRES 		    PIN_F4
+
+#endif //v2 teensy++ 
+
+/*
+ * Pin definitions for Teensy v2
+ */
+#if defined(__AVR_ATmega32U4__)
+
+#define glcd_ConfigName "Bills-BB-v2Teensy-BGMicro"
+
+#define glcdDI			    PIN_B0
+#define glcdRW			    PIN_B1
+#define glcdEN			    PIN_B2
+
+#define glcdData0Pin		PIN_B3
+#define glcdData1Pin		PIN_B7
+#define glcdData2Pin		PIN_D0
+#define glcdData3Pin		PIN_D1
+#define glcdData4Pin		PIN_D2
+#define glcdData5Pin		PIN_D3
+#define glcdData6Pin		PIN_C6
+#define glcdData7Pin		PIN_C7
+
+// skipped D6 to avoid LED
+#define glcdCSEL1		    PIN_D7
+#define glcdCSEL2		    PIN_B4
+
+#define glcdRES 		    PIN_B5
+
+#endif // teensy v2
 
 #define glcd_CHIP0	glcdCSEL1,HIGH, glcdCSEL2,LOW
 #define glcd_CHIP1	glcdCSEL1,LOW, glcdCSEL2,HIGH
