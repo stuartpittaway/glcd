@@ -1,13 +1,28 @@
 /*
  * BigDemo.h
  *
- * common defines for glcd_BigDemo
+ * Common defines for pins 
+ * Uncomment these to enable these resources
+ *
  */
+      
+/*
+ * potPin is used to move the rocket up and down and to set the clock
+ * Note analog pin 5 is not available if reset is enabled in glcd config file
+ */
+//#define potPin      5           
 
+
+/*
+ * buttonPin is used to enable setting of the clock
+ */
+//#define buttonPin   2
+
+/*
+ * speakerAPin is used for sound effects in rocket and life
+ */
  
-#define potPin 0
-#define buttonPin 15
-#define speakerAPin 0
-#define speakerBPin 1 
+//#define speakerAPin 3
+        
 
 #define PULL_UP  HIGH

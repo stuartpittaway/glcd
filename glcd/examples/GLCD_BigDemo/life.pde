@@ -135,6 +135,13 @@ int startSeed = 0;
 
 void life(unsigned long duration)
 { 
+#ifdef speakerAPin
+  pinMode(speakerAPin, OUTPUT);
+#endif
+#ifdef speakerBPin
+  pinMode(speakerBPin, OUTPUT);
+#endif
+
   GLCD.ClearScreen();  
   GLCD.SelectFont(Arial_14);
   GLCD.CursorTo(0,2);
@@ -203,10 +210,13 @@ unsigned int generate(){
           }
         }
       }
+#ifdef speakerAPin      
       tone( speakerAPin, tones[births], DELAY);
+#endif      
+#ifdef speakerBPin
       tone( speakerBPin, tones[deaths], DELAY);
+#endif      
     } 
-
   }
   while(isStable(thisGeneration) == false  && ++iteration < MAX_ITERATIONS ) ;
   return iteration;
