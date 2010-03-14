@@ -1106,6 +1106,8 @@ int gText::PutChar(uint8_t c)
  *
  * @see PutChar()
  * @see Puts_P()
+ * @see DrawString()
+ * @see DrawString_P()
  * @see write()
  */
 
@@ -1130,8 +1132,9 @@ void gText::Puts(char* str)
  *
  * @see PutChar()
  * @see Puts()
- * @see write()
  * @see DrawString()
+ * @see DrawString_P()
+ * @see write()
  */
 
 void gText::Puts_P(PGM_P str)
@@ -1143,6 +1146,64 @@ uint8_t c;
         this->PutChar(c);
         str++;
     }
+}
+
+/**
+ * output a character string at x,y coordinate
+ *
+ * @param str pointer to a null terminated character string
+ * @param x specifies the horizontal locaion
+ * @param y specifies the vertical locaion
+ *
+ *
+ * Outputs all the characters in the string to the text area. 
+ * X & Y are zero based pixel coordinates and are relative to 
+ * the upper left corner of the text area.
+ *
+ * See PutChar() for a full description of how characters are
+ * written to the text area.
+ *
+ *
+ * @see PutChar()
+ * @see Puts()
+ * @see Puts_P()
+ * @see DrawString_P()
+ * @see write()
+ */
+
+void gText::DrawString(char *str, uint8_t x, uint8_t y)
+{
+	this->CursorToXY(x,y);
+	this->Puts(str);
+}
+
+/**
+ * output a program memory character string at x,y coordinate
+ *
+ * @param str pointer to a null terminated character string stored in program memory
+ * @param x specifies the horizontal locaion
+ * @param y specifies the vertical locaion
+ *
+ *
+ * Outputs all the characters in the string to the text area. 
+ * X & Y are zero based pixel coordinates and are relative to 
+ * the upper left corner of the text area.
+ *
+ * See PutChar() for a full description of how characters are
+ * written to the text area.
+ *
+ *
+ * @see PutChar()
+ * @see Puts()
+ * @see Puts_P()
+ * @see DrawString()
+ * @see write()
+ */
+
+void gText::DrawString_P(PGM_P str, uint8_t x, uint8_t y)
+{
+	this->CursorToXY(x,y);
+	this->Puts_P(str);
 }
 
 /**
@@ -1191,19 +1252,25 @@ void gText::CursorTo( uint8_t column, uint8_t row)
  *
  * @param column specifies the horizontal position 
  *
- *	Column is a zero based character position
- *	and is relative the the left edge of the
- *	text area base on the size of the currently selected font.
+ *	Column is a 0 based character position
+ *	based on the size of the currently selected font.
  *
- * While intended for fixed width fonts, positioning will work for variable
+ * If column is negative then the column position is relative to the current cursor
+ * position.
+ *
+ * @warning
+ * While intended only for fixed width fonts, cursor repositioning will be done for variable
  * width fonts.
- *
  * When variable width fonts are used, the column is based on assuming a width
- * of the widest character.
+ * of the widest character in the font.
+ * Because the widest character is used for the amount of cursor movement, the amount
+ * of cursor movement when using relative positioning will often not be consistent with
+ * the number characters previously rendered. For example, if a letter "l" was written
+ * and the cursor was reposisitioned with a -1, the amount backed up will be much larger
+ * than the width of the "l".
  *
- * if column is negative then the column position is relative to the current cursor
  *
- * @see CursorTo(column, row)
+ * @see CursorTo()
  */
 void gText::CursorTo( int8_t column)
 {
@@ -1231,7 +1298,7 @@ void gText::CursorTo( int8_t column)
  * Positions cursor to a X,Y position
  *
  * @param x specifies the horizontal locaion
- * @param y  specifies the vertical locaion
+ * @param y specifies the vertical locaion
  *
  *	X & Y are zero based pixel coordinates and are relative to 
  *	the upper left corner of the text area.

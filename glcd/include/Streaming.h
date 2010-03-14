@@ -30,6 +30,8 @@ template<class T>
 inline Print &operator <<(Print &stream, const T arg) 
 { stream.print(arg); return stream; }
 
+
+/// @cond hide_from_doxygen
 struct _BASED 
 { 
   long val; 
@@ -45,6 +47,7 @@ struct _FLOAT
   _FLOAT(double v, int d): val(v), digits(d) 
   {}
 };
+/// @endcond
 
 #define _HEX(a)     _BASED(a, HEX)
 #define _DEC(a)     _BASED(a, DEC)

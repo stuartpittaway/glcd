@@ -66,6 +66,7 @@
 #define MK_TareaToken(x1, y1, x2, y2) \
 	(uint32_t) (((uint32_t) (x1) << 24) | ((uint32_t)(y1) << 16) | ((uint32_t)(x2) << 8) | (uint32_t)(y2))
         
+/// @cond hide_from_doxygen
 typedef union
 {       
  struct
@@ -79,6 +80,7 @@ typedef union
  uint32_t token; // swap byte order above for big endian
         
 }TareaToken;
+/// @endcond
 
 typedef uint8_t textMode;  // type holding mode for scrolling and future attributes like padding etc.
 // the only textMode supported in the current release is scrolling
@@ -117,6 +119,7 @@ uint8_t ReadPgmData(const uint8_t* ptr);	//Standard Read Callback
 static glcd_Device    *device;              // static pointer to the device instance
 static FontCallback	FontRead;               // font callback shared across all instances
 
+/// @cond hide_from_doxygen
 struct tarea
 {
 	uint8_t x1;
@@ -125,6 +128,7 @@ struct tarea
 	uint8_t y2;
 	int8_t  mode;
 };
+/// @endcond
 
   
  // graphical device text routines
@@ -184,6 +188,8 @@ class gText : public Print
 	int PutChar(uint8_t c);
 	void Puts(char *str);
 	void Puts_P(PGM_P str);
+	void DrawString(char *str, uint8_t x, uint8_t y);
+	void DrawString_P(PGM_P str, uint8_t x, uint8_t y);
 
 	void write(uint8_t c);  // character output for print base class
 

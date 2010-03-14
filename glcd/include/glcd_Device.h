@@ -48,6 +48,7 @@ typedef class _FlashString {} *FLASHSTRING;
 #define BLACK				0xFF
 #define WHITE				0x00
 
+/// @cond hide_from_doxygen
 typedef struct {
 	uint8_t x;
 	uint8_t y;
@@ -56,6 +57,7 @@ typedef struct {
 		uint8_t page;
 	} chip[(DISPLAY_WIDTH / CHIP_WIDTH)];
 } lcdCoord;
+/// @endcond
 	
 class glcd_Device : public Print   
 {
