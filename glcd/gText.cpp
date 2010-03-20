@@ -1557,8 +1557,8 @@ void gText::write(uint8_t c)
  * Support for printf().
  * This code plays a few games with the AVR stdio routines.
  *
- * It fudges up a STDIO stream to point back to a C callable function
- * Which recovers the C++ text area object and the prints the character
+ * The Printf() functions fudge up a STDIO stream to point back to a C callable function
+ * which recovers the C++ text area object (this) and then prints the character
  * using the C++ text area object.
  */
 
@@ -1606,4 +1606,30 @@ static FILE stdiostr;
 	vfprintf(&stdiostr, format, ap);
 	va_end(ap);
 }
+
+/**
+ * print formatted data
+ *
+ * @param format string in AVR progmem that contains text or optional embedded format tags
+ * @param ... Depending on the format string, the function may expect a sequence of additional arguments.
+ *
+ * See gText::Printf() for full details.
+ *
+ */ 
+
+
+void gText::Printf_P(const char *format, ...)
+{
+static FILE stdiostr;
+
+	va_list ap;
+
+	fdev_setup_stream(&stdiostr, glcdputc, NULL, _FDEV_SETUP_WRITE);
+	fdev_set_udata(&stdiostr, this);
+
+	va_start(ap, format);
+	vfprintf_P(&stdiostr, format, ap);
+	va_end(ap);
+}
+
 #endif

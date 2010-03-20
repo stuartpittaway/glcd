@@ -205,6 +205,7 @@ class gText : public Print
 
 #ifndef GLCD_NO_PRINTF
 	void Printf(const char *format, ...);
+	void Printf_P(const char *format, ...);
 #endif
 
 /*@}*/ // part of doxygen don't remove
