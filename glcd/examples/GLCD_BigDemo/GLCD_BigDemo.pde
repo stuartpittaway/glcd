@@ -46,7 +46,10 @@ void  loop()
   scribble(5000);  // run for 5 seconds
 
   GLCD.ClearScreen(); 
-  showCharacters();
+  GLCD.SelectFont(System5x7, BLACK);
+  showCharacters("5x7 font:", System5x7);
+  countdown(3);
+  showCharacters("Arial_14:", Arial_14);
   countdown(3);
 
   clock(10); // show the clock given number of seconds
@@ -63,14 +66,12 @@ void  loop()
   scrollingDemo();
 
   GLCD.ClearScreen();   
-  for(int i=0; i < 4; i++)  
-     FPS(GLCD.Width, GLCD.Height);
+  FPS(GLCD.Width, GLCD.Height, 10000); // 10 seconds of FPS
 
   if(GLCD.Width >= 192)
   {         
     GLCD.ClearScreen();   
-    for(int i=0; i < 4; i++)
-       FPS(GLCD.Width/2, GLCD.Height);         
+    FPS(GLCD.Width/2, GLCD.Height, 10000); // 10 seconds of FPS
   }
 }
 
@@ -80,21 +81,22 @@ void introScreen(){
   countdown(3);
   GLCD.ClearScreen();
   GLCD.SelectFont(Arial_14); // you can also make your own fonts, see playground for details   
-  GLCD.GotoXY(10, 2);
+  GLCD.GotoXY(10, 3);
   GLCD.print("GLCD ver ");
   GLCD.print(GLCD_VERSION, DEC);
-  GLCD.DrawRoundRect(8,0,GLCD.Width-9,18, 5);  // rounded rectangle around text area   
+  GLCD.DrawRoundRect(8,0,GLCD.Width-9,17, 5);  // rounded rectangle around text area   
   countdown(3);  
   GLCD.ClearScreen(); 
 }
 
-void showCharacters(){
-  // this displays the fixed width system font  
+void showCharacters(char * title, Font_t font) {
+  // this displays the desired font
+  GLCD.ClearScreen();  
   GLCD.CursorTo(0,0);
-  GLCD.print("5x7 font:");
+  GLCD.print(title);
   GLCD.DrawRoundRect(GLCD.CenterX + 2, 0, GLCD.CenterX -3, GLCD.Bottom, 5);  // rounded rectangle around text area 
-  textArea.DefineArea( GLCD.CenterX + 5, 3, GLCD.Right-2, GLCD.Bottom-4, 1); 
-  textArea.SelectFont(System5x7, BLACK);
+  textArea.DefineArea(GLCD.CenterX + 5, 3, GLCD.Right-2, GLCD.Bottom-4, SCROLL_UP); 
+  textArea.SelectFont(font, BLACK);
   textArea.CursorTo(0,0);
   for(byte c = 32; c <=127; c++){
     textArea.print(c);  
@@ -270,6 +272,12 @@ byte fn_x( float tick )
 byte fn_y( float tick )
 {
   return (byte)(GLCD.Height/2 + (GLCD.Height/2 -1) * cos( tick * 1.2 ) * sin( tick * 3.1 )) ;
+}
+void FPS(const byte width, const byte height, const unsigned long msecs)
+{
+unsigned long stime = millis();
+  while(millis()  - stime < msecs)
+    FPS(width, height);
 }
 
 void FPS( const byte width, const byte height)

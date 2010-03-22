@@ -92,7 +92,9 @@ void rocket(int duration)
   pinMode(speakerAPin, OUTPUT);
 #endif
   GLCD.SelectFont(System5x7);
+#ifdef potPin
   randomSeed(analogRead(potPin));
+#endif
   GLCD.DrawBitmap(startup, 0, 0, BLACK);
   delay(2000);
   GLCD.ClearScreen();
@@ -150,7 +152,25 @@ void drawScore(){
 ******************************
 */
 void getControls(){
+#ifdef potPin
   playerY = map(analogRead(potPin), 0, 1023, 0, 56);
+#else
+/*
+ * Not pot input so move the rocket up and down
+ */
+static uint8_t yval;
+static uint8_t iter = 0;
+static int8_t dir = 1;
+  if(++iter == 0)
+    yval += dir;
+
+  if(yval == 0)
+    dir = 1;
+
+  if(yval == 56)
+    dir = -1;
+  playerY = yval;
+#endif
 }
 
 
