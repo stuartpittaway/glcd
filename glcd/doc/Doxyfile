@@ -1,4 +1,4 @@
-# Doxyfile 1.6.2
+# Doxyfile 1.6.3
 
 # This file describes the settings to be used by the documentation system
 # doxygen (www.doxygen.org) for a project
@@ -115,7 +115,7 @@ INLINE_INHERITED_MEMB  = YES
 # path before files name in the file list and in the header files. If set 
 # to NO the shortest path that makes the file name unique will be used.
 
-FULL_PATH_NAMES        = YES
+FULL_PATH_NAMES        = NO
 
 # If the FULL_PATH_NAMES tag is set to YES then the STRIP_FROM_PATH tag 
 # can be used to strip a user-defined part of the path. Stripping is 
@@ -180,7 +180,7 @@ SEPARATE_MEMBER_PAGES  = NO
 # The TAB_SIZE tag can be used to set the number of spaces in a tab. 
 # Doxygen uses this value to replace tabs by spaces in code fragments.
 
-TAB_SIZE               = 8
+TAB_SIZE               = 4
 
 # This tag can be used to specify a number of aliases that acts 
 # as commands in the documentation. An alias has the form "name=value". 
@@ -324,7 +324,7 @@ EXTRACT_STATIC         = NO
 # defined locally in source files will be included in the documentation. 
 # If set to NO only classes defined in header files are included.
 
-EXTRACT_LOCAL_CLASSES  = YES
+EXTRACT_LOCAL_CLASSES  = NO
 
 # This flag is only useful for Objective-C code. When set to YES local 
 # methods, which are defined in the implementation section but not in 
@@ -354,7 +354,7 @@ HIDE_UNDOC_MEMBERS     = NO
 # If set to NO (the default) these classes will be included in the various 
 # overviews. This option has no effect if EXTRACT_ALL is enabled.
 
-HIDE_UNDOC_CLASSES     = NO
+HIDE_UNDOC_CLASSES     = YES
 
 # If the HIDE_FRIEND_COMPOUNDS tag is set to YES, Doxygen will hide all 
 # friend (class|struct|union) declarations. 
@@ -389,13 +389,13 @@ CASE_SENSE_NAMES       = NO
 # will show members with their full class and namespace scopes in the 
 # documentation. If set to YES the scope will be hidden.
 
-HIDE_SCOPE_NAMES       = NO
+HIDE_SCOPE_NAMES       = YES
 
 # If the SHOW_INCLUDE_FILES tag is set to YES (the default) then Doxygen 
 # will put a list of the files that are included by a file in the documentation 
 # of that file.
 
-SHOW_INCLUDE_FILES     = YES
+SHOW_INCLUDE_FILES     = NO
 
 # If the FORCE_LOCAL_INCLUDES tag is set to YES then Doxygen 
 # will list include files with double quotes in the documentation 
@@ -420,7 +420,7 @@ SORT_MEMBER_DOCS       = YES
 # by member name. If set to NO (the default) the members will appear in 
 # declaration order.
 
-SORT_BRIEF_DOCS        = NO
+SORT_BRIEF_DOCS        = YES
 
 # If the SORT_MEMBERS_CTORS_1ST tag is set to YES then doxygen
 # will sort the (brief and detailed) documentation of class members so that
@@ -430,13 +430,13 @@ SORT_BRIEF_DOCS        = NO
 # This tag will be ignored for brief docs if SORT_BRIEF_DOCS is set to NO
 # and ignored for detailed docs if SORT_MEMBER_DOCS is set to NO.
 
-SORT_MEMBERS_CTORS_1ST = NO
+SORT_MEMBERS_CTORS_1ST = YES
 
 # If the SORT_GROUP_NAMES tag is set to YES then doxygen will sort the 
 # hierarchy of group names into alphabetical order. If set to NO (the default) 
 # the group names will appear in their defined order.
 
-SORT_GROUP_NAMES       = NO
+SORT_GROUP_NAMES       = YES
 
 # If the SORT_BY_SCOPE_NAME tag is set to YES, the class list will be 
 # sorted by fully-qualified names, including namespaces. If set to 
@@ -470,7 +470,7 @@ GENERATE_BUGLIST       = YES
 # disable (NO) the deprecated list. This list is created by putting 
 # \deprecated commands in the documentation.
 
-GENERATE_DEPRECATEDLIST= YES
+GENERATE_DEPRECATEDLIST= NO
 
 # The ENABLED_SECTIONS tag can be used to enable conditional 
 # documentation sections, marked by \if sectionname ... \endif.
@@ -485,13 +485,13 @@ ENABLED_SECTIONS       =
 # documentation can be controlled using \showinitializer or \hideinitializer 
 # command in the documentation regardless of this setting.
 
-MAX_INITIALIZER_LINES  = 30
+MAX_INITIALIZER_LINES  = 0
 
 # Set the SHOW_USED_FILES tag to NO to disable the list of files generated 
 # at the bottom of the documentation of classes and structs. If set to YES the 
 # list will mention the files that were used to generate the documentation.
 
-SHOW_USED_FILES        = YES
+SHOW_USED_FILES        = NO
 
 # If the sources in your project are distributed over multiple directories 
 # then setting the SHOW_DIRECTORIES tag to YES will show the directory hierarchy 
@@ -503,13 +503,13 @@ SHOW_DIRECTORIES       = NO
 # This will remove the Files entry from the Quick Index and from the 
 # Folder Tree View (if specified). The default is YES.
 
-SHOW_FILES             = YES
+SHOW_FILES             = NO
 
 # Set the SHOW_NAMESPACES tag to NO to disable the generation of the 
 # Namespaces page.  This will remove the Namespaces entry from the Quick Index 
 # and from the Folder Tree View (if specified). The default is YES.
 
-SHOW_NAMESPACES        = YES
+SHOW_NAMESPACES        = NO
 
 # The FILE_VERSION_FILTER tag can be used to specify a program or script that 
 # doxygen should invoke to get the current version for each file (typically from 

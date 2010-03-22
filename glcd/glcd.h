@@ -65,6 +65,11 @@ typedef const uint8_t* Image_t;
 #define bitmapWidth(bitmap)  (*bitmap)  
 #define bitmapHeight(bitmap)  (*(bitmap+1))  
 
+
+/**
+ * @class glcd
+ * @brief Functions for Graphics
+ */
 class glcd : public glcd_Device  // glcd_Device has low level device access routines
 {
   private:
@@ -73,19 +78,6 @@ class glcd : public glcd_Device  // glcd_Device has low level device access rout
   public:
 	glcd();
 	
-/*
- * Put functions into glcd_graphics doxygen group
- */
-
-/**
- * @defgroup glcd_graphics glcd Graphic Functions
- *
- * The following functions are configure and draw graphics.
- */
-
-/** @ingroup glcd_graphics
- */
-/*@{*/
 	// Control functions
 	void Init(uint8_t invert = NON_INVERTED);
 	void SetDisplayMode(uint8_t mode); //NON_INVERTED or INVERTED,   was SetInverted(uint8_t invert);
@@ -105,14 +97,15 @@ class glcd : public glcd_Device  // glcd_Device has low level device access rout
 	void DrawBitmap(Image_t bitmap, uint8_t x, uint8_t y, uint8_t color= BLACK);
 	
 	// Text class
-	gText Text; // making this class public allows access to undocumented functions, not sure if we should allow that.
+	// making this class public allows access to undocumented functions, not sure if we should allow that.
+	gText Text; /**< Default text area */
 	
 
 /// @cond hide_from_doxygen
 
     // Font Functions - this is public API for functionality in the Text class:
 
-	void SelectFont(const uint8_t* font, uint8_t color=BLACK); // default arguments added, callback removed from public method
+	void SelectFont(Font_t font, uint8_t color=BLACK); // default arguments added, callback removed from public method
 	void SetFontColor(uint8_t color); // new method to change the selected fonts color
 	void SetTextMode(textMode mode);  // change to the given text mode (currently only scroll direction is supported)
 	void Puts_P(PGM_P str);  // this prints a string defined explicitly as a constant in program memory
@@ -125,22 +118,22 @@ class glcd : public glcd_Device  // glcd_Device has low level device access rout
 	// void ClearSysTextLine( uint8_t row); // note the old ClearSysTextLine behaviour is supported using glcd_Deprecated.h
 	
 	// legacy text output functions 
-	int PutChar(char c);
-	void Puts(char* str);
+	int PutChar(uint8_t c);
+	void Puts(uint8_t * str);
 	void PrintNumber(long n);
 
-	uint8_t CharWidth(char c);
+	uint8_t CharWidth(uint8_t c);
 	uint16_t StringWidth(const char* str);
 	uint16_t StringWidth_P(PGM_P str);
 /// @endcond
 
 	//Device Properties - these are read only constants	 
-	static const uint8_t Width = DISPLAY_WIDTH;
-	static const uint8_t Height = DISPLAY_HEIGHT;
-	static const uint8_t Right = DISPLAY_WIDTH-1;
-	static const uint8_t Bottom = DISPLAY_HEIGHT-1;
-	static const uint8_t CenterX = DISPLAY_WIDTH/2;
-	static const uint8_t CenterY = DISPLAY_HEIGHT/2;
+	static const uint8_t Width = DISPLAY_WIDTH; 	/**< Display width in pixels */
+	static const uint8_t Height = DISPLAY_HEIGHT;	/**< Display height in pixels */
+	static const uint8_t Right = DISPLAY_WIDTH-1;	/**< Right most pixel on Display */
+	static const uint8_t Bottom = DISPLAY_HEIGHT-1; /**< Bottom most pixel on Display */
+	static const uint8_t CenterX = DISPLAY_WIDTH/2;	/**< Horizontal center pixel on Display */
+	static const uint8_t CenterY = DISPLAY_HEIGHT/2;/**< Vertical center pixel on Display */
 	
 };
 

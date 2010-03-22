@@ -101,8 +101,8 @@ void gText::ClearArea(void)
  * @param y Y coordinate of upper left corner
  * @param columns number of text columns
  * @param rows number of text rows
- * @param font a pointer defined in a font defintion file
- * @param mode	<0 it scrolls down/reverse, >0 up/normal
+ * @param font a font definition
+ * @param mode constants SCROLL_DOWN and SCROLL_UP control scroll direction
  *
  *
  * Defines a text area sized to hold columns characters across and rows characters tall.
@@ -147,7 +147,7 @@ uint8_t x2,y2;
  * @param y1 Y coordinate of upper left corner
  * @param x2 X coordinate of lower right corner
  * @param y2 Y coordinate of lower right corner
- * @param	mode	constants SCROLL_DOWN and SCROLL_UP control scroll direction
+ * @param mode constants SCROLL_DOWN and SCROLL_UP control scroll direction
  *
  * Defines a text area based on absolute coordinates.
  * The pixel coordinates for the text area are inclusive so x2,y2 is the lower right
@@ -216,12 +216,10 @@ uint8_t ret = false;
 /**
  * Define a predefined generic text area
  *
- * @param area the desired text area (0 to GLCD.Text.AreaCount)
- * @param selection one of: textAreaFULL, textAreaTOP,  textAreaBOTTOM, textAreaLEFT, textAreaRIGHT,
- *                                textAreaTOPLEFT,textAreaTOPRIGHT,textAreaBOTTOMLEFT,textAreaBOTTOMRIGHT
- * @param	mode	<0 it scrolls down/reverse, >0 up/normal
+ * @param selection a value from @ref predefinedArea
+ * @param mode constants SCROLL_DOWN and SCROLL_UP control scroll direction
  *
- * Defines a text area using a predefined area.
+ * Defines a text area using a selection form a set of predefined areas.
  *
  * The area within the newly defined text area is intentionally not cleared.
  *
@@ -235,6 +233,7 @@ uint8_t ret = false;
  * the upper left coordinate of the given predefined area
  *
  * @see ClearArea()
+ * @see predefinedArea
  *
  */
 
@@ -1112,7 +1111,7 @@ int gText::PutChar(uint8_t c)
  */
 
 
-void gText::Puts(char* str)
+void gText::Puts(uint8_t* str)
 {
     while(*str)
 	{
@@ -1171,7 +1170,7 @@ uint8_t c;
  * @see write()
  */
 
-void gText::DrawString(char *str, uint8_t x, uint8_t y)
+void gText::DrawString(uint8_t *str, uint8_t x, uint8_t y)
 {
 	this->CursorToXY(x,y);
 	this->Puts(str);
@@ -1328,18 +1327,19 @@ void gText::CursorToXY( uint8_t x, uint8_t y)
  *
  * @param type type of line erase
  *
- * @arg eraseTO_EOL Erase from cursor to end of line
- * @arg eraseFROM_BOL Erase from cursor to begining of line
- * @arg eraseFULL_LINE Erase entire line
+ * @arg \ref eraseTO_EOL Erase from cursor to end of line
+ * @arg \ref eraseFROM_BOL Erase from beginning of line to cursor
+ * @arg \ref eraseFULL_LINE Erase entire line
  *
  * Erases all or part of a line of text depending on the type
  * of erase specified.
-
- * If type is not specified it is assumed to be 0
+ *
+ * If type is not specified it is assumed to be \ref eraseTO_EOL
  *
  * The cursor position does not change.
  *
  * @see ClearArea()
+ * @see eraseLine_t
  */
 
 void gText::EraseTextLine( eraseLine_t type) 
@@ -1391,7 +1391,7 @@ void gText::EraseTextLine( uint8_t row)
 /**
  * Select a Font and font color
  *
- * @param font a pointer defined in a font defintion file
+ * @param font a font definition
  * @param color  can be WHITE or BLACK and defaults to black
  * @param callback optional font read routine
  *
@@ -1442,7 +1442,9 @@ void gText::SetFontColor(uint8_t color)
  *
  * @param mode  text area mode
  *
- * mode is a scroll direction.
+ * Currently mode is a scroll direction
+ * @arg SCROLL_UP
+ * @arg SCROLL_DOWN
  *
  * @see SelectFont()
  * @see SetFontColor()
@@ -1473,7 +1475,7 @@ void gText::SetTextMode(textMode mode)
  * @see StringWidth_P()
  */
 
-uint8_t gText::CharWidth(char c)
+uint8_t gText::CharWidth(uint8_t c)
 {
 	uint8_t width = 0;
 	
@@ -1614,7 +1616,6 @@ static FILE stdiostr;
  * @param ... Depending on the format string, the function may expect a sequence of additional arguments.
  *
  * See gText::Printf() for full details.
- *
  */ 
 
 

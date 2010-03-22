@@ -14,22 +14,22 @@
 /**
  * @defgroup glcd_deprecated Deprecated GLCD functions
  * The following functions have been deprecated from the GLCD inerface.
- * They are temporarily available by adding the following include
+ * They are temporarily available by adding the following include to your sketch:
  * @code
  * #include "include/glcd_Deprecated.h"
  * @endcode
- * to your sketch.
  */
+
 
 /**
  * @ingroup glcd_deprecated
  * @hideinitializer
- * @function void glcd::DrawVertLine(uint8_t x, uint8_t y, uint8_t height, uint8_t color)
- * @brief Draw a Vertial line
+ * @brief Draw a Vertical line
  * @deprecated
  * This functions has been replaced by glcd::DrawVLine()
- * @see glcd::DrawVLine()
- * @see glcd::DrawHLine()
+ *
+ * @see gText::DrawVLine()
+ * @see gText::DrawHLine()
  */
 
 #define DrawVertLine(x, y, height, color)   DrawVLine(x, y, height, color)
@@ -37,7 +37,6 @@
 /**
  * @ingroup glcd_deprecated
  * @hideinitializer
- * @function void glcd::DrawHoriLine(uint8_t x, uint8_t y, uint8_t width, uint8_t color)
  * @brief Draw a Horizontal line
  * @deprecated
  * This functions has been replaced by glcd::DrawHLine()
@@ -49,13 +48,11 @@
 /**
  * @ingroup glcd_deprecated
  * @hideinitializer
- * @function void glcd::ClearSysTextLine(uint8_t x, line)
  * @brief Clear a line of system text
  * @deprecated
- * This function should no longer be used.
+ * This function should no longer be used.\n
  * It has been replaced by the text area function gText::EraseTextLine(uint8_t row)
  * and gText::EraseTextLine(eraseLine_t type).
- * See the individual functions form more details.
  * @see gText::EraseTextLine(uint8_t row)
  * @see gText::EraseTextLine(eraseLine_t type)
  */
@@ -64,7 +61,6 @@
 /**
  * @ingroup glcd_deprecated
  * @hideinitializer
- * @function void glcd::SetInverted(uint8_t invert)
  * @brief Set LCD display mode
  * @deprecated
  * This functions has been replaced by glcd::SetDisplayMode()

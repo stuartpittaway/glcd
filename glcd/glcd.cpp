@@ -62,6 +62,7 @@ glcd::glcd(){
  
 
 void glcd::Init(uint8_t invert){
+
     this->Inverted=invert;
 	glcd_Device::Init(invert);  
 	//this->Text.Init((glcd_Device *)this); // new TA - init of gText no longer needed
@@ -370,7 +371,6 @@ void glcd::FillRect(uint8_t x, uint8_t y, uint8_t width, uint8_t height, uint8_t
  * @param y the y coordinate of the upper left corner of the rectangle
  * @param width width of the rectangle
  * @param height height of the rectangle
- * @param color BLACK or WHITE
  *
  * Inverts the pixels in the rectanglular area of the specified width and height.
  * BLACK pixels becom WHITE and WHITE pixels become BLACK.
@@ -454,6 +454,7 @@ void glcd::InvertRect(uint8_t x, uint8_t y, uint8_t width, uint8_t height) {
  */
 
 void glcd::SetDisplayMode(uint8_t invert) {  // was named SetInverted
+
 	if(this->Inverted != invert) {
 		this->InvertRect(0,0,DISPLAY_WIDTH-1,DISPLAY_HEIGHT-1);
 		this->Inverted = invert;
@@ -693,9 +694,10 @@ uint8_t ReadPgmData(const uint8_t* ptr) {  // note this is a static function
 }
 
 /*
- * Below here are text functions
+ * Below here are text wrapper functions
  */
 
+/// @cond hide_from_doxygen
 
 void glcd::write(uint8_t c)  // method needed for Print base class
 {
@@ -704,7 +706,7 @@ void glcd::write(uint8_t c)  // method needed for Print base class
 
 
 // Font and text methods now implemented in the gText class
-void glcd::SelectFont(const uint8_t* font, uint8_t color)
+void glcd::SelectFont(Font_t font, uint8_t color)
 {
    Text.SelectFont(font, color);
 }
@@ -759,7 +761,7 @@ void glcd::CursorToXY( uint8_t x, uint8_t y)
    	Text.CursorToXY(x,y); 
 }
 
-uint8_t glcd::CharWidth(char c)
+uint8_t glcd::CharWidth(uint8_t c)
 {
    return Text.CharWidth(c);
 }
@@ -784,15 +786,17 @@ uint16_t glcd::StringWidth_P(PGM_P str)
  * absolute minimim code size is required.
  */
  
-int glcd::PutChar(char c)
+int glcd::PutChar(uint8_t c)
 {
    Text.PutChar(c);
 }
 
-void glcd::Puts(char* str)
+void glcd::Puts(uint8_t * str)
 {
    Text.Puts(str);
 }
+
+/// @endcond
 
 void glcd::PrintNumber(long n)
 {
