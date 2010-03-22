@@ -177,9 +177,10 @@ cd %GLCDDISTDIR%
 for /D /r %%G in (.svn) DO rmdir /S /Q %%G 
 cd %PWD%
 
-echo Removing debug files
+echo Removing debug and build directory from distribution
 cd %GLCDDISTDIR%
 rmdir /S /Q debug
+rmdir /S /Q build
 cd %PWD%
 
 
