@@ -2,7 +2,10 @@
  * GLCDdiags
  *
  * This sketch will test the memory and interface to the GLCD module as well as report
- * current GLCD library configuration information to the serial port.
+ * the current GLCD library configuration information to the serial port.
+ *
+ * It will also display a set of visual screens on the GLCD that can aid in diagnosing
+ * misconfigured/wired chip select lines.
  *
  * The memory associated with each chip will be tested seperately.
  * Tests will be performed starting on chip #0.
@@ -14,10 +17,14 @@
  *
  * Status and error information will also sent out the serial port while testing.
  *
- * The test peforms a few different memory tests but the main tests walk an incrementing pattern
+ * The sketch peforms a few different memory tests but the main tests walk an incrementing pattern
  * through memory horizontally by incrementing through pages column at a time (left to right)
  * as well as vertically by incrementing throuh pages page a time (top to bottom).
  * 
+ * NOTE:
+ *   This sketch uses some internal GLCD library information that should 
+ *   not normally used by sketches that use the GLCD library.
+ *   
  */
 
 
@@ -26,22 +33,32 @@
 #include "fonts/SystemFont5x7.h"       // system font
 
 #include <avr/pgmspace.h>
-#define P(name)   static const prog_char name[] PROGMEM   // declare a static string in Progmem
+#define P(name)   static const prog_char name[] PROGMEM   // declare a static string in AVR Progmem
 
 #define MAX_ERRORS 10
 
 #ifdef _AVRIO_AVRIO_
-#define GLCDdiagsPIN2STR(x) \
-  glcdpin2str(x, AVRIO_PIN2AVRPORT(AVRIO_PIN2AVRPIN(x)), AVRIO_PIN2AVRBIT(AVRIO_PIN2AVRPIN(x)))
+#define SerialPrintPINstr(x) \
+  _SerialPrintPINstr(x, AVRIO_PIN2AVRPORT(AVRIO_PIN2AVRPIN(x)), AVRIO_PIN2AVRBIT(AVRIO_PIN2AVRPIN(x)))
 #else
-#define GLCDdiagsPIN2STR(x) glcdpin2str(x)
+#define SerialPrintPINstr(x) _SerialPrintPINStr(x)
 #endif
 
- P(hline) = "-----------------------------------------------------\n";  // declare hline as string in progmem
+/*
+ * declare a string for a horizontal line in program memory
+ */
+P(hline) =  "-----------------------------------------------------\n";
 
 
 #define xstr(s) str(s)
 #define str(...) #__VA_ARGS__
+
+/*
+ * Function to print a simple Quoted string to serial port.
+ * The string is automagically forced to live in AVR flash/program space.
+ */
+
+#define SerialPrintQ(str) SerialPrintP(PSTR(str))
 
 /*
  * print Progmem string to the serial port
@@ -55,9 +72,16 @@ void SerialPrintP(  const prog_char * str )
     Serial.print(c);   
 }
 
+#ifdef SERIALPRINTF
+
 /*
  * Define a REAL printf since Arduino doesn't have one
+ *
+ * SerialPrintf() will automatically put the format string in AVR program space
+ * 
  */
+
+#define SerialPrintf(fmt, ...) _SerialPrintf(PSTR(fmt), ##__VA_ARGS__)
 
 extern "C" {
   int serialputc(char c, FILE *fp) { 
@@ -66,7 +90,7 @@ extern "C" {
 }
 
 
-void SerialPrintf(const char *fmt, ...)
+void _SerialPrintf(const char *fmt, ...)
 {
 FILE stdiostr;
 va_list ap;
@@ -74,7 +98,7 @@ va_list ap;
   fdev_setup_stream(&stdiostr, serialputc, NULL, _FDEV_SETUP_WRITE);
 
   va_start(ap, fmt);
-  vfprintf(&stdiostr, fmt, ap);
+  vfprintf_P(&stdiostr, fmt, ap);
   va_end(ap);
 }
 
@@ -84,6 +108,14 @@ va_list ap;
  */
 #define eprintf(...) SerialPrintf(__VA_ARGS__)
 
+#endif //SERIALPRINTF
+
+
+/*
+ * GlcdPrintf() will automatically put the format string in AVR program space
+ */
+#define GlcdPrintf(fmt, ...) GLCD.Text.Printf_P(PSTR(fmt), ##__VA_ARGS__)
+
 
 void setup()
 {
@@ -92,29 +124,24 @@ void setup()
 #ifdef CORE_TEENSY
   delay(2000);    // allow USB time to come up.
                   // plus give user time to start serial monitor
+                  // NOTE: for Teensy users:
+                  //       Watch for the serial monitor icon in the IDE
+                  //       to briefly "flash". When it does, USB is up and the IDE
+                  //       has noticed the Teensy board. You can then click on the icon
+                  //       to connect the teensy board virtual com port.
 #endif
 
-  SerialPrintP(PSTR("Serial initialized\n"));
   delay(5);    // allow the hardware time settle
-
-  /*
-   * Dump GLCD config information *before* trying to talk to the GLCD
-   * in case there is a problem talking to the GLCD.
-   * This way ensures the GLCD information is always available.
-   */
-
-  /*
-   * dump the GLCD library configuration information to
-   * the serial port.
-   */
-  showGLCDconfig();
-
-  GLCD.Init();   // initialise the library, non inverted writes pixels onto a clear screen
-  GLCD.SelectFont(System5x7, BLACK);
-
+  SerialPrintQ("Serial initialized\n");
 }
 
 
+/*
+ * Attempt to show some graphical information on
+ * the display that will easily visually demonstrate
+ * whether or not the chip select lines are properly
+ * connected.
+ */
 void showchipselscreen(void)
 {
   /*
@@ -145,6 +172,7 @@ void showchipselscreen(void)
     GLCD.print("Chip:");
     GLCD.print(chip);
   }
+
   delay(5000);
 }
 
@@ -152,27 +180,86 @@ void  loop()
 {   // run over and over again
 
   int lcount = 1;
+  unsigned int glcdspeed, kops, kops_fract;
+
+  /*
+   * Dump GLCD config information *before* trying to talk to the GLCD
+   * in case there is a problem talking to the GLCD.
+   * This way ensures the GLCD information is always available.
+   */
+
+  /*
+   * dump the GLCD library configuration information to
+   * the serial port.
+   */
+  showGLCDconfig();
+
+#ifdef XXX
+  SerialPrintQ("Initializing GLCD\n");
+  GLCD.Init();   // initialise the library, non inverted writes pixels onto a clear screen
+  GLCD.SelectFont(System5x7, BLACK);
+#endif
 
   while(1)
   {
-    showchipselscreen();
+
     SerialPrintP(hline);
-    SerialPrintf("Diag Loop: %d\n", lcount);
+    SerialPrintQ("Diag Loop: ");
+    Serial.println(lcount);
+
+    SerialPrintQ("Initializing GLCD\n");
+    GLCD.Init();   // initialise the library, non inverted writes pixels onto a clear screen
+    GLCD.SelectFont(System5x7, BLACK);
+
+
+    SerialPrintQ("Displaying ChipSelect Screens\n");
+    showchipselscreen();
     if( lcdmemtest())
     {
       /*
        * memory tests failed.
        */
-      eprintf("TEST FAILED\n");
+      SerialPrintQ("TEST FAILED\n");
     }
     else
     {
-      SerialPrintP(PSTR("Tests PASSED\n"));
+      SerialPrintQ("Tests PASSED\n");
+
+      /*
+       * Diags report loop count on completion
+       */
       GLCD.ClearScreen();
       GLCD.CursorTo(0,0);
-      GLCD.println("Tests PASSED");
       GLCD.print("Diag Loop: ");
-      GLCD.print(lcount);
+      GLCD.println(lcount);
+      GLCD.println("Tests PASSED");
+
+      /*
+       * All GLCD tests passed so now
+       * perform a GLCD "speed" test.
+       */
+
+      glcdspeed = getglcdspeed();
+      /*
+       * Calculate the speed in K operations/sec
+       * Since the speed value reported is 10x the actual value,
+       * Dividing by 100 gives the integer K ops/sec
+       * Modulo 100 gives the factional K ops/sec
+       */
+
+      kops = glcdspeed/100;
+      kops_fract = glcdspeed %100;
+
+      GLCD.print("K SetDot/s: ");
+      GLCD.print(kops);
+      GLCD.print(".");
+      GLCD.println(kops_fract);
+
+
+      SerialPrintQ("GLCD.SetDot() speed (K ops/sec): ");
+      Serial.print(kops);
+      SerialPrintQ(".");
+      Serial.println(kops_fract);
     }
 
     delay(5000);
@@ -192,13 +279,13 @@ uint8_t lcdmemtest(void)
 {
   uint8_t errors = 0;
 
-  SerialPrintP(PSTR("Walking 1s data test\n"));
+  SerialPrintQ("Walking 1s data test\n");
 
   errors = lcdw1test();
   if(errors)
     return(errors);
 
-  SerialPrintP(PSTR("Wr/Rd Chip Select Test\n"));
+  SerialPrintQ("Wr/Rd Chip Select Test\n");
 
   errors = lcdw1test();
   if(errors)
@@ -206,7 +293,7 @@ uint8_t lcdmemtest(void)
 
   GLCD.ClearScreen();
 
-  SerialPrintP(PSTR("testing GLCD memory pages\n"));
+  SerialPrintQ("Testing GLCD memory pages\n");
 
   uint8_t col = 0;
   uint8_t ecol = CHIP_WIDTH-1;
@@ -228,13 +315,31 @@ uint8_t lcdmemtest(void)
     else
       GLCD.CursorToXY(CHIP_WIDTH,8);
     GLCD.print((int)col);
-    GLCD.print("-");
+    GLCD.print('-');
     GLCD.print((int)ecol);
     delay(500);
 
-    SerialPrintf("Horizonal Page Test Chip: %d Pixels %d to %d\n", chip, col, ecol);
+//  SerialPrintf("Horizonal Page Test Chip: %d Pixels %d-%d\n", chip, col, ecol);
+
+    SerialPrintQ("Horizonal Page Test Chip: ");
+    Serial.print((int)chip);
+    SerialPrintQ(" Pixels ");
+    Serial.print((int)col);
+    Serial.print('-');
+    Serial.println((unsigned int)ecol);
+
     errors += lcdhpagetest(col, ecol, 0, GLCD.Height/8 - 1, 0, 255);
-    SerialPrintf("Vertical Page Test Chip: %d Pixels %d to %d\n", chip, col, ecol);
+
+
+//  SerialPrintf("Vertical Page Test Chip: %d Pixels %d-%d\n", chip, col, ecol);
+
+    SerialPrintQ("Vertical Page Test Chip: ");
+    Serial.print((int)chip);
+    SerialPrintQ(" Pixels ");
+    Serial.print((int)col);
+    Serial.print('-');
+    Serial.println((int)ecol);
+
     errors += lcdvpagetest(col, ecol, 0, GLCD.Height/8 - 1, 0, 255);
     GLCD.ClearScreen();
 
@@ -249,12 +354,26 @@ uint8_t lcdmemtest(void)
   GLCD.print("Full Display");
   GLCD.CursorTo(0,1);
   GLCD.print((int)0);
-  GLCD.print("-");
+  GLCD.print('-');
   GLCD.print((int)GLCD.Right);
   delay(1000);
-  SerialPrintf("Full Module Horizontal Page Test:Pixels %d to %d\n",  0, GLCD.Right);
+
+//SerialPrintf("Full Module Horizontal Page Test:Pixels %d-%d\n",  0, GLCD.Right);
+
+  SerialPrintQ("Full Module Horizontal Page Test:Pixels ");
+  Serial.print(0);
+  Serial.print('-');
+  Serial.println((int)GLCD.Right);
+
   errors += lcdhpagetest(0, GLCD.Right, 0, GLCD.Bottom/8, 0, 255);
-  SerialPrintf("Full Module Vertical Page Test:Pixels %d to %d\n",  0, GLCD.Right);
+
+//SerialPrintf("Full Module Vertical Page Test:Pixels %d-%d\n",  0, GLCD.Right);
+
+  SerialPrintQ("Full Module Vertical Page Test:Pixels ");
+  Serial.print(0);
+  Serial.print('-');
+  Serial.println((int)GLCD.Right);
+
   errors += lcdvpagetest(0, GLCD.Right, 0, GLCD.Bottom/8, 0, 255);
 
   GLCD.ClearScreen();
@@ -282,7 +401,12 @@ lcdw1test(void)
 
     if(data != pat)
     {
-      eprintf("Compare error: %x != %x\n", data, pat);
+//    eprintf(" Compare error: %x != %x\n", data, pat);
+      SerialPrintQ(" Compare error: ");
+      Serial.print((unsigned int)data, HEX);
+      SerialPrintQ(" != ");
+      Serial.println((unsigned int)pat, HEX);
+
       errors++;
     }
   }
@@ -317,7 +441,13 @@ lcdrwseltest()
     data = GLCD.ReadData();
     if(data != chip)
     {
-      eprintf("Compare error: chip:%d  %x != %x\n", chip, data, chip);
+//    eprintf(" Compare error: chip:%d %x != %x\n", chip, data, chip);
+      SerialPrintQ(" Compare error: chip:");
+      Serial.print((int)chip);
+      Serial.print(' ');
+      Serial.print((unsigned int)data, HEX);
+      SerialPrintQ(" != ");
+      Serial.println((unsigned int)chip, HEX);
       errors++;
     }
   }
@@ -333,7 +463,13 @@ lcdrwseltest()
     data = GLCD.ReadData();
     if(data != chip)
     {
-      eprintf("Compare error: chip:%d  %x != %x\n", chip, data, chip);
+//    eprintf(" Compare error: chip:%d  %x != %x\n", chip, data, chip);
+      SerialPrintQ(" Compare error: chip:");
+      Serial.print((int)chip);
+      Serial.print(' ');
+      Serial.print((unsigned int)data, HEX);
+      SerialPrintQ(" != ");
+      Serial.println((unsigned int)chip, HEX);
       errors++;
     }
   }
@@ -419,8 +555,16 @@ int lcdhpagetest(uint8_t x1, uint8_t x2, uint8_t spage, uint8_t epage, uint8_t s
 
         if(data != rdata)
         {
-          eprintf("Verify error: (%d,%d) %x!=%x\n",
-          x, spage*8, data, rdata);
+//        eprintf(" Verify error: (%d,%d) %x!=%x\n", x, spage*8, data, rdata);
+          SerialPrintQ(" Verify error: (");
+          Serial.print((unsigned int) x);
+          Serial.print(',');
+          Serial.print((unsigned int) (spage*8));
+          SerialPrintQ(") ");
+          Serial.print((unsigned int)data, HEX);
+          SerialPrintQ("!=");
+          Serial.println((unsigned int)rdata, HEX);
+
           if(++errors > MAX_ERRORS)
             return(errors);
         }
@@ -498,8 +642,16 @@ int lcdvpagetest(uint8_t x1, uint8_t x2, uint8_t spage, uint8_t epage, uint8_t s
 
         if(data != rdata)
         {
-          eprintf("Verify error: (%d,%d) %x!=%x\n",
-          x, spage*8, data, rdata);
+//        eprintf(" Verify error: (%d,%d) %x!=%x\n", x, spage*8, data, rdata);
+
+          SerialPrintQ(" Verify error: (");
+          Serial.print((unsigned int) x);
+          Serial.print(',');
+          Serial.print((unsigned int) (spage*8));
+          SerialPrintQ(") ");
+          Serial.print((unsigned int)data, HEX);
+          SerialPrintQ("!=");
+          Serial.println((unsigned int)rdata, HEX);
 
           if(++errors > MAX_ERRORS)
             return(errors);
@@ -520,87 +672,138 @@ int lcdvpagetest(uint8_t x1, uint8_t x2, uint8_t spage, uint8_t epage, uint8_t s
 void showGLCDconfig(void)
 {
   SerialPrintP(hline);
-  SerialPrintP( PSTR("GLCD Lib Configuration: Library VER: "));
-  SerialPrintf("%d\n", GLCD_VERSION);
+  SerialPrintQ("GLCD Lib Configuration: Library VER: ");
+  Serial.println(GLCD_VERSION);
   SerialPrintP(hline);
-  SerialPrintP( PSTR("Configuration:"));
-  SerialPrintP( PSTR(glcd_ConfigName));
-  SerialPrintP( PSTR(" GLCD:"));
-  SerialPrintP( PSTR(glcd_DeviceName));
-  SerialPrintf("\n");
+  SerialPrintQ("Configuration:");
+  SerialPrintQ(glcd_ConfigName);
+  SerialPrintQ(" GLCD:");
+  SerialPrintQ(glcd_DeviceName);
+  Serial.print('\n');
 
-  SerialPrintf("DisplayWidth:%d DisplayHeight:%d\n", GLCD.Width, GLCD.Height);
-  SerialPrintf("Chips:%d", glcd_CHIP_COUNT);
-  SerialPrintf(" ChipWidth:%3d ChipHeight:%2d\n", CHIP_WIDTH, CHIP_HEIGHT);
+//SerialPrintf("DisplayWidth:%d DisplayHeight:%d\n", GLCD.Width, GLCD.Height);
+  SerialPrintQ("DisplayWidth:");
+  Serial.print((int)GLCD.Width);
+  SerialPrintQ(" DisplayHeight:");
+  Serial.println((int)GLCD.Height);
+
+//SerialPrintf("Chips:%d", glcd_CHIP_COUNT);
+  SerialPrintQ("Chips:");
+  Serial.print(glcd_CHIP_COUNT);
+
+
+//SerialPrintf(" ChipWidth:%3d ChipHeight:%2d\n", CHIP_WIDTH, CHIP_HEIGHT);
+  SerialPrintQ(" ChipWidth:");
+  Serial.print(CHIP_WIDTH);
+  SerialPrintQ(" ChipHeight:");
+  Serial.println(CHIP_HEIGHT);
 
 #ifdef glcdRES
-  SerialPrintf("RES:%s", GLCDdiagsPIN2STR(glcdRES));
+  SerialPrintQ("RES:");
+  SerialPrintPINstr(glcdRES);
 #endif
 #ifdef glcdCSEL1
-  SerialPrintf(" CSEL1:%s", GLCDdiagsPIN2STR(glcdCSEL1));
+  SerialPrintQ(" CSEL1:");
+  SerialPrintPINstr(glcdCSEL1);
 #endif
 #ifdef glcdCSEL2
-  SerialPrintf(" CSEL2:%s", GLCDdiagsPIN2STR(glcdCSEL2));
+  SerialPrintQ(" CSEL2:");
+  SerialPrintPINstr(glcdCSEL2);
 #endif
 #ifdef glcdCSEL3
-  SerialPrintf(" CSEL3:%s", GLCDdiagsPIN2STR(glcdCSEL3));
+  SerialPrintQ(" CSEL3:");
+  SerialPrintPINstr(glcdCSEL3);
 #endif
 #ifdef glcdCSEL4
-  SerialPrintf(" CSEL4:%s", GLCDdiagsPIN2STR(glcdCSEL4));
+  SerialPrintQ(" CSEL4:");
+  SerialPrintPINstr(glcdCSEL4);
 #endif
 
 
-  SerialPrintf(" RW:%s", GLCDdiagsPIN2STR(glcdRW));
-  SerialPrintf(" DI:%s", GLCDdiagsPIN2STR(glcdDI));
+  SerialPrintQ(" RW:");
+  SerialPrintPINstr(glcdRW);
+
+  SerialPrintQ(" DI:");
+  SerialPrintPINstr(glcdDI);
 
 #ifdef glcdEN
-  SerialPrintf(" EN:%s", GLCDdiagsPIN2STR(glcdEN));
+  SerialPrintQ(" EN:");
+  SerialPrintPINstr(glcdEN);
 #endif
 
 #ifdef glcdE1
-  SerialPrintf(" E1:%s", GLCDdiagsPIN2STR(glcdE1));
+  SerialPrintQ(" E1:");
+  SerialPrintPINstr(glcdE1);
 #endif
 #ifdef glcdE2
-  SerialPrintf(" E2:%s", GLCDdiagsPIN2STR(glcdE2));
+  SerialPrintQ(" E2:");
+  SerialPrintPINstr(glcdE2);
 #endif
 
-  SerialPrintf("\n");
+  Serial.print('\n');
 
-  SerialPrintf("D0:%s", GLCDdiagsPIN2STR(glcdData0Pin));
-  SerialPrintf(" D1:%s", GLCDdiagsPIN2STR(glcdData1Pin));
-  SerialPrintf(" D2:%s", GLCDdiagsPIN2STR(glcdData2Pin));
-  SerialPrintf(" D3:%s", GLCDdiagsPIN2STR(glcdData3Pin));
-  SerialPrintf(" D4:%s", GLCDdiagsPIN2STR(glcdData4Pin));
-  SerialPrintf(" D5:%s", GLCDdiagsPIN2STR(glcdData5Pin));
-  SerialPrintf(" D6:%s", GLCDdiagsPIN2STR(glcdData6Pin));
-  SerialPrintf(" D7:%s", GLCDdiagsPIN2STR(glcdData7Pin));
+//  SerialPrintf("D0:%s", GLCDdiagsPIN2STR(glcdData0Pin));
+  SerialPrintQ("D0:");
+  SerialPrintPINstr(glcdData0Pin);
 
-  SerialPrintP(PSTR("\n"));
+  SerialPrintQ(" D1:");
+  SerialPrintPINstr(glcdData1Pin);
 
+  SerialPrintQ(" D2:");
+  SerialPrintPINstr(glcdData2Pin);
 
-  SerialPrintf("Delays: tDDR:%d tAS:%d tDSW:%d tWH:%d tWL: %d\n",
-  GLCD_tDDR, GLCD_tAS, GLCD_tDSW, GLCD_tWH, GLCD_tWL);
+  SerialPrintQ(" D3:");
+  SerialPrintPINstr(glcdData3Pin);
+
+  SerialPrintQ(" D4:");
+  SerialPrintPINstr(glcdData4Pin);
+
+  SerialPrintQ(" D5:");
+  SerialPrintPINstr(glcdData5Pin);
+
+  SerialPrintQ(" D6:");
+  SerialPrintPINstr(glcdData6Pin);
+
+  SerialPrintQ(" D7:");
+  SerialPrintPINstr(glcdData7Pin);
+
+  Serial.print('\n');
+
+//  SerialPrintf("Delays: tDDR:%d tAS:%d tDSW:%d tWH:%d tWL: %d\n",
+//  GLCD_tDDR, GLCD_tAS, GLCD_tDSW, GLCD_tWH, GLCD_tWL);
+
+  SerialPrintQ("Delays: tDDR:");
+  Serial.print(GLCD_tDDR);
+  SerialPrintQ(" tAS:");
+  Serial.print(GLCD_tAS);
+  SerialPrintQ(" tDSW:");
+  Serial.print(GLCD_tDSW);
+  SerialPrintQ(" tWH:");
+  Serial.print(GLCD_tWH);
+  SerialPrintQ(" tWL:");
+  Serial.println(GLCD_tWL);
+
 
 #ifdef glcd_CHIP0
-  SerialPrintP(PSTR("ChipSelects:"));
-  SerialPrintP(PSTR(" CHIP0:"));
-  SerialPrintP(PSTR(xstr(glcd_CHIP0)));
+  SerialPrintQ("ChipSelects:");
+  SerialPrintQ(" CHIP0:");
+  SerialPrintQ(xstr(glcd_CHIP0));
 #endif
 #ifdef glcd_CHIP1
-  SerialPrintP(PSTR(" CHIP1:"));
-  SerialPrintP(PSTR(xstr(glcd_CHIP1)));
+  SerialPrintQ(" CHIP1:");
+  SerialPrintQ(xstr(glcd_CHIP1));
 #endif
 #ifdef glcd_CHIP2
-  SerialPrintP(PSTR(" CHIP2:"));
-  SerialPrintP(PSTR(xstr(glcd_CHIP2)));
+  SerialPrintQ(" CHIP2:");
+  SerialPrintQ(xstr(glcd_CHIP2));
 #endif
 #ifdef glcd_CHIP3
-  SerialPrintP(PSTR(" CHIP3:"));
-  SerialPrintP(PSTR(xstr(glcd_CHIP3)));
+  SerialPrintQ(" CHIP3:");
+  SerialPrintQ(xstr(glcd_CHIP3));
 #endif
 
 #ifdef glcd_CHIP0
-  SerialPrintP(PSTR("\n"));
+  Serial.print('\n');
 #endif
 
 
@@ -613,7 +816,7 @@ void showGLCDconfig(void)
    * in avrio land.
    */
 
-  SerialPrintP(PSTR("Data mode: "));
+  SerialPrintQ("Data mode: ");
   /*
    * First check for full 8 bit mode
    *
@@ -624,43 +827,43 @@ void showGLCDconfig(void)
     /*
      * full 8 bit mode
      */
-    SerialPrintP(PSTR("byte\n"));
+    SerialPrintQ("byte\n");
   }
   else
   {
-    SerialPrintP(PSTR("\n d0-d3:"));
+    SerialPrintQ("\n d0-d3:");
     if(AVRDATA_4BITHI(glcdData0Pin, glcdData1Pin, glcdData2Pin, glcdData3Pin) ||
       AVRDATA_4BITLO(glcdData0Pin, glcdData1Pin, glcdData2Pin, glcdData3Pin))
     {
-      SerialPrintP(PSTR("nibble mode"));
+      SerialPrintQ("nibble mode");
 #ifndef GLCD_ATOMIC_IO
-      SerialPrintP(PSTR("-Non-Atomic"));
+      SerialPrintQ("-Non-Atomic");
 #else
-      SerialPrintP(PSTR("-disabled")); // for now this "knows" avrio disabled nibbles when in atomic mode.
+      SerialPrintQ("-disabled"); // for now this "knows" avrio disabled nibbles when in atomic mode.
 #endif
     }
     else
     {
-      SerialPrintP(PSTR("bit i/o"));
+      SerialPrintQ("bit i/o");
     }
 
-    SerialPrintP(PSTR("\n d4-d7:"));
+    SerialPrintQ("\n d4-d7:");
 
     if(AVRDATA_4BITHI(glcdData4Pin, glcdData5Pin, glcdData6Pin, glcdData7Pin) ||
       AVRDATA_4BITLO(glcdData4Pin, glcdData5Pin, glcdData6Pin, glcdData7Pin))
     {
-      SerialPrintP(PSTR("nibble mode"));
+      SerialPrintQ("nibble mode");
 #ifndef GLCD_ATOMIC_IO
-      SerialPrintP(PSTR("-Non-Atomic"));
+      SerialPrintQ("-Non-Atomic");
 #else
-      SerialPrintP(PSTR("-disabled")); // for now this "knows" avrio disabled nibbles when in atomic mode.
+      SerialPrintQ("-disabled"); // for now this "knows" avrio disabled nibbles when in atomic mode.
 #endif
     }
     else
     {
-      SerialPrintP(PSTR("bit i/o"));
+      SerialPrintQ("bit i/o");
     }
-    SerialPrintf("\n");
+    Serial.print('\n');
   }
 
 #endif // _AVRIO_AVRIO_
@@ -670,8 +873,8 @@ void showGLCDconfig(void)
    */
 
 #ifdef GLCD_OLD_FONTDRAW
-  SerialPrintP(PSTR("Text Render: "));
-  SerialPrintP(PSTR("OLD\n"));
+  SerialPrintQ("Text Render: ");
+  SerialPrintQ("OLD\n");
 #endif
 
   /*
@@ -679,40 +882,105 @@ void showGLCDconfig(void)
    */
 
 #ifdef GLCD_NO_SCROLLDOWN
-  SerialPrintP(PSTR("NO Down Scroll"));
+  SerialPrintQ("NO Down Scroll");
 #endif
 
 }
 
 #ifdef _AVRIO_AVRIO_
 /*
- * The avrio version of the pin string will also contain
+ * The avrio version of the pin string also contain
  * the AVR port and bit number of the pin.
  * The format is PIN_Pb where P is the port A-Z 
  * and b is the bit number within the port 0-7
  */
-char *
-glcdpin2str(uint8_t pin, uint8_t avrport, uint8_t avrbit)
+void
+_SerialPrintPINstr(uint8_t pin, uint8_t avrport, uint8_t avrbit)
 {
-static char buf[15];
 
+  /*
+   * Check to see if Ardino pin# is used or
+   * if AVRPIN #s are used.
+   */
   if(pin >= AVRIO_PIN(AVRIO_PORTA, 0))
   {
-    sprintf(buf, "0x%x(PIN_%c%d)", pin, 'A'-AVRIO_PORTA+avrport, avrbit);
+    
+//  SerialPrintf("0x%x", pin);
+    /*
+     * print pin value in hex when AVRPIN #s are used
+     */
+    SerialPrintQ("0x");
+    Serial.print(pin,HEX);
   }
   else
   {
-    sprintf(buf, "%d(PIN_%c%d)", pin, 'A'-AVRIO_PORTA+avrport, avrbit);
+//  SerialPrintf("%d", pin);
+    Serial.print(pin,DEC);
   }
-  return(buf);
+
+//SerialPrintf("(PIN_%c%d)", pin, 'A'-AVRIO_PORTA+avrport, avrbit);
+
+  SerialPrintQ("(PIN_");
+  Serial.print((char)('A' - AVRIO_PORTA+avrport));
+  Serial.print((int)avrbit);
+  Serial.print(')');
+
 }
 #else
-char *
-glcdpin2str(uint16_t pin)
+void
+_SerialPrintPINstr(uint16_t pin)
 {
-static char buf[8];
-
-  sprintf(buf, "%d", pin);
-  return(buf);
+  Serial.print((int) pin);
 }
 #endif
+
+
+/*
+ * This function returns a composite "speed" of the glcd
+ * by returning the SetDot() speed in 1/10 operations/sec.
+ * i.e. return value is 1/10 the number of SetDot() calls
+ * per second.
+ */
+uint16_t
+getglcdspeed()
+{
+uint16_t iter = 0;
+unsigned long startmillis;
+
+  startmillis = millis();
+
+  while(millis() - startmillis < 1000) // loop for 1 second
+  {
+    /*
+     * Do 10 operations to minimize the effects of the millis() call
+     * and the loop.
+     *
+     * Note: The pixel locations were chosen to ensure that a
+     * a set colum and set page operation are needed for each SetDot()
+     * call.
+     * The intent is to get an overall feel for the speed of the GLD
+     * as each SetDot() call will do these operations to the glcd:
+     * - set page
+     * - set column
+     * - read byte (dummy read)
+     * - read byte (real read)
+     * - set column (set column back for write)
+     * - write byte
+     */
+
+    GLCD.SetDot(GLCD.Right, GLCD.Bottom, WHITE);
+    GLCD.SetDot(GLCD.Right-1, GLCD.Bottom-1, WHITE);
+    GLCD.SetDot(GLCD.Right, GLCD.Bottom, WHITE);
+    GLCD.SetDot(GLCD.Right-1, GLCD.Bottom-1, WHITE);
+    GLCD.SetDot(GLCD.Right, GLCD.Bottom, WHITE);
+    GLCD.SetDot(GLCD.Right-1, GLCD.Bottom-1, WHITE);
+    GLCD.SetDot(GLCD.Right, GLCD.Bottom, WHITE);
+    GLCD.SetDot(GLCD.Right-1, GLCD.Bottom-1, WHITE);
+    GLCD.SetDot(GLCD.Right, GLCD.Bottom, WHITE);
+    GLCD.SetDot(GLCD.Right-1, GLCD.Bottom-1, WHITE);
+    iter++;
+  }
+
+  return(iter);
+
+}
