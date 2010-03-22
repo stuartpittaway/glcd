@@ -114,7 +114,7 @@ REM #
 
 set DOXYGEN=doxygen
 set DOXYGENDIR= %GLCDDISTDIR%\doc
-set DOXYGENCFG=Doxyfile
+set DOXYGENCFG=Doxyfile.dox
 
 REM #
 REM # Name of ZIP file
@@ -186,7 +186,7 @@ cd %PWD%
 
 echo Creating Zip file
 echo ======== Creating Zip file >> %LOGFILE%
-erase /F %GLCDZIPNAME%
+if exist %GLCDZIPNAME% erase /F %GLCDZIPNAME%
 echo About to create zip file from %GLCDDISTDIR%
 pause
 %ZIPCMD% %GLCDZIPNAME% %GLCDDISTDIR% >> %LOGFILE%
