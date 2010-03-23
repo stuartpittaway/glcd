@@ -222,9 +222,9 @@ class gText : public Print
 	void SelectFont(Font_t font, uint8_t color=BLACK, FontCallback callback=ReadPgmData); // default arguments added, callback now last arg
 	void SetFontColor(uint8_t color); // new method
 	int PutChar(uint8_t c);
-	void Puts(uint8_t *str);
+	void Puts(char *str);
 	void Puts_P(PGM_P str);
-	void DrawString(uint8_t *str, uint8_t x, uint8_t y);
+	void DrawString(char *str, uint8_t x, uint8_t y);
 	void DrawString_P(PGM_P str, uint8_t x, uint8_t y);
 
 	void write(uint8_t c);  // character output for print base class
