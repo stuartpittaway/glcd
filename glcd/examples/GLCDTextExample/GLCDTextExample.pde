@@ -75,7 +75,7 @@ void showAscii(int area, int _delay)
 
 void introScreen(){  
   if(GLCD.Height >= 64)   
-    GLCD.DrawBitmap(ArduinoIcon, 32,0); //draw the bitmap at the given x,y position
+    GLCD.DrawBitmap(ArduinoIcon64x64, 32,0); //draw the bitmap at the given x,y position
   else
     GLCD.DrawBitmap(ArduinoIcon64x32, 32,0); //draw the bitmap at the given x,y position
   countdown(3);
@@ -98,7 +98,7 @@ void showCharacters(){
   GLCD.CursorTo(0,0);
   GLCD.print("5x7 font:");
   GLCD.DrawRoundRect(GLCD.CenterX + 2, 0, GLCD.CenterX -3, GLCD.Bottom, 5);  // rounded rectangle around text area 
-  textArea[1].DefineArea( GLCD.CenterX + 5, 3, GLCD.Right-2, GLCD.Bottom-4, 1); 
+  textArea[1].DefineArea( GLCD.CenterX + 5, 3, GLCD.Right-2, GLCD.Bottom-4, SCROLL_UP); 
   textArea[1].SelectFont(System5x7, BLACK);
   textArea[1].CursorTo(0,0);
   for(byte c = 32; c <=127; c++){
@@ -181,7 +181,7 @@ void scrollingDemo()
   }
 
   // CursorToXY using user defined text area  
-  textArea[0].DefineArea(0,0, GLCD.Right,GLCD.Bottom, 1);
+  textArea[0].DefineArea(0,0, GLCD.Right,GLCD.Bottom, SCROLL_UP);
   textArea[0].SelectFont(Arial_14, WHITE);
   for(x=0; x< 15; x++)
   {
@@ -196,13 +196,13 @@ void scrollingDemo()
   }
 
   GLCD.ClearScreen();  
-  textArea[0].DefineArea(0,0, GLCD.CenterX -1,GLCD.CenterY -1, 1);
+  textArea[0].DefineArea(0,0, GLCD.CenterX -1,GLCD.CenterY -1, SCROLL_UP);
   textArea[0].SelectFont(System5x7, WHITE);
   textArea[0].CursorTo(0,0);
-  textArea[1].DefineArea(GLCD.CenterX,0, GLCD.Right,GLCD.CenterY-1, -1);
+  textArea[1].DefineArea(GLCD.CenterX,0, GLCD.Right,GLCD.CenterY-1, SCROLL_DOWN);
   textArea[1].SelectFont(System5x7, BLACK);
   textArea[1].CursorTo(0,0);
-  textArea[2].DefineArea(textAreaBOTTOM,1); 
+  textArea[2].DefineArea(textAreaBOTTOM,SCROLL_UP); 
   
   textArea[2].SelectFont(Arial_14, BLACK);
   textArea[2].CursorTo(0,0);
@@ -248,7 +248,7 @@ void scrollingDemo()
   }
   if(GLCD.Height < 64)
   {
-     textArea[0].DefineArea(0,0,GLCD.CenterX-1, GLCD.Bottom-1, 1);
+     textArea[0].DefineArea(0,0,GLCD.CenterX-1, GLCD.Bottom-1, SCROLL_UP);
   }
 
   for(char c = 0x20; c < 0x7f; c++)
