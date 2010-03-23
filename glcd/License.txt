@@ -6,9 +6,9 @@ in the Arduino software environment.
 
 
 The one file worth noting is avrio.h
-This file is not LGPL but is available available for free use and distribution
+This file is not LGPL but is available for free use and distribution
 as long it is used with the GLCD library in the Arduino software environment.
-See the avrio.h for further details.
+See the avrio.h file for further details.
 
 Files should have explicit licensing ageement statements in them.
 In the absence of of any licensing agreement statement,
