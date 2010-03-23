@@ -84,7 +84,7 @@ class glcd : public glcd_Device  // glcd_Device has low level device access rout
 	
 	// Graphic Functions
 	void ClearScreen(uint8_t color = WHITE);
-	void ClearPage(uint8_t page, uint8_t color = WHITE); // bill, this was public in ks0108, why did we make it private?
+	void ClearPage(uint8_t page, uint8_t color = WHITE);
 	void DrawVLine(uint8_t x, uint8_t y, uint8_t height, uint8_t color= BLACK);
 	void DrawHLine(uint8_t x, uint8_t y, uint8_t width, uint8_t color= BLACK);
 	void DrawLine(uint8_t x1, uint8_t y1, uint8_t x2, uint8_t y2, uint8_t color= BLACK);
@@ -119,7 +119,7 @@ class glcd : public glcd_Device  // glcd_Device has low level device access rout
 	
 	// legacy text output functions 
 	int PutChar(uint8_t c);
-	void Puts(uint8_t * str);
+	void Puts(char * str);
 	void PrintNumber(long n);
 
 	uint8_t CharWidth(uint8_t c);

@@ -791,7 +791,7 @@ int glcd::PutChar(uint8_t c)
    Text.PutChar(c);
 }
 
-void glcd::Puts(uint8_t * str)
+void glcd::Puts(char * str)
 {
    Text.Puts(str);
 }

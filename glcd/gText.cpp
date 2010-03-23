@@ -1111,7 +1111,7 @@ int gText::PutChar(uint8_t c)
  */
 
 
-void gText::Puts(uint8_t* str)
+void gText::Puts(char *str)
 {
     while(*str)
 	{
@@ -1170,7 +1170,7 @@ uint8_t c;
  * @see write()
  */
 
-void gText::DrawString(uint8_t *str, uint8_t x, uint8_t y)
+void gText::DrawString(char *str, uint8_t x, uint8_t y)
 {
 	this->CursorToXY(x,y);
 	this->Puts(str);
