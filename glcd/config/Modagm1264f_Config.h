@@ -138,10 +138,6 @@
 
 // defines for panel specific timing 
 /*
- *	Nov 2009
- *	Low level additions added by Bill Perry
- *	bill@billsworld.billandterrie.com
- *
  * The following defines are for low level timing.
  * They have been derived from looking at many ks0108 data sheets.
  * Nearly all of the datasheets have the same low level timing.

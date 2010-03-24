@@ -144,7 +144,7 @@
 /*
  *	Nov 2009
  *	Low level additions added by Bill Perry
- *	bill@billsworld.billandterrie.com
+ *	bperrybap@opensource.billsworld.billandterrie.com
  *
  * The following defines are for low level timing.
  * They have been derived from looking at many ks0108 data sheets.

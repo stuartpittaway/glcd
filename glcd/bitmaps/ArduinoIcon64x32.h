@@ -5,14 +5,14 @@
 //    It contains embedded width and height format information.
 //
 //    Ardino bitmap format support added by Bill Perry
-//           (bill@billsworld.billandterrie.com)
+//           (bperrybap@opensource.billsworld.billandterrie.com)
 //
 // 64x32 Arduino Icon.
 // This icon keeps the same "flavor" as the original Ardino Icon
 // but has been modified to fit on lcd displays that are only 32 pixels high
 // and has be limited to only 64 pixes wide.
 // 
-// Created 2009-12-12 by Bill Perry  (bill@billsworld.billandterrie.com)
+// Created 2009-12-12 by Bill Perry  (bperrybap@opensource.billsworld.billandterrie.com)
 //
 //---------------------------------------------------------------------------
 

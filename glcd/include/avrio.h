@@ -4,7 +4,7 @@
  *
  * vi:ts=4
  *
- *	Copyright (C) 2009,2010 Bill Perry. (bill@billsworld.billandterrie.com)
+ *	Copyright (C) 2009,2010 Bill Perry. (bperrybap@opensource.billsworld.billandterrie.com)
  *
  * 	This file is included as part of the Arduino GLCD library.
  *
@@ -12,7 +12,7 @@
  * 	with the GLCD Library.
  *
  *	You can download a version of AVRIO that can be used with other code from: 
- *	http://www.billsworld.billandterrie.com/opensource/avr/avrio
+ *	http://www.opensource.billsworld.billandterrie.com/avr/avrio
  *
  * GLCD is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
