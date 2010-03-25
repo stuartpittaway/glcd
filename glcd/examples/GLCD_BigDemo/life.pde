@@ -34,8 +34,10 @@
 // used for sound effects
 
              //  A   A#   B     C   C#    D   D#   E    F    F#   G    G#
-int tones[] =  {2273,2145,2025,1911,1804,1703,1607,1517,1432,1351,1276,1204,
+const int tones[] =  {2273,2145,2025,1911,1804,1703,1607,1517,1432,1351,1276,1204,
                 1136,1073,1012, 956, 902, 851, 804, 758, 716, 676, 638, 603 };
+
+const int nbrTones = sizeof(tones) / sizeof(int);                
 
 /* ========   Life Objects   ========
  * these objects  can be displayed on the Arduino life screen
@@ -132,6 +134,7 @@ struct {
 byte generations[STABLE_GENERATIONS][ROWS][BYTES_PER_COLUMN]; // array used to calculate, draw and check if iterations are changing     
 
 int startSeed = 0;
+int genPeriod = DELAY; // set default period between generations
 
 void life(unsigned long duration)
 { 
@@ -168,7 +171,10 @@ unsigned int generate(){
   unsigned int iteration = 0;
   byte thisGeneration,nextGeneration, previousGeneration;  
   thisGeneration = nextGeneration  = 0;
-  do{    
+  do{   
+#ifdef potPin 
+   genPeriod = map(analogRead(potPin),0, 1023, 2, 200);
+#endif
     thisGeneration  = iteration % STABLE_GENERATIONS;
     nextGeneration =  (thisGeneration+1) % STABLE_GENERATIONS;
     previousGeneration  =  (thisGeneration-1) % STABLE_GENERATIONS;
@@ -187,7 +193,7 @@ unsigned int generate(){
     if(iteration == 0)  
        delay(1500); // show the seeded condition a little longer 
     else
-       delay(DELAY);     
+       delay(genPeriod);     
     memset(generations[nextGeneration],0,sizeof(generations[0])); // clear the array for the next generation
     //see who lives and who dies
     births = deaths = 0;
@@ -211,10 +217,12 @@ unsigned int generate(){
         }
       }
 #ifdef speakerAPin      
-      tone( speakerAPin, tones[births], DELAY);
+      births = births % nbrTones ;  
+      tone( speakerAPin, tones[births], genPeriod);
 #endif      
 #ifdef speakerBPin
-      tone( speakerBPin, tones[deaths], DELAY);
+      deaths = deaths % nbrTones ;  
+      tone( speakerBPin, tones[deaths], genPeriod);
 #endif      
     } 
   }
