@@ -849,7 +849,7 @@ HTML_STYLESHEET        =
 # page will contain the date and time when the page was generated. Setting 
 # this to NO can help when comparing the output of multiple runs.
 
-HTML_TIMESTAMP         = NO
+HTML_TIMESTAMP         = YES
 
 # If the HTML_ALIGN_MEMBERS tag is set to YES, the members of classes, 
 # files or namespaces will be aligned in HTML using tables. If set to 
@@ -1010,7 +1010,7 @@ DISABLE_INDEX          = NO
 # This tag can be used to set the number of enum values (range [1..20]) 
 # that doxygen will group on one line in the generated HTML documentation.
 
-ENUM_VALUES_PER_LINE   = 4
+ENUM_VALUES_PER_LINE   = 1
 
 # The GENERATE_TREEVIEW tag is used to specify whether a tree-like index 
 # structure should be generated to display hierarchical information. 
