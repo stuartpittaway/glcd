@@ -6,9 +6,6 @@
  *
  */
 
-#define potPin 0
-#define buttonPin 15
-#define speakerAPin 19
 //#define speakerBPin ? 
         
       
