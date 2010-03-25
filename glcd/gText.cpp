@@ -697,18 +697,21 @@ int gText::PutChar(uint8_t c)
 	uint8_t charCount = FontRead(this->Font+FONT_CHAR_COUNT);
 	
 	uint16_t index = 0;
+	uint8_t thielefont;
 
 	if(c < firstChar || c >= (firstChar+charCount)) {
 		return 0; // invalid char
 	}
 	c-= firstChar;
 
-	if( isFixedWidtFont(this->Font) {
-	   width = FontRead(this->Font+FONT_FIXED_WIDTH); 
-	   index = c*bytes*width+FONT_WIDTH_TABLE;
+	if( isFixedWidthFont(this->Font) {
+		thielefont = 0;
+		width = FontRead(this->Font+FONT_FIXED_WIDTH); 
+		index = c*bytes*width+FONT_WIDTH_TABLE;
 	}
 	else{
 	// variable width font, read width data, to get the index
+		thielefont = 1;
 		/*
 		 * Because there is no table for the offset of where the data
 		 * for each character glyph starts, run the table and add up all the
@@ -842,7 +845,7 @@ int gText::PutChar(uint8_t c)
 	 * and writing all 8 bits to LCD memory and expecting the write data routine
 	 * to fragement the 8 bits across LCD 2 memory pages when necessary.
 	 * That method (really doesn't work) and reads and writes the same LCD page 
-	 * more than once as well is does not do sequential writes to memory.
+	 * more than once as well as not do sequential writes to memory.
 	 *
 	 * This method of rendering while much more complicated, somewhat scrambles the font 
 	 * data reads to ensure that all writes to LCD pages are always sequential and a given LCD
@@ -908,18 +911,10 @@ int gText::PutChar(uint8_t c)
 				 * Have to shift font data because Thiele shifted residual
 				 * font bits the wrong direction for LCD memory.
 				 *
-				 * FIXME
-				 * NOTE: the check for height> 8 is because the system font
-				 * is not in thiele format. So this is a hack that treats
-				 * fonts with height less than 8 to be "fixed" font format
-				 * rather than thiele format.
-				 * This really should use !isFixedWidtFont(this->Font)
-				 * instead. but it will be a little slower.
-				 *
-				 * The real solution to this is fix font format to
+				 * The real solution to this is to fix the variable width font format to
 				 * not shift the residual bits the wrong direction!!!!
 				 */
-				if((height > 8) && (height - (p&~7)) < 8)
+				if(thielefont && (height - (p&~7)) < 8)
 				{
 					fdata >>= 8 - (height & 7);
 				}
@@ -991,13 +986,9 @@ int gText::PutChar(uint8_t c)
 					 * Have to shift font data because Thiele shifted residual
 					 * font bits the wrong direction for LCD memory.
 					 *
-					 * Again, the height >8 is a hack for the system font.
-					 * and probably should be replaced with
-				 	 * !isFixedWidtFont(this->Font)
-					 *
 					 */
 
-					if((height > 8) && ((height - tfp) < 8))
+					if((thielefont) && ((height - tfp) < 8))
 					{
 						fdata >>= (8 - (height & 7));
 					}
@@ -1269,7 +1260,7 @@ void gText::CursorTo( uint8_t column, uint8_t row)
  * than the width of the "l".
  *
  *
- * @see CursorTo()
+ * @see CursorToXY()
  */
 void gText::CursorTo( int8_t column)
 {
@@ -1413,6 +1404,8 @@ void gText::EraseTextLine( uint8_t row)
  * black background; however, if the display is set to INVERTED mode
  * all colors are inverted. 
  *
+ * @see SetFontColor()
+ * @see SetTextMode()
  */
 
 void gText::SelectFont(Font_t font,uint8_t color, FontCallback callback)
@@ -1479,7 +1472,7 @@ uint8_t gText::CharWidth(uint8_t c)
 {
 	uint8_t width = 0;
 	
-    if(isFixedWidtFont(this->Font){
+    if(isFixedWidthFont(this->Font){
 		width = FontRead(this->Font+FONT_FIXED_WIDTH)+1;  // there is 1 pixel pad here
 	} 
     else{ 
@@ -1546,6 +1539,7 @@ uint16_t gText::StringWidth_P(PGM_P str)
  * @param c the character to output
  *
  * This method is needed for the Print base class
+ * @see PutChar()
  */
 
 void gText::write(uint8_t c) 
@@ -1592,6 +1586,7 @@ extern "C"
  *	In order to enable this, a linker option must be changed. Currenly,
  *	the Arduino IDE does not support modifying the linker options.
  *
+ * @see Printf_P()
  */ 
 
 
@@ -1616,6 +1611,7 @@ static FILE stdiostr;
  * @param ... Depending on the format string, the function may expect a sequence of additional arguments.
  *
  * See gText::Printf() for full details.
+ * @see Printf()
  */ 
 
 

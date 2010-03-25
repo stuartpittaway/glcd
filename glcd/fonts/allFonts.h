@@ -10,4 +10,7 @@
 
 #include "fonts/SystemFont5x7.h"       // system font
 #include "fonts/Arial14.h"             // proportional font
-#include "fonts/Verdana_digits_24.h"   // large font - numerals only 
+#include "fonts/Verdana_digits_24.h"   // large proportional font - numerals only 
+#include "fonts/fixednums7x15.h"       // fixed width font - numerals only 
+#include "fonts/fixednums8x16.h"       // fixed width font - numerals only 
+#include "fonts/fixednums15x31.h"      // fixed width font - numerals only 
