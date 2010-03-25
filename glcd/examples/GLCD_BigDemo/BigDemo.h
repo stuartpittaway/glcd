@@ -5,6 +5,12 @@
  * Uncomment these to enable these resources
  *
  */
+
+#define potPin 0
+#define buttonPin 15
+#define speakerAPin 19
+//#define speakerBPin ? 
+        
       
 /*
  * potPin is used to move the rocket up and down and to set the clock
