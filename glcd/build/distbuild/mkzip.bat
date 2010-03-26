@@ -113,8 +113,8 @@ REM #  are relative to that point.
 REM #
 
 set DOXYGEN=doxygen
-set DOXYGENDIR= %GLCDDISTDIR%\doc
-set DOXYGENCFG=Doxyfile.dox
+set DOXYGENDIR= %GLCDDISTDIR%\build\doc\doxygen
+set DOXYGENCFG=Doxyfile.doxcfg
 
 REM #
 REM # Name of ZIP file
@@ -157,6 +157,7 @@ echo ======== Checkout SVN tree >> %LOGFILE%
 echo Working tree is ready for processing
 pause
 
+REM # Must build doxygen docs before build directory is removed
 echo Building Doxygen Documents
 echo ======== Building Doxygen Documents >> %LOGFILE%
 cd %DOXYGENDIR%
