@@ -61,6 +61,8 @@ set SEC=%TIME:~6,2%
 set MYDATE=%YR%%MTH%%DAY%
 set MYTIME=%HR%%MIN%%SEC%
 
+set MYDATE=TODAY
+
 REM ##################################################################
 REM #
 REM # Define working variables
@@ -113,7 +115,7 @@ REM #  are relative to that point.
 REM #
 
 set DOXYGEN=doxygen
-set DOXYGENDIR= %GLCDDISTDIR%\build\doc\doxygen
+set DOXYGENDIR=%GLCDDISTDIR%\build\doc\doxygen
 set DOXYGENCFG=Doxyfile.doxcfg
 
 REM #
@@ -130,7 +132,7 @@ set GLCDMANIFEST=%GLCDDISTDIR%\manifest.txt
 REM ##################################################################
 REM # Now start to actually do something
 
-echo Starting build %DATE% %TIME% >%LOGFILE%
+echo Starting build %DATE% %TIME% >"%LOGFILE%"
 
 REM # check to see if there is an argument from drag-n-drop
 REM # if no argument passed in, then get files from SVN
@@ -141,7 +143,7 @@ echo Drag and drop mode for file %1
 
 echo Copying existing devlopment tree
 REM DO NOT TURN THIS ON
-REM echo copy %1 %GLCDDISTDIR%
+REM echo copy %1 "%GLCDDISTDIR%"
 echo DRAG and DROP not yet supported
 pause
 goto done
@@ -150,51 +152,63 @@ goto working_tree_ready
 
 :get_svnfiles
 echo Checking out SVN working tree: %GLCDDISTDIR%
-echo ======== Checkout SVN tree >> %LOGFILE%
-%SVNCMD% %GLCDREPO% %GLCDDISTDIR% >>%LOGFILE%
+echo ======== Checkout SVN tree to %GLCDDISTDIR% >> "%LOGFILE%"
+%SVNCMD% %GLCDREPO% "%GLCDDISTDIR%" >>"%LOGFILE%"
+
+if not ERRORLEVEL 1 goto working_tree_ready
+echo Fatal Error: could not checkout SVN tree
+goto done
 
 :working_tree_ready
 echo Working tree is ready for processing
 pause
 
-REM # Must build doxygen docs before build directory is removed
-echo Building Doxygen Documents
-echo ======== Building Doxygen Documents >> %LOGFILE%
-cd %DOXYGENDIR%
-%DOXYGEN% %DOXYGENCFG%  >> %LOGFILE% 2>&1
-cd %PWD%
-
 echo Creating SVN Manifest file
-echo Distribution files created %DATE% %TIME% >%GLCDMANIFEST%
-echo =====================================================================>>%GLCDMANIFEST%
-cd %GLCDDISTDIR%
-%SVNINFO% >>%GLCDMANIFEST%
-echo =====================================================================>>%GLCDMANIFEST%
-%SVNLIST% >>%GLCDMANIFEST%
+echo Distribution files created %DATE% %TIME% >"%GLCDMANIFEST%"
+echo =====================================================================>>"%GLCDMANIFEST%"
+cd "%GLCDDISTDIR%"
+%SVNINFO% >>"%GLCDMANIFEST%"
+echo =====================================================================>>"%GLCDMANIFEST%"
+%SVNLIST% >>"%GLCDMANIFEST%"
 cd %PWD%
 
-echo Removing SVN control files (ignore cannot find errors)
-cd %GLCDDISTDIR%
+echo Removing SVN control files 
+cd ""%GLCDDISTDIR%""
 for /D /r %%G in (.svn) DO rmdir /S /Q %%G 
 cd %PWD%
 
-echo Removing debug and build directory from distribution
-cd %GLCDDISTDIR%
+REM # Must build doxygen docs before build directory is removed
+echo Building Doxygen Documents
+echo ======== Building Doxygen Documents >> "%LOGFILE%"
+cd %DOXYGENDIR%
+%DOXYGEN% %DOXYGENCFG%  >> "%LOGFILE%" 2>&1
+cd %PWD%
+
+echo Removing debug and build directory from SVN working tree
+echo ======== Removing debug and build directories from %GLCDDISTDIR% >> "%LOGFILE%"
+cd "%GLCDDISTDIR%"
 rmdir /S /Q debug
 rmdir /S /Q build
 cd %PWD%
 
 
 echo Creating Zip file
-echo ======== Creating Zip file >> %LOGFILE%
-if exist %GLCDZIPNAME% erase /F %GLCDZIPNAME%
+echo ======== Creating Zip file from %GLCDDISTDIR%>> "%LOGFILE%"
+if exist "%GLCDZIPNAME%" erase /F "%GLCDZIPNAME%"
 echo About to create zip file from %GLCDDISTDIR%
 pause
-%ZIPCMD% %GLCDZIPNAME% %GLCDDISTDIR% >> %LOGFILE%
+%ZIPCMD% %GLCDZIPNAME% "%GLCDDISTDIR%" >> "%LOGFILE%"
 
-echo Removing SVN working tree
-rmdir /S /Q %GLCDDISTDIR%
-
-:done
 echo Zip file %GLCDZIPNAME% created
+echo ======== Zip file %GLCDZIPNAME% created >> "%LOGFILE%"
+
+echo Removing SVN working tree %GLCDDISTDIR%
+echo About to remove SVN working tree %GLCDDISTDIR%
+pause
+rmdir /S /Q "%GLCDDISTDIR%"
+echo ======== Removed SVN working tree %GLCDDISTDIR% >> "%LOGFILE%"
+
+echo ======== mkzip completed normally >> "%LOGFILE%"
+:done
+echo %0 Finished
 pause
