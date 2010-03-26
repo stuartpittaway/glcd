@@ -1,0 +1,29 @@
+//-----------------------------------------------------------
+
+/*! \page basic_use Basic Usage
+This page introduces the user to the basic usage.
+Now you can proceed to the \ref advanced_use "advanced section".  
+
+@section basic_sec1 Basic Section 1
+This the basic sec1 section.
+And on and on
+
+@subsection subsection2 The second subsection
+  More text.
+
+@subpage basic_sub "Basic Sub page"
+
+
+*/
+
+
+/** @page basic_sub Basic usage Subpage
+This page is more basic information.
+*/
+
+//-----------------------------------------------------------
+
+/*! \page advanced_use Advanced Usage
+This page is for advanced users.
+Make sure you have first read \ref basic_use "basic usage".
+*/

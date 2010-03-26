@@ -266,6 +266,7 @@ int8_t error, ystep;
  *
  * @see FillRect()
  * @see InvertRect()
+ * @see DrawRoundRect()
  */
 
 void glcd::DrawRect(uint8_t x, uint8_t y, uint8_t width, uint8_t height, uint8_t color) {
@@ -291,6 +292,7 @@ void glcd::DrawRect(uint8_t x, uint8_t y, uint8_t width, uint8_t height, uint8_t
  * Which is it, or is it a the smaller of the two?
  * FIXME FIXME need more description here.
  *
+ * @see DrawRect()
  */
 
 void glcd::DrawRoundRect(uint8_t x, uint8_t y, uint8_t width, uint8_t height, uint8_t radius, uint8_t color) {
