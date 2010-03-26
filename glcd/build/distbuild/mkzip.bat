@@ -61,7 +61,14 @@ set SEC=%TIME:~6,2%
 set MYDATE=%YR%%MTH%%DAY%
 set MYTIME=%HR%%MIN%%SEC%
 
-set MYDATE=TODAY
+REM #
+REM # WARNING:
+REM # you would think that getting date would be a simply
+REM # operation. But this is the world of Windoze.
+REM # since date format can be customized by the user there is no
+REM # no way to detect the format.
+REM # so for now the date stuff cannot be used.
+REM #
 
 REM ##################################################################
 REM #
@@ -122,7 +129,9 @@ REM #
 REM # Name of ZIP file
 REM # has date as part of file name
 REM #
-set GLCDZIPNAME=%GLCDLIBNAME%-%MYDATE%.zip
+
+REM set GLCDZIPNAME=%GLCDLIBNAME%-%MYDATE%.zip
+set GLCDZIPNAME=%GLCDLIBNAME%.zip
 
 REM #
 REM # name of manifest file
