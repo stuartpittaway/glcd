@@ -15,6 +15,17 @@
 #include "bitmaps/ArduinoIcon.h"     // bitmap 
 //#include "include/glcd_Deprecated.h"
 
+/*
+ * Check for small displays as this code was written
+ * before small displays were supported.
+ */
+#if DISPLAY_HEIGHT < 64
+#error ks0108 example requires a display at least 64 pixels tall
+#endif
+#if DISPLAY_WIDTH < 128
+#error ks0108 example requires a display at least 128 pixels wide
+#endif
+
 unsigned long startMillis;
 unsigned int loops = 0;
 unsigned int iter = 0;
