@@ -3,7 +3,7 @@
  *
  * A rolling demo showing many capabilities of the GLCD library
  * It combines a number of sketches included in the download.
- * This sketch uses just over 24k of flash so will not run on 
+ * This sketch uses around 26k of flash so will not run on 
  * an ATmega168
  *
  */
