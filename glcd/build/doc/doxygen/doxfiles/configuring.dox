@@ -4,7 +4,7 @@
  */
 
 /**
-@page page_configuring Configuation
+@page page_configuring Configuration
 
 Configuration is handled by a single file used to set panel and pin configuration.
 The configuration capability alows creation of configuration files to allows a wide
