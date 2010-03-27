@@ -154,23 +154,23 @@ void showchipselscreen(void)
   /*
    * show sequential ascii characters 
    */
-  GLCD.CursorTo(0,2); 
-  GLCD.print("GLCD ver ");
-  GLCD.print(GLCD_VERSION, DEC); // no newline to prevent erase EOL
-  GLCD.CursorTo(0,3); 
+  GLCD.Text.CursorTo(0,2); 
+  GLCD.Text.print("GLCD ver ");
+  GLCD.Text.print(GLCD_VERSION, DEC); // no newline to prevent erase EOL
+  GLCD.Text.CursorTo(0,3); 
   for(int i=0; i  < GLCD.Width / GLCD.CharWidth(' '); i++ )
   {
-     GLCD.print(char('A' + i)); // show the ascii character
+     GLCD.Text.print(char('A' + i)); // show the ascii character
   }
-  GLCD.print('\n');
+  GLCD.Text.print('\n');
   delay(5000);
   // show chips
   GLCD.ClearScreen();
   for(int chip = 0; chip < glcd_CHIP_COUNT; chip++)
   {
-    GLCD.CursorToXY(chip * CHIP_WIDTH,0);
-    GLCD.print("Chip:");
-    GLCD.print(chip);
+    GLCD.Text.CursorToXY(chip * CHIP_WIDTH,0);
+    GLCD.Text.print("Chip:");
+    GLCD.Text.print(chip);
   }
 
   delay(5000);
@@ -197,7 +197,7 @@ void  loop()
 #ifdef XXX
   SerialPrintQ("Initializing GLCD\n");
   GLCD.Init();   // initialise the library, non inverted writes pixels onto a clear screen
-  GLCD.SelectFont(System5x7, BLACK);
+  GLCD.Text.SelectFont(System5x7, BLACK);
 #endif
 
   while(1)
@@ -209,7 +209,7 @@ void  loop()
 
     SerialPrintQ("Initializing GLCD\n");
     GLCD.Init();   // initialise the library, non inverted writes pixels onto a clear screen
-    GLCD.SelectFont(System5x7, BLACK);
+    GLCD.Text.SelectFont(System5x7, BLACK);
 
 
     SerialPrintQ("Displaying ChipSelect Screens\n");
@@ -229,10 +229,10 @@ void  loop()
        * Diags report loop count on completion
        */
       GLCD.ClearScreen();
-      GLCD.CursorTo(0,0);
-      GLCD.print("Diag Loop: ");
-      GLCD.println(lcount);
-      GLCD.println("Tests PASSED");
+      GLCD.Text.CursorTo(0,0);
+      GLCD.Text.print("Diag Loop: ");
+      GLCD.Text.println(lcount);
+      GLCD.Text.println("Tests PASSED");
 
       /*
        * All GLCD tests passed so now
@@ -250,10 +250,10 @@ void  loop()
       kops = glcdspeed/100;
       kops_fract = glcdspeed %100;
 
-      GLCD.print("K SetDot/s: ");
-      GLCD.print(kops);
-      GLCD.print(".");
-      GLCD.println(kops_fract);
+      GLCD.Text.print("K SetDot/s: ");
+      GLCD.Text.print(kops);
+      GLCD.Text.print(".");
+      GLCD.Text.println(kops_fract);
 
 
       SerialPrintQ("GLCD.SetDot() speed (K ops/sec): ");
@@ -301,22 +301,22 @@ uint8_t lcdmemtest(void)
   {
 
     if(col >= CHIP_WIDTH)
-      GLCD.CursorToXY(0,0);
+      GLCD.Text.CursorToXY(0,0);
     else
-      GLCD.CursorToXY(CHIP_WIDTH,0);
-    GLCD.print("Chip:");
-    GLCD.print((int)chip);
+      GLCD.Text.CursorToXY(CHIP_WIDTH,0);
+    GLCD.Text.print("Chip:");
+    GLCD.Text.print((int)chip);
 
     /*
      * Assumes font is 8 pixels high
      */
     if(col >= CHIP_WIDTH)
-      GLCD.CursorToXY(0,8);
+      GLCD.Text.CursorToXY(0,8);
     else
-      GLCD.CursorToXY(CHIP_WIDTH,8);
-    GLCD.print((int)col);
-    GLCD.print('-');
-    GLCD.print((int)ecol);
+      GLCD.Text.CursorToXY(CHIP_WIDTH,8);
+    GLCD.Text.print((int)col);
+    GLCD.Text.print('-');
+    GLCD.Text.print((int)ecol);
     delay(500);
 
 //  SerialPrintf("Horizonal Page Test Chip: %d Pixels %d-%d\n", chip, col, ecol);
@@ -350,12 +350,12 @@ uint8_t lcdmemtest(void)
   }
 
 
-  GLCD.CursorTo(0,0);
-  GLCD.print("Full Display");
-  GLCD.CursorTo(0,1);
-  GLCD.print((int)0);
-  GLCD.print('-');
-  GLCD.print((int)GLCD.Right);
+  GLCD.Text.CursorTo(0,0);
+  GLCD.Text.print("Full Display");
+  GLCD.Text.CursorTo(0,1);
+  GLCD.Text.print((int)0);
+  GLCD.Text.print('-');
+  ((int)GLCD.Right);
   delay(1000);
 
 //SerialPrintf("Full Module Horizontal Page Test:Pixels %d-%d\n",  0, GLCD.Right);
