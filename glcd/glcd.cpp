@@ -708,10 +708,7 @@ void glcd::write(uint8_t c)  // method needed for Print base class
 
 #ifdef TEXT_WRAPPERS
 // Font and text methods now implemented in the gText class
-void glcd::SelectFont(Font_t font, uint8_t color)
-{
-   Text.SelectFont(font, color);
-}
+
 
 void glcd::SetFontColor(uint8_t color)
 {
@@ -723,15 +720,6 @@ void glcd::SetTextMode(textMode mode)
   Text.SetTextMode(mode);
 }
 	
-void glcd::CursorTo( uint8_t column, uint8_t row)    // 0 based coordinates for fixed width fonts (i.e. systemFont5x7)
-{
-
-	/*
-	 * Text position is relative to default text window which is the entire display
-	 */
-	Text.CursorTo(column, row); 
-}
-
 void glcd::CursorToXY( uint8_t x, uint8_t y)
 {
 	/*
@@ -751,6 +739,20 @@ void glcd::EraseTextLine( uint8_t row)
 }
 
 #endif
+
+void glcd::SelectFont(Font_t font, uint8_t color)
+{
+   Text.SelectFont(font, color);
+}
+
+void glcd::CursorTo( uint8_t column, uint8_t row)    // 0 based coordinates for fixed width fonts (i.e. systemFont5x7)
+{
+
+	/*
+	 * Text position is relative to default text window which is the entire display
+	 */
+	Text.CursorTo(column, row); 
+}
 
 void glcd::Puts_P(PGM_P str)
 {
