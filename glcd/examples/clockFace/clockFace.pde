@@ -29,7 +29,7 @@ void setup(){
   GLCD.Init(); // start the GLCD code
   GLCD.SelectFont(System5x7);
 
-  setTime(7,20,0,1,1,10); // set time to 7:20 am Jan 1 2010  
+  setTime(4,37,0,2,1,10); // set time to 4:37 am Jan 2 2010  
   analogClock.Init(GLCD.CenterX,GLCD.CenterY,GLCD.CenterY-4);  // draw the clock face  
 }
 

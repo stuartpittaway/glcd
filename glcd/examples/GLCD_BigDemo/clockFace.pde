@@ -24,7 +24,7 @@ void clockBegin(){
   digitalWrite(buttonPin, PULL_UP);  // enable internal pull-up resistor
 #endif  
 
-  setTime(10,20,0,1,1,10); // set time to 7:20 am Jan 1 2010  
+  setTime(4,37,0,2,1,10); // set time to 4:37 am Jan 2 2010  
 }
 
 //show clock for the given number of seconds
@@ -33,7 +33,7 @@ void  clock( int duration)
 
   GLCD.SelectFont(System5x7);
   GLCD.ClearScreen();
-  analogClock.Init(32,32,28);  // draw the clock face  
+  analogClock.Init(GLCD.CenterX,GLCD.CenterY,GLCD.CenterY-4);  // draw the clock face  
   unsigned long startTime = now() ;   
   unsigned long  prevtime;
   while( now() < startTime + duration )
