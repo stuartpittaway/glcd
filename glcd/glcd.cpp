@@ -706,7 +706,7 @@ void glcd::write(uint8_t c)  // method needed for Print base class
   Text.PutChar(c);
 } 
 
-
+#ifdef TEXT_WRAPPERS
 // Font and text methods now implemented in the gText class
 void glcd::SelectFont(Font_t font, uint8_t color)
 {
@@ -722,10 +722,22 @@ void glcd::SetTextMode(textMode mode)
 {
   Text.SetTextMode(mode);
 }
-
-void glcd::Puts_P(PGM_P str)
+	
+void glcd::CursorTo( uint8_t column, uint8_t row)    // 0 based coordinates for fixed width fonts (i.e. systemFont5x7)
 {
-  Text.Puts_P(str);
+
+	/*
+	 * Text position is relative to default text window which is the entire display
+	 */
+	Text.CursorTo(column, row); 
+}
+
+void glcd::CursorToXY( uint8_t x, uint8_t y)
+{
+	/*
+	 * Pixel coordinataes relative to the default text window which is the entire display
+	 */
+   	Text.CursorToXY(x,y); 
 }
 
 void glcd::EraseTextLine( eraseLine_t type) 
@@ -737,14 +749,12 @@ void glcd::EraseTextLine( uint8_t row)
 {
      Text.EraseTextLine(row);
 }
-	
-void glcd::CursorTo( uint8_t column, uint8_t row)    // 0 based coordinates for fixed width fonts (i.e. systemFont5x7)
-{
 
-	/*
-	 * Text position is relative to default text window which is the entire display
-	 */
-	Text.CursorTo(column, row); 
+#endif
+
+void glcd::Puts_P(PGM_P str)
+{
+  Text.Puts_P(str);
 }
 
 
@@ -755,13 +765,6 @@ void glcd::GotoXY(uint8_t x, uint8_t y)
   	Text.CursorToXY(x,y); 
 } 
 
-void glcd::CursorToXY( uint8_t x, uint8_t y)
-{
-	/*
-	 * Pixel coordinataes relative to the default text window which is the entire display
-	 */
-   	Text.CursorToXY(x,y); 
-}
 
 uint8_t glcd::CharWidth(uint8_t c)
 {
