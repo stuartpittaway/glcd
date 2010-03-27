@@ -55,7 +55,7 @@ typedef struct {
 	struct {
 		uint8_t col;
 		uint8_t page;
-	} chip[(DISPLAY_WIDTH / CHIP_WIDTH)];
+	} chip[glcd_CHIP_COUNT];
 } lcdCoord;
 /// @endcond
 	
@@ -63,7 +63,7 @@ class glcd_Device : public Print
 {
   private:
   // Control functions
-	uint8_t DoReadData(uint8_t first);
+	uint8_t DoReadData();
 	void WriteCommand(uint8_t cmd, uint8_t chip);
 	inline void Enable(void);
 	inline void SelectChip(uint8_t chip); 
