@@ -108,7 +108,7 @@ void setup(){
   pinMode(speakerPin, OUTPUT);
 #endif
     
-  GLCD.SelectFont(System5x7);
+  GLCD.Text.SelectFont(System5x7);
 #ifdef potPin
   randomSeed(analogRead(potPin));
 #endif
@@ -139,7 +139,7 @@ void  loop(){
 */
 void drawLives(){
   GLCD.DrawBitmap(heart, 0, 0, BLACK);
-  GLCD.CursorTo(1,0);
+  GLCD.Text.CursorTo(1,0);
   GLCD.print((int)lives);
 }
 
@@ -151,7 +151,7 @@ void drawLives(){
 ******************************
 */
 void drawScore(){
-  GLCD.CursorTo(0,7);
+  GLCD.Text.CursorTo(0,7);
   GLCD.print('S');
   GLCD.print((int)score);
 }
