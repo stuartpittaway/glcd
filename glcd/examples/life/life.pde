@@ -126,16 +126,16 @@ byte generations[STABLE_GENERATIONS][ROWS][BYTES_PER_COLUMN]; // array used to c
 
 void setup(){     
   GLCD.Init();   // initialise the library, non inverted writes pixels onto a clear screen
-  GLCD.SelectFont(System5x7);
+  GLCD.Text.SelectFont(System5x7);
   seed(0);
 }
 
 void loop (void){     
   GLCD.ClearScreen();
   unsigned int i = generate();  
-  GLCD.CursorTo(0,0); 
-  GLCD.print(i);
-  GLCD.print(" iterations");  
+  GLCD.Text.CursorTo(0,0); 
+  GLCD.Text.print(i);
+  GLCD.Text.print(" iterations");  
   delay(1500);   
   seed(1); // use random seed
 }   
