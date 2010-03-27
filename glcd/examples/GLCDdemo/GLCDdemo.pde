@@ -33,7 +33,7 @@ void setup()
     ArduinoIcon = ArduinoIcon64x32;  // the 32 pixel high icon
   introScreen();
   GLCD.ClearScreen();    
-  GLCD.SelectFont(System5x7, BLACK); // font for the default text area
+  GLCD.Text.SelectFont(System5x7, BLACK); // font for the default text area
 }
 
 void  loop()
@@ -49,24 +49,24 @@ void  loop()
     GLCD.FillRect( GLCD.CenterX + GLCD.CenterX/2-8 ,GLCD.CenterY + GLCD.CenterY/2 -8,16,16, WHITE); // clear previous spinner position  
     drawSpinner(loops++, GLCD.CenterX + GLCD.CenterX/2, GLCD.CenterY + GLCD.CenterY/2);       // draw new spinner position
     GLCD.GotoXY(GLCD.CenterX/2, GLCD.Bottom -15);          
-    GLCD.print(iter);            // print current iteration at the current cursor position 
+    GLCD.Text.print(iter);            // print current iteration at the current cursor position 
   } 
   // display iterations per second
   unsigned long duration = millis() - startMillis;
   int fps = 10000 / duration;
   int fps_fract = (10000 % duration) / 10;
   GLCD.ClearScreen();               // clear the screen  
-  GLCD.CursorToXY(GLCD.CenterX + 16, 9);
-  GLCD.print("GLCD ");
-  GLCD.print(GLCD_VERSION, DEC);
+  GLCD.Text.CursorToXY(GLCD.CenterX + 16, 9);
+  GLCD.Text.print("GLCD ");
+  GLCD.Text.print(GLCD_VERSION, DEC);
   if(GLCD.Height <= 32)
-    GLCD.CursorToXY(GLCD.CenterX + 4, 1);
+    GLCD.Text.CursorToXY(GLCD.CenterX + 4, 1);
   else  
-    GLCD.CursorToXY(GLCD.CenterX + 4, 24);
-  GLCD.print("FPS=");               // print a text string
-  GLCD.print(fps);                  // print an integer value
-  GLCD.print(".");
-  GLCD.print(fps_fract);
+    GLCD.Text.CursorToXY(GLCD.CenterX + 4, 24);
+  GLCD.Text.print("FPS=");               // print a text string
+  GLCD.Text.print(fps);                  // print an integer value
+  GLCD.Text.print(".");
+  GLCD.Text.print(fps_fract);
 }
 
 
@@ -74,16 +74,16 @@ void introScreen(){
   GLCD.DrawBitmap(ArduinoIcon, 32,0); //draw the bitmap at the given x,y position
   countdown(3);
   GLCD.ClearScreen();
-  GLCD.SelectFont(Arial_14); // you can also make your own fonts, see playground for details   
+  GLCD.Text.SelectFont(Arial_14); // you can also make your own fonts, see playground for details   
   GLCD.GotoXY(10, 3);
-  GLCD.print("GLCD ver ");
-  GLCD.print(GLCD_VERSION, DEC);
+  GLCD.Text.print("GLCD ver ");
+  GLCD.Text.print(GLCD_VERSION, DEC);
   GLCD.DrawRoundRect(8,0,GLCD.Width-9,17, 5);  // rounded rectangle around text area   
   countdown(3);  
   GLCD.ClearScreen(); 
   scribble(5000);  // run for 5 seconds
   moveBall(6000); // kick ball for 6 seconds
-  GLCD.SelectFont(System5x7, BLACK);
+  GLCD.Text.SelectFont(System5x7, BLACK);
   showCharacters("5x7 font:", System5x7);
   countdown(3);
   showCharacters("Arial_14:", Arial_14);
@@ -95,8 +95,8 @@ void introScreen(){
 void showCharacters(char * title, Font_t font) {
   // this displays the desired font
   GLCD.ClearScreen();  
-  GLCD.CursorTo(0,0);
-  GLCD.print(title);
+  GLCD.Text.CursorTo(0,0);
+  GLCD.Text.print(title);
   GLCD.DrawRoundRect(GLCD.CenterX + 2, 0, GLCD.CenterX -3, GLCD.Bottom, 5);  // rounded rectangle around text area 
   textArea.DefineArea(GLCD.CenterX + 5, 3, GLCD.Right-2, GLCD.Bottom-4, SCROLL_UP); 
   textArea.SelectFont(font, BLACK);
@@ -160,7 +160,7 @@ void showAscii()
 {
   for( char ch = 64; ch < 127; ch++)
   {
-    GLCD.print(ch);
+    GLCD.Text.print(ch);
     delay(theDelay);
   }   
 }
@@ -297,5 +297,4 @@ int ballDirectionX = 1;        // Y direction of the ball
     delay(30 );
   }
 }
-
 
