@@ -17,13 +17,25 @@
 #include "bitmaps.h"         // bitmaps
 
 /*
+ * Check for small displays as this code requires a large display
+ */
+#if DISPLAY_HEIGHT < 64
+#error Rocket game requires a display at least 64 pixels tall
+#endif
+#if DISPLAY_WIDTH < 128
+#error Rocket game requires a display at least 128 pixels wide
+#endif
+
+
+
+/*
 ******************************
 *  A few pin defines         *
 ******************************
 */
 
 
-#define potPin        5   // analog input pin connected to a variable resistor   
+//#define potPin        5   // analog input pin connected to a variable resistor   
 //#define speakerPin    2   // digital pin that can optionally connected to a piezo or speaker for sound
 //#define brightnessPin 3   // optional output that can be used to control backlight
 
@@ -97,7 +109,9 @@ void setup(){
 #endif
     
   GLCD.SelectFont(System5x7);
+#ifdef potPin
   randomSeed(analogRead(potPin));
+#endif
   GLCD.DrawBitmap(startup, 0, 0, BLACK);
   delay(2000);
   GLCD.ClearScreen();
@@ -151,7 +165,25 @@ void drawScore(){
 ******************************
 */
 void getControls(){
+#ifdef potPin
   playerY = map(analogRead(potPin), 0, 1023, 0, 56);
+#else
+/*
+ * Not pot input so move the rocket up and down
+ */
+static uint8_t yval;
+static uint8_t iter = 0;
+static int8_t dir = 1;
+  if(++iter == 0)
+    yval += dir;
+
+  if(yval == 0)
+    dir = 1;
+
+  if(yval == 56)
+    dir = -1;
+  playerY = yval;
+#endif
 }
 
 

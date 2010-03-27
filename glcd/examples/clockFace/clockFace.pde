@@ -30,7 +30,7 @@ void setup(){
   GLCD.SelectFont(System5x7);
 
   setTime(7,20,0,1,1,10); // set time to 7:20 am Jan 1 2010  
-  analogClock.Init(32,32,28);  // draw the clock face  
+  analogClock.Init(GLCD.CenterX,GLCD.CenterY,GLCD.CenterY-4);  // draw the clock face  
 }
 
 void  loop(){  
@@ -42,6 +42,10 @@ void  loop(){
     checkSetButton(btnForward, 1);    
     checkSetButton(btnBack, -1);
   }
+#ifdef DISPLAY_HEIGHT < 64
+// small clocks scribble over numbers so redraw face
+  analogClock.DrawFace();
+#endif
   analogClock.DisplayTime(hour(), minute(), second() ); // update analog clock  
 }
 
@@ -61,6 +65,10 @@ int step = 0; // counts steps between each index increment
        if(millis() - startTime > 100){
          startTime = millis();
          adjustTime(stepSecs[stepIndex] * direction);
+#ifdef DISPLAY_HEIGHT < 64
+// small clocks scribble over numbers so redraw face
+         analogClock.DrawFace();
+#endif
          analogClock.DisplayTime(hour(), minute(), second() ); // update analog clock  
          if( ++step > 30){
             step=0;

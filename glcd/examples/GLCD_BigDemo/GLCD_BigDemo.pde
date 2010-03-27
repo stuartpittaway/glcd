@@ -14,6 +14,20 @@
 #include "fonts/allFonts.h"         // system and arial14 fonts are used
 #include "bitmaps/allBitmaps.h"   // all images in the bitmap dir 
 
+
+/*
+ * Check for small displays as several components of this demo
+ * requrie a large display.
+ */
+#if DISPLAY_HEIGHT < 64
+#error GLCD_BigDemo requires a display at least 64 pixels tall
+#endif
+#if DISPLAY_WIDTH < 128
+#error GLCD_BigDemo requires a display at least 128 pixels wide
+#endif
+
+
+
 Image_t ArduinoIcon;
 
 gText textArea;              // a text area to be defined later in the sketch
@@ -38,6 +52,7 @@ void setup()
   GLCD.SelectFont(System5x7, BLACK); // font for the default text area
   clockBegin(); // start the clock
   clock(10); // show the clock to allow it to be set
+
 }
 
 void  loop()
@@ -46,6 +61,7 @@ void  loop()
   scribble(5000);  // run for 5 seconds
 
   GLCD.ClearScreen(); 
+
   GLCD.SelectFont(System5x7, BLACK);
   showCharacters("5x7 font:", System5x7);
   countdown(3);
@@ -88,6 +104,7 @@ void introScreen(){
   countdown(3);  
   GLCD.ClearScreen(); 
 }
+
 
 void showCharacters(char * title, Font_t font) {
   // this displays the desired font
@@ -273,12 +290,19 @@ byte fn_y( float tick )
 {
   return (byte)(GLCD.Height/2 + (GLCD.Height/2 -1) * cos( tick * 1.2 ) * sin( tick * 3.1 )) ;
 }
+
 void FPS(const byte width, const byte height, const unsigned long msecs)
+
 {
+
 unsigned long stime = millis();
+
   while(millis()  - stime < msecs)
+
     FPS(width, height);
+
 }
+
 
 void FPS( const byte width, const byte height)
 {
@@ -318,4 +342,5 @@ void FPS( const byte width, const byte height)
   GLCD.print(".");
   GLCD.print(fps_fract);  
 }
+
 

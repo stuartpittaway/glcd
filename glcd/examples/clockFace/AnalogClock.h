@@ -37,12 +37,12 @@ byte DateRow    ; /* row position of date string      */
 byte DateColumn ; /* column position of date string   */
 
   void CalcHands( byte angle, byte radius, byte *x, byte *y );
-  void DrawFace();
   void Box( byte x, byte y );
   void SegBox( byte FaceAngle );
 public:		// Public Methods
   AnalogClock();
   void Init(byte x, byte y, byte r); //  x & y are the coordinates of the center of the clock, r is the radius of the clock face
+  void DrawFace();
   void DisplayTime( byte hours, byte minutes, byte seconds = -1 ); // draw hands in the position for the given hours and minutes 
 };
 
