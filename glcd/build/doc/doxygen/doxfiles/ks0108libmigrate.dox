@@ -1,0 +1,100 @@
+/*
+ * Documenation about migration and for those familiar with the original ks0108 library
+ */
+
+/**
+@page page_ks0108_migrate ks0108 library migration
+@image html ks0108_small.jpg
+
+The glcd library is an extensive modification of the ks0108 library. It now supports more
+chips and is easier to integrate with different panels.
+The graphical functions are backwards compatible (except where noted) so existing sketches
+should work with little or no modification to the code.  The configuration mechanism has been
+changed to facilitate use with a broad range of GLCD chips and ATmega controllers so the
+configuration information will need modification to work with the new library. 
+
+
+@subpage page_ks0108config\n
+@subpage page_ks0108sketch
+
+*/
+
+/*
+ * ks0108 configuration migration
+ */
+
+/**
+@page page_ks0108config Migrating Configurations
+
+Configuration has been significantly improved in this release to give a wider
+choice of pins, support for more processor types and more display panels.
+There is now a single file used to set panel and pin configuration.
+
+Processor type is now determined from the board selected when the sketch is built.\n
+See the library configuration page for full details:
+@ref page_configuring
+
+*/
+
+/*
+ * ks0108 sketch migration
+ */
+
+/**
+@page page_ks0108sketch Sketch Migration
+The distribution includes the system font and arial14 font, but these are now in a subdirectory 
+called 'fonts' so you will need to modify the include statement, for example change:
+\code
+#include "SystemFont5x7.h"       // system font
+\endcode
+To 
+\code
+#include "fonts/SystemFont5x7.h"       // system font
+\endcode
+
+Bitmaps are now in a subdirectory called 'bitmaps' so change :
+\code
+ #include "ArduinoIcon.h"  // the bitmap distributed with the ks0108 lib
+\endcode
+To
+\code
+#include "bitmaps/ArduinoIcon.h"  // 64x64 bitmap
+\endcode
+
+The file bitmap filenames now include the width and height so
+while the ArduinoIcon.h bitmap file is available for backward compability and will map
+to ArduinoIcon64x64.h it is recommended to use the new bitmap file names for clarity.
+
+
+If you are using any of the following functions you should either change the code use the new
+function names.
+- DrawVertLine(x, y, length, color)  is now:   \ref glcd::DrawVLine() "DrawVLine(x, y, length, color)"
+- DrawHoriLine(x, y, length, color)  is now :  \ref glcd::DrawHLine() "DrawHLine(x, y, length, color)"
+- ClearSysTextLine(row)  is now \ref gText::EraseTextLine() "EraseTextLine(row)"
+
+Alternatively you may add the deprecated include header file to your sketch toautomatically
+map the deprecated old functions name to the newer names.
+\code
+#include "include/glcd_Deprecated.h" // header to map old function names to new functin names
+\endcode
+
+The character output functions behave differently in the new library. 
+The new library now sets or clears all pixels of a font (glyph), the old library did not
+consistently erase pixels in the whitespace below the glyph.
+This means that if there are graphics very close below the character they may be overwritten
+with the new text ouput code.
+The workaround is to either move the graphics objects so they are not cleared when the text
+is written or to draw the graphical objects after the text is displayed. 
+
+Another change is the way a string wraps on the newline character. The old library wrapped
+to the column where the string started, the new library now wraps to the beginning of the text area.
+See the section on Text Areas to see how you can use this new capability to control where 
+text will wrap on the display.
+
+See the section on Configuration for details on the new configuration files.
+You can use the same wiring as the old library but the configuration file format has changed.
+The ks0108_Config,h file included in the distribution uses exactly the same pins as the ks0108_Arduino.h
+file supplied with the old library, but if you changed the Arduino pin numbers you will need
+to modify ks0108_Config to match your wiring.
+
+*/

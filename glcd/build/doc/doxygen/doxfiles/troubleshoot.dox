@@ -1,0 +1,29 @@
+/*
+ * Troubleshoot documenation
+ */
+
+/**
+@page page_troubleshoot Troubleshooting
+- No pixels visible on the display 
+ -# Check +5v and Gnd connections between Arduino and GLCD panel 
+ -# Check all data and command pins are wired according to the datasheet and matching the configuration settings – this is the most common cure to this problem.
+ -# Check the datasheet for your panel to verify appropriate timing values are set in the configuration file.
+ -# Check contrast voltage (typically between -3 and -4 volts) on contrast-in pin of LCD panel. While the sketch is operating, try gradually adjusting the pot through its range. Some displays are very sensitive to this setting. 
+ -# Check sketch has compiled ok and downloaded to Arduino. 
+ -# Run \ref page_GLCDdiags "GLCDDiags" test sketch.
+- Left and right side of image reversed 
+ -# Swap CSEL1 and CSEL2 wires (or swap pin assignments in header file) 
+
+@subpage page_GLCDdiags
+
+*/
+
+/**
+@page page_GLCDdiags Diagnostic Sketch
+GLCDdiags is a test sketch included in the examples folder.
+It will validate the connections and test the memory of GLCD module as well
+as report the active configuration information to the serial port.
+If your display is not working properly then check the information displayed
+in the serial monitor. This shows what information the library is using and
+you can use this to verify if the sketch is configured correctly. 
+*/

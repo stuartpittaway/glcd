@@ -1,0 +1,13 @@
+/*
+ * documentation for the sed1520 chip set panels
+ */
+
+
+/**
+@page page_sed1520_family SED1520
+@image html vk5121_small.jpg "SED1520 based vk5121 panel"
+The SED1520 uses different timing, command pins then the \ref page_ks0108_family "KS0108"
+and the most common panels have fewer pixels.
+The distribution contains a generic configuration file named sed1520_Config.h
+and an example called Modvk5121_Config.h for the VK5121 panel. 
+*/

@@ -1,0 +1,26 @@
+/*
+ * glcd library configuration documenation
+ * (not for any ks0108 migration discussion)
+ */
+
+/**
+@page page_configuring Configuation
+
+Configuration is handled by a single file used to set panel and pin configuration.
+The configuration capability alows creation of configuration files to allows a wide
+choice of pins, support for several different processor types and different display panels.
+Panel configuration defines the overall display height and width and the height
+and width of the display controller chips. 
+The display timing can also be easily configured, but most displays will now work without
+requiring a configuration change for timing. However, you should check the datasheet
+for your panel to verify the timing values in the configuration file.
+
+Processor type is determined from the board selected when the sketch is built, 
+this allows Arduino style pin numbers to be mapped to fast direct port IO used by the library.
+Pin numbering for the following processor types are supported:
+- Standard Arduino (ATmega8,168,328)
+- Mega(ATmega1280)
+- Sanguino (ATmega644P)
+- Teensy and Teensy++
+
+*/
