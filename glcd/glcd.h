@@ -91,15 +91,17 @@ class glcd : public glcd_Device  // glcd_Device has low level device access rout
 #ifdef TEXT_WRAPPERS
     // Font Functions - this API for functionality in the Text class is not supported this release, use the form:  Text.func
 
-	void SelectFont(Font_t font, uint8_t color=BLACK); // default arguments added, callback removed from public method
+
 	void SetFontColor(uint8_t color); // new method to change the selected fonts color
 	void SetTextMode(textMode mode);  // change to the given text mode (currently only scroll direction is supported)
-	void CursorTo( uint8_t column, uint8_t row); // 0 based coordinates for character columns and rows
 	void CursorToXY( uint8_t x, uint8_t y); // pixel coordinates 
 	void EraseTextLine( eraseLine_t type=eraseTO_EOL); // default erases to the end of line
 	void EraseTextLine( uint8_t row); // erase the entire text line in the given row and move cursor to left position
 	// void ClearSysTextLine( uint8_t row); // note the old ClearSysTextLine behaviour is supported using glcd_Deprecated.h
 #endif
+
+	void SelectFont(Font_t font, uint8_t color=BLACK); // default arguments added, callback removed from public method
+	void CursorTo( uint8_t column, uint8_t row); // 0 based coordinates for character columns and rows
 	void GotoXY(uint8_t x, uint8_t y);  // overrride for GotoXY in device class
 	
 	// legacy text output functions 
