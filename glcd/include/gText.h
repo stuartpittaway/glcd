@@ -184,7 +184,7 @@ struct tarea
  */
   
  // graphical device text routines
-class gText : public Print
+class gText : public glcd_Device
 {
   private:
     //FontCallback	FontRead;     // now static, move back here if each instance needs its own callback
@@ -204,8 +204,6 @@ class gText : public Print
 	void ScrollDown(uint8_t x1, uint8_t y1, uint8_t x2, uint8_t y2, uint8_t pixels, uint8_t color);
 
   public:
-
-
 	gText(); // default - uses the entire display
 	gText(uint8_t x1, uint8_t y1, uint8_t x2, uint8_t y2, textMode mode=DEFAULT_SCROLLDIR);
 	// 4 Feb - added two constuctors (and SetFontColor below) 
@@ -243,6 +241,10 @@ class gText : public Print
 	void EraseTextLine( eraseLine_t type=eraseTO_EOL); //ansi like line erase function 
 	void EraseTextLine( uint8_t row); // erase the entire text line in the given row and move cursor to left position
 
+    // legacy text output functions 
+	void PrintNumber(long n);
+
+	
 #ifndef GLCD_NO_PRINTF
 	void Printf(const char *format, ...);
 	void Printf_P(const char *format, ...);
