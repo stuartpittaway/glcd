@@ -33,7 +33,7 @@
 
 
 /*
- * Experimental define
+ * Experimental defines
  */
 
 //#define TRUE_WRITE	// does writes to glcd memory on page crossings vs ORs
@@ -49,6 +49,10 @@
 						// undesired pixels.
 						//
 						// current RECOMMENDED setting: OFF
+
+#ifdef GLCD_READDATA_ORIG
+#undef GLCD_XCOL_SUPPORT // original readdata()/DoRead() code doesn't support x colum stff
+#endif
 
 	
 glcd_Device::glcd_Device(){
@@ -183,7 +187,13 @@ void glcd_Device::GotoXY(uint8_t x, uint8_t y)
 {
   uint8_t chip, cmd;
 
-  if( (x > DISPLAY_WIDTH-1) || (y > DISPLAY_HEIGHT-1) ) {	// exit if coordinates are not legal  
+#ifndef GLCD_READDATA_ORIG
+  if((x == this->Coord.x) && (y == this->Coord.y))
+	return;
+#endif
+
+  if( (x > DISPLAY_WIDTH-1) || (y > DISPLAY_HEIGHT-1) )	// exit if coordinates are not legal  
+  {
     return;
   }
 
@@ -192,13 +202,14 @@ void glcd_Device::GotoXY(uint8_t x, uint8_t y)
 
   chip = glcd_DevXYval2Chip(x, y);
 
-	if(y/8 != this->Coord.chip[chip].page){
+	if(y/8 != this->Coord.chip[chip].page)
+	{
   		this->Coord.chip[chip].page = y/8;
 		cmd = LCD_SET_PAGE | this->Coord.chip[chip].page;
 	   	this->WriteCommand(cmd, chip);	
 	}
-	x = glcd_DevXval2ChipCol(x);
 	
+	x = glcd_DevXval2ChipCol(x);
 	/*
 	 * NOTE: For now, the "if" below is intentionally commented out.
 	 * In order for this to work, the code must properly track
@@ -207,9 +218,16 @@ void glcd_Device::GotoXY(uint8_t x, uint8_t y)
 	 * way right now.
 	 */
 
-	//if(x != this->Coord.chip[chip].col)
+#ifdef GLCD_XCOL_SUPPORT
+	if(x != this->Coord.chip[chip].col)
+#endif
 	{
-//		this->Coord.chip[chip].col = x;		// No column tracking yet
+		x = glcd_DevXval2ChipCol(x);
+
+#ifdef GLCD_XCOL_SUPPORT
+		this->Coord.chip[chip].col = x;
+#endif
+
 #ifdef LCD_SET_ADDLO
 		cmd = LCD_SET_ADDLO | glcd_DevCol2addrlo(x);
 	   	this->WriteCommand(cmd, chip);	
@@ -319,8 +337,10 @@ void glcd_Device::Init(uint8_t invert)
 		/*
 		 * flush out internal state to force first GotoXY() to work
 		 */
-		this->Coord.chip[chip].page = 0xff;
-		//this->Coord.chip[chip].col = 0xff; // not used yet
+		this->Coord.chip[chip].page = -1;
+#ifdef GLCD_XCOL_SUPPORT
+		this->Coord.chip[chip].col = -1;
+#endif
 
        	lcdDelayMilliseconds(10);  			
         glcd_DeviceInit(chip);  // call device specific initialization if defined    
@@ -332,14 +352,17 @@ void glcd_Device::Init(uint8_t invert)
 		/*
 		 * flush out internal state to force first GotoXY() to work
 		 */
-		this->Coord.chip[chip].page = 0xff;
-		//this->Coord.chip[chip].col = 0xff;// not used yet
+		this->Coord.chip[chip].page = -1;
+#ifdef GLCD_XCOL_SUPPORT
+		this->Coord.chip[chip].col = -1;
+#endif
 
 		this->WriteCommand(LCD_ON, chip);			// power on
 		this->WriteCommand(LCD_DISP_START, chip);	// display start line = 0
 
 	}
-#endif
+#endif // glcd_DeviceInit
+
 	/*
 	 * All hardware initialization is complete.
 	 *
@@ -391,15 +414,18 @@ void glcd_Device::WaitReady( uint8_t chip)
 	lcdDataDir(0x00);
 	lcdfastWrite(glcdDI, LOW);	
 	lcdfastWrite(glcdRW, HIGH);	
-	lcdDelayNanoseconds(GLCD_tAS);
+//	lcdDelayNanoseconds(GLCD_tAS);
 	glcd_DevENstrobeHi(chip);
 	lcdDelayNanoseconds(GLCD_tDDR);
 
-	while(lcdIsBusy()){
+	while(lcdIsBusy())
+	{
        ;
 	}
 	glcd_DevENstrobeLo(chip);
 }
+
+#if defined(GLCD_READDATA_ORIG)
 
 uint8_t glcd_Device::DoReadData(uint8_t first)
 {
@@ -445,8 +471,153 @@ inline uint8_t glcd_Device::ReadData(void)
 	return this->DoReadData(0);			// "real" read
 }
 
+#elif !defined(GLCD_READDATA_XFAST)
+
+/*
+ * This is the "default" code if you don't define GLCD_READDATA_ORIG or GLCD_READDATA_XFAST
+ */
+uint8_t glcd_Device::DoReadData()
+{
+	uint8_t data, chip;
+
+	chip = glcd_DevXYval2Chip(this->Coord.x, this->Coord.y);
+
+	this->WaitReady(chip);
+	lcdfastWrite(glcdDI, HIGH);		// D/I = 1
+	lcdfastWrite(glcdRW, HIGH);		// R/W = 1
+	
+	lcdDelayNanoseconds(GLCD_tAS);
+	glcd_DevENstrobeHi(chip);
+	lcdDelayNanoseconds(GLCD_tDDR);
+
+	data = lcdDataIn();	// Read the data bits from the LCD
+
+	glcd_DevENstrobeLo(chip);
+#ifdef GLCD_XCOL_SUPPORT
+	this->Coord.chip[chip].col++;
+#endif
+	return data;
+}
+/**
+ * read a data byte from display device memory
+ *
+ * @return the data byte at the current x,y position
+ *
+ * @note the current x,y location is not modified by the routine.
+ *	This allows a read/modify/write operation.
+ *	Code can call ReadData() modify the data then
+ *  call WriteData() and update the same location.
+ *
+ * @see WriteData()
+ */
+
+inline uint8_t glcd_Device::ReadData()
+{  
+uint8_t x, data;
+
+
+	x = this->Coord.x;
+	if(x >= DISPLAY_WIDTH)
+	{
+		return(0);
+	}
+
+	this->DoReadData();				// dummy read
+
+	data = this->DoReadData();			// "real" read
+
+	if(this->Inverted)
+	{
+		data = ~data;
+	}
+
+	this->Coord.x = -1;	// force a set column on GotoXY
+
+	this->GotoXY(x, this->Coord.y);	
+	return(data);
+}
+
+#else // GLCD_READDATA_XFAST below here
+
+/**
+ * read a data byte from display device memory
+ *
+ * @return the data byte at the current x,y position
+ *
+ * @note the current x,y location is not modified by the routine.
+ *	This allows a read/modify/write operation.
+ *	Code can call ReadData() modify the data then
+ *  call WriteData() and update the same location.
+ *
+ * @see WriteData()
+ */
+
+inline uint8_t glcd_Device::ReadData()
+{  
+uint8_t x, data, chip;
+
+	x = this->Coord.x;
+
+	if(x >= DISPLAY_WIDTH)
+	{
+		return(0);
+	}
+
+	chip = glcd_DevXYval2Chip(this->Coord.x, this->Coord.y);
+
+	this->WaitReady(chip);
+	lcdfastWrite(glcdDI, HIGH);		// D/I = 1
+//	lcdfastWrite(glcdRW, HIGH);		// R/W = 1 // already done by WaitReady()
+//	lcdDelayNanoseconds(GLCD_tAS);	// cheating
+	glcd_DevENstrobeHi(chip);
+	lcdDelayNanoseconds(GLCD_tDDR);
+
+	data = lcdDataIn();	// Read the data bits from the LCD
+
+	glcd_DevENstrobeLo(chip);
+#ifdef GLCD_XCOL_SUPPORT
+	this->Coord.chip[chip].col++;
+#endif
+//	this->WaitReady(chip);
+	// wait until LCD busy bit goes to zero (inlined)
+	  lcdfastWrite(glcdDI, LOW);	
+//	  lcdDelayNanoseconds(GLCD_tAS);	// cheating
+	  glcd_DevENstrobeHi(chip);
+	  lcdDelayNanoseconds(GLCD_tDDR);
+
+	  while(lcdIsBusy())
+	  {
+       ;
+	  }
+	glcd_DevENstrobeLo(chip);
+	lcdfastWrite(glcdDI, HIGH);		// D/I = 1
+//	lcdfastWrite(glcdRW, HIGH);		// R/W = 1 // already done
+	
+//	lcdDelayNanoseconds(GLCD_tAS);	// cheating
+	glcd_DevENstrobeHi(chip);
+	lcdDelayNanoseconds(GLCD_tDDR);
+
+	data = lcdDataIn();	// Read the data bits from the LCD
+
+	glcd_DevENstrobeLo(chip);
+#ifdef GLCD_XCOL_SUPPORT
+	this->Coord.chip[chip].col++;
+#endif
+
+	if(this->Inverted)
+	{
+		data = ~data;
+	}
+
+	this->Coord.x = -1;	// for a set col command on next GOTOXY
+
+	this->GotoXY(x, this->Coord.y);	
+	return(data);
+}
+#endif
+
 void glcd_Device::WriteCommand(uint8_t cmd, uint8_t chip)
- {
+{
 	this->WaitReady(chip);
 	lcdfastWrite(glcdDI, LOW);					// D/I = 0
 	lcdfastWrite(glcdRW, LOW);					// R/W = 0	
@@ -607,6 +778,9 @@ void glcd_Device::WriteData(uint8_t data) {
 		 */
 
 		this->Coord.x++;
+#ifdef GLCD_XCOL_SUPPORT
+		this->Coord.chip[chip].col++;
+#endif
 
 
 		/*
@@ -615,7 +789,11 @@ void glcd_Device::WriteData(uint8_t data) {
 		if( glcd_DevXYval2Chip(this->Coord.x, this->Coord.y) != chip)
 		{
 			if(this->Coord.x < DISPLAY_WIDTH)
-				this->GotoXY(this->Coord.x, this->Coord.y);
+			{
+				uint8_t x = this->Coord.x;
+				this->Coord.x = -1;
+				this->GotoXY(x, this->Coord.y);
+			}
  		}
 	    //showXY("WrData",this->Coord.x, this->Coord.y); 
 	}
