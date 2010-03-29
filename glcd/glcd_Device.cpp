@@ -30,6 +30,11 @@
 #include "include/glcd_Device.h"
 #include "include/glcd_io.h"
 
+/*
+ * define the static variables declared in glcd_Device
+ */
+uint8_t	 glcd_Device::Inverted; 
+lcdCoord  glcd_Device::Coord;
 
 
 /*
