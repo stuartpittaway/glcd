@@ -18,7 +18,7 @@
   *
  */
 
-#include "config/ks0108_Arduino_Config.h"   // config file for standard Arduino using documented wiring 
+//#include "config/ks0108_Arduino_Config.h"   // config file for standard Arduino using documented wiring 
 //#include "config/ks0108_Mega_Config.h"      // config for Mega board using same pins as previous library
 //#include "config/ks0108_Sanguino_Config.h"  // config for Sanguino using same pins as previous library
 //#include "config/ks0108_Teensy_Config.h"    // config for Teensy and Teensy++  
@@ -38,7 +38,9 @@
 				// might have issues if a pin used shares a processor i/o port with an
 				// interrupt routine that updates pins/bits on the same port.
 
-//#define GLCD_OLD_FONTDRAW	// uncomment this define to get old font rendering
+//#define GLCD_OLD_FONTDRAW	// uncomment this define to get old font rendering (not recommended)
 
+//#define GLCD_NODEFER_SCROLL	// uncomment to disable deferred newline processing
+//#define GLCD_READDATA_XFAST	// uncomment to enable experimental code that speeds up LCD read operations.
 
 #endif
