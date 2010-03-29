@@ -44,6 +44,11 @@ typedef class _FlashString {} *FLASHSTRING;
 
 #define GLCD_Device 1 // software version of this class
 
+
+// useful user constants
+#define NON_INVERTED false
+#define INVERTED     true
+
 // Colors
 #define BLACK				0xFF
 #define WHITE				0x00
@@ -73,9 +78,6 @@ class glcd_Device : public Print
 	inline void SelectChip(uint8_t chip); 
 	void WaitReady( uint8_t chip);
 	void write(uint8_t); // for Print base class
-	// Coord moved to private 22 Jan 10 and gText added as friend
-    lcdCoord  Coord;  
-	friend class gText;  // give gText access to private data - (only use Coord)
   public:
     glcd_Device();
     void Init(uint8_t invert = false);      // now public, default is non-inverted
@@ -90,7 +92,9 @@ class glcd_Device : public Print
 	void printFlash(FLASHSTRING str); //this overrides the Arduino print function to implicilty store the string in flash (progmem)
     void printFlashln(FLASHSTRING str);
 #endif
-	uint8_t				Inverted; 
+  protected:
+    static lcdCoord	  	Coord;  
+	static uint8_t	 	Inverted; 
 };
   
 #endif
