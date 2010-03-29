@@ -1,5 +1,5 @@
 /*
- * clockAnalog.pde
+ * clockFace.pde
  *
  * analog clock using the GLCD library
  *
@@ -27,7 +27,7 @@ void setup(){
   digitalWrite(btnBack, PULL_UP);  
 
   GLCD.Init(); // start the GLCD code
-  GLCD.Text.SelectFont(System5x7);
+  GLCD.SelectFont(System5x7);
 
   setTime(4,37,0,2,1,10); // set time to 4:37 am Jan 2 2010  
   analogClock.Init(GLCD.CenterX,GLCD.CenterY,GLCD.CenterY-4);  // draw the clock face  
@@ -80,9 +80,3 @@ int step = 0; // counts steps between each index increment
      } 
   }   
 }
-
-
-
-
-
-
