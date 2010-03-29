@@ -1,29 +1,29 @@
 /*
  * GLCDdiags
  *
- * This sketch will test the memory and interface to the GLCD module as well as report
- * the current GLCD library configuration information to the serial port.
+ * This sketch tests the memory and interface to the GLCD module as well as report
+ * the current GLCD library configuration to the serial port.
  *
- * It will also display a set of visual screens on the GLCD that can aid in diagnosing
- * misconfigured/wired chip select lines.
+ * It also displays a set of visual screens on the GLCD that can aid in diagnosing
+ * mis-configured/wired chip select lines.
  *
- * The memory associated with each chip will be tested seperately.
- * Tests will be performed starting on chip #0.
- * The GLCD will go through a series of visual displays as the memory is
- * being tested. The test will attempt to display the chip # under test as
- * well as the x coordinate values under test using the memory and chip that is not under test.
- * If everthing is working and configured properly, chip #0 will be on the left
+ * The memory associated with each chip is tested seperately.
+ * Tests are performed starting on chip #0.
+ * The GLCD gos through a series of visual displays as the memory is tested.
+ * The chip # under test as well as the x coordinate values are displayed: 
+ * if everthing is working and configured properly, chip #0 will be on the left
  * and each increasing chip # will advance to the right.
  *
- * Status and error information will also sent out the serial port while testing.
+ * Status and error information is sent to the serial port while testing.
  *
  * The sketch peforms a few different memory tests but the main tests walk an incrementing pattern
  * through memory horizontally by incrementing through pages column at a time (left to right)
- * as well as vertically by incrementing throuh pages page a time (top to bottom).
+ * as well as vertically by incrementing thorough pages a page at time (top to bottom).
  * 
  * NOTE:
- *   This sketch uses some internal GLCD library information that should 
- *   not normally used by sketches that use the GLCD library.
+ * This sketch is a diagnostic tool, it is not an example of library usage.
+ * It uses internal GLCD library information that is not needed and should not normally used by sketches.
+ * Sketches that use these undocumented capabilities may not work correctly in future releases
  *   
  */
 
@@ -114,7 +114,7 @@ va_list ap;
 /*
  * GlcdPrintf() will automatically put the format string in AVR program space
  */
-#define GlcdPrintf(fmt, ...) GLCD.Text.Printf_P(PSTR(fmt), ##__VA_ARGS__)
+#define GlcdPrintf(fmt, ...) GLCD.Printf_P(PSTR(fmt), ##__VA_ARGS__)
 
 
 void setup()
@@ -154,23 +154,26 @@ void showchipselscreen(void)
   /*
    * show sequential ascii characters 
    */
-  GLCD.Text.CursorTo(0,2); 
-  GLCD.Text.print("GLCD ver ");
-  GLCD.Text.print(GLCD_VERSION, DEC); // no newline to prevent erase EOL
-  GLCD.Text.CursorTo(0,3); 
+  GLCD.CursorTo(0,1); 
+  GLCD.print("GLCD ver ");
+  GLCD.print(GLCD_VERSION, DEC); 
+  GLCD.CursorTo(0,2); 
+  GLCD.print("Device ver ");
+  GLCD.print(GLCD_Device, DEC); // no newline to prevent erase EOL
+  GLCD.CursorTo(0,3); 
   for(int i=0; i  < GLCD.Width / GLCD.CharWidth(' '); i++ )
   {
-     GLCD.Text.print(char('A' + i)); // show the ascii character
+     GLCD.print(char('A' + i)); // show the ascii character
   }
-  GLCD.Text.print('\n');
+  GLCD.print('\n');
   delay(5000);
   // show chips
   GLCD.ClearScreen();
   for(int chip = 0; chip < glcd_CHIP_COUNT; chip++)
   {
-    GLCD.Text.CursorToXY(chip * CHIP_WIDTH,0);
-    GLCD.Text.print("Chip:");
-    GLCD.Text.print(chip);
+    GLCD.CursorToXY(chip * CHIP_WIDTH,0);
+    GLCD.print("Chip:");
+    GLCD.print(chip);
   }
 
   delay(5000);
@@ -197,7 +200,7 @@ void  loop()
 #ifdef XXX
   SerialPrintQ("Initializing GLCD\n");
   GLCD.Init();   // initialise the library, non inverted writes pixels onto a clear screen
-  GLCD.Text.SelectFont(System5x7, BLACK);
+  GLCD.SelectFont(System5x7, BLACK);
 #endif
 
   while(1)
@@ -209,7 +212,7 @@ void  loop()
 
     SerialPrintQ("Initializing GLCD\n");
     GLCD.Init();   // initialise the library, non inverted writes pixels onto a clear screen
-    GLCD.Text.SelectFont(System5x7, BLACK);
+    GLCD.SelectFont(System5x7, BLACK);
 
 
     SerialPrintQ("Displaying ChipSelect Screens\n");
@@ -229,10 +232,10 @@ void  loop()
        * Diags report loop count on completion
        */
       GLCD.ClearScreen();
-      GLCD.Text.CursorTo(0,0);
-      GLCD.Text.print("Diag Loop: ");
-      GLCD.Text.println(lcount);
-      GLCD.Text.println("Tests PASSED");
+      GLCD.CursorTo(0,0);
+      GLCD.print("Diag Loop: ");
+      GLCD.println(lcount);
+      GLCD.println("Tests PASSED");
 
       /*
        * All GLCD tests passed so now
@@ -250,10 +253,10 @@ void  loop()
       kops = glcdspeed/100;
       kops_fract = glcdspeed %100;
 
-      GLCD.Text.print("K SetDot/s: ");
-      GLCD.Text.print(kops);
-      GLCD.Text.print(".");
-      GLCD.Text.println(kops_fract);
+      GLCD.print("K SetDot/s: ");
+      GLCD.print(kops);
+      GLCD.print(".");
+      GLCD.println(kops_fract);
 
 
       SerialPrintQ("GLCD.SetDot() speed (K ops/sec): ");
@@ -301,22 +304,22 @@ uint8_t lcdmemtest(void)
   {
 
     if(col >= CHIP_WIDTH)
-      GLCD.Text.CursorToXY(0,0);
+      GLCD.CursorToXY(0,0);
     else
-      GLCD.Text.CursorToXY(CHIP_WIDTH,0);
-    GLCD.Text.print("Chip:");
-    GLCD.Text.print((int)chip);
+      GLCD.CursorToXY(CHIP_WIDTH,0);
+    GLCD.print("Chip:");
+    GLCD.print((int)chip);
 
     /*
      * Assumes font is 8 pixels high
      */
     if(col >= CHIP_WIDTH)
-      GLCD.Text.CursorToXY(0,8);
+      GLCD.CursorToXY(0,8);
     else
-      GLCD.Text.CursorToXY(CHIP_WIDTH,8);
-    GLCD.Text.print((int)col);
-    GLCD.Text.print('-');
-    GLCD.Text.print((int)ecol);
+      GLCD.CursorToXY(CHIP_WIDTH,8);
+    GLCD.print((int)col);
+    GLCD.print('-');
+    GLCD.print((int)ecol);
     delay(500);
 
 //  SerialPrintf("Horizonal Page Test Chip: %d Pixels %d-%d\n", chip, col, ecol);
@@ -350,11 +353,11 @@ uint8_t lcdmemtest(void)
   }
 
 
-  GLCD.Text.CursorTo(0,0);
-  GLCD.Text.print("Full Display");
-  GLCD.Text.CursorTo(0,1);
-  GLCD.Text.print((int)0);
-  GLCD.Text.print('-');
+  GLCD.CursorTo(0,0);
+  GLCD.print("Full Display");
+  GLCD.CursorTo(0,1);
+  GLCD.print((int)0);
+  GLCD.print('-');
   ((int)GLCD.Right);
   delay(1000);
 
