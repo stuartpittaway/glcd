@@ -17,6 +17,20 @@
 #include "bitmaps.h"         // bitmaps
 
 /*
+*******************************
+* A few pin defines           *
+* Uncomment the defines below *
+* to enable these features    *  
+*******************************
+*/
+
+
+//#define potPin        5   // analog input pin connected to a variable resistor   
+//#define speakerPin    2   // digital pin that can optionally connected to a piezo or speaker for sound
+//#define brightnessPin 3   // optional output that can be used to control backlight
+
+
+/*
  * Check for small displays as this code requires a large display
  */
 #if DISPLAY_HEIGHT < 64
@@ -26,18 +40,6 @@
 #error Rocket game requires a display at least 128 pixels wide
 #endif
 
-
-
-/*
-******************************
-*  A few pin defines         *
-******************************
-*/
-
-
-//#define potPin        5   // analog input pin connected to a variable resistor   
-//#define speakerPin    2   // digital pin that can optionally connected to a piezo or speaker for sound
-//#define brightnessPin 3   // optional output that can be used to control backlight
 
 byte brightness = 64;
 
@@ -108,7 +110,7 @@ void setup(){
   pinMode(speakerPin, OUTPUT);
 #endif
     
-  GLCD.Text.SelectFont(System5x7);
+  GLCD.SelectFont(System5x7);
 #ifdef potPin
   randomSeed(analogRead(potPin));
 #endif
@@ -139,7 +141,7 @@ void  loop(){
 */
 void drawLives(){
   GLCD.DrawBitmap(heart, 0, 0, BLACK);
-  GLCD.Text.CursorTo(1,0);
+  GLCD.CursorTo(1,0);
   GLCD.print((int)lives);
 }
 
@@ -151,7 +153,7 @@ void drawLives(){
 ******************************
 */
 void drawScore(){
-  GLCD.Text.CursorTo(0,7);
+  GLCD.CursorTo(0,7);
   GLCD.print('S');
   GLCD.print((int)score);
 }
