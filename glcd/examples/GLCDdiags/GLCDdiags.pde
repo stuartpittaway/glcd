@@ -969,15 +969,15 @@ unsigned long startmillis;
      */
 
     GLCD.SetDot(GLCD.Right, GLCD.Bottom, WHITE);
-    GLCD.SetDot(GLCD.Right-1, GLCD.Bottom-1, WHITE);
+    GLCD.SetDot(GLCD.Right-1, GLCD.Bottom-9, WHITE);
     GLCD.SetDot(GLCD.Right, GLCD.Bottom, WHITE);
-    GLCD.SetDot(GLCD.Right-1, GLCD.Bottom-1, WHITE);
+    GLCD.SetDot(GLCD.Right-1, GLCD.Bottom-9, WHITE);
     GLCD.SetDot(GLCD.Right, GLCD.Bottom, WHITE);
-    GLCD.SetDot(GLCD.Right-1, GLCD.Bottom-1, WHITE);
+    GLCD.SetDot(GLCD.Right-1, GLCD.Bottom-9, WHITE);
     GLCD.SetDot(GLCD.Right, GLCD.Bottom, WHITE);
-    GLCD.SetDot(GLCD.Right-1, GLCD.Bottom-1, WHITE);
+    GLCD.SetDot(GLCD.Right-1, GLCD.Bottom-9, WHITE);
     GLCD.SetDot(GLCD.Right, GLCD.Bottom, WHITE);
-    GLCD.SetDot(GLCD.Right-1, GLCD.Bottom-1, WHITE);
+    GLCD.SetDot(GLCD.Right-1, GLCD.Bottom-9, WHITE);
     iter++;
   }
 
