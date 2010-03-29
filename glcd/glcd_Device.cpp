@@ -101,6 +101,7 @@ void glcd_Device::SetDot(uint8_t x, uint8_t y, uint8_t color)
  * @param y Y coordinate of upper left corner
  * @param x2 X coordinate of lower right corner
  * @param y2 Y coordinate of lower right corner
+ * @param color
  *
  * sets the pixels an area bounded by x,y to x2,y2 inclusive
  * to the specified color.
