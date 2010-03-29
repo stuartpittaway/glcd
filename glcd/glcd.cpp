@@ -38,7 +38,7 @@
 
 
 glcd::glcd(){
-   this->Inverted=0; 
+   glcd_Device::Inverted = NON_INVERTED; 
 }
 
 /**
@@ -62,11 +62,7 @@ glcd::glcd(){
  
 
 void glcd::Init(uint8_t invert){
-
-    this->Inverted=invert;
 	glcd_Device::Init(invert);  
-	//this->Text.Init((glcd_Device *)this); // new TA - init of gText no longer needed
-	//this->Text = gText();
 }		
 	
 // Note that the ClearPage functions are now private and probably no longer be necessary - mem 21 Jan
@@ -703,127 +699,18 @@ uint8_t ReadPgmData(const uint8_t* ptr) {  // note this is a static function
 
 void glcd::write(uint8_t c)  // method needed for Print base class
 {
-  Text.PutChar(c);
+  gText::PutChar(c);
 } 
 
-#ifdef TEXT_WRAPPERS
-// Font and text methods now implemented in the gText class
-
-
-void glcd::SetFontColor(uint8_t color)
-{
-   Text.SetFontColor(color);
-}
-
-void glcd::SetTextMode(textMode mode)
-{
-  Text.SetTextMode(mode);
-}
-	
-void glcd::CursorToXY( uint8_t x, uint8_t y)
-{
-	/*
-	 * Pixel coordinataes relative to the default text window which is the entire display
-	 */
-   	Text.CursorToXY(x,y); 
-}
-
-void glcd::EraseTextLine( eraseLine_t type) 
-{
-   Text.EraseTextLine(type);
-} 
-
-void glcd::EraseTextLine( uint8_t row)  
-{
-     Text.EraseTextLine(row);
-}
-
-#endif
-
-void glcd::SelectFont(Font_t font, uint8_t color)
-{
-   Text.SelectFont(font, color);
-}
-
-void glcd::CursorTo( uint8_t column, uint8_t row)    // 0 based coordinates for fixed width fonts (i.e. systemFont5x7)
-{
-
-	/*
-	 * Text position is relative to default text window which is the entire display
-	 */
-	Text.CursorTo(column, row); 
-}
-
-void glcd::Puts_P(PGM_P str)
-{
-  Text.Puts_P(str);
-}
+/// @endcond
 
 
 // override GotoXY to call CursorToxy
 void glcd::GotoXY(uint8_t x, uint8_t y)
 {
 	glcd_Device::GotoXY(x, y);
-  	Text.CursorToXY(x,y); 
+  	CursorToXY(x,y); 
 } 
-
-
-uint8_t glcd::CharWidth(uint8_t c)
-{
-   return Text.CharWidth(c);
-}
-
-uint16_t glcd::StringWidth(const char* str)
-{
-  return Text.StringWidth(str);
-}
-
-uint16_t glcd::StringWidth_P(PGM_P str)
-{
-  return Text.StringWidth_P(str);
-}
-
-/*
- * These legacy print functions are almost 500 bytes smaller than
- * output using the Arduino print class.
- * Note that if any Arduino print function is included in a sketch then
- * the entire class is linked
- *
- * It is suggested that the print class functions are used unless 
- * absolute minimim code size is required.
- */
- 
-int glcd::PutChar(uint8_t c)
-{
-   Text.PutChar(c);
-}
-
-void glcd::Puts(char * str)
-{
-   Text.Puts(str);
-}
-
-/// @endcond
-
-void glcd::PrintNumber(long n)
-{
-   uint8_t buf[10];  // prints up to 10 digits  
-   uint8_t i=0;
-   if(n==0)
-	   Text.PutChar('0');
-   else{
-	 if(n < 0){
-        Text.PutChar('-');
-		n = -n;
-	 }
-     while(n>0 && i <= 10){
-	   buf[i++] = n % 10;  // n % base
-	   n /= 10;   // n/= base
-	 }
-	 for(; i >0; i--)
-		 Text.PutChar((char) (buf[i-1] < 10 ? '0' + buf[i-1] : 'A' + buf[i-1] - 10));	  
-   }
-}
 
 // Make one instance for the user
 glcd GLCD = glcd();
