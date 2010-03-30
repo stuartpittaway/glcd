@@ -150,8 +150,9 @@ void showchipselscreen(void)
   for(int x = 0; x < GLCD.Width; x++)
   {
      GLCD.DrawVLine( x, 0, map(x, 0, GLCD.Right, 0, GLCD.Bottom));
+     delay(60); // delay is to allow seeing if chip selects are duplicated or overlapping
   }   
-  delay(5000);
+  delay(4000);
   // show chips
   GLCD.ClearScreen();
   for(int chip = 0; chip < glcd_CHIP_COUNT; chip++)
@@ -159,6 +160,7 @@ void showchipselscreen(void)
     GLCD.CursorToXY(chip * CHIP_WIDTH,0);
     GLCD.print("Chip:");
     GLCD.print(chip);
+    delay(750); // delay is to allow seeing duplicate or overlapping chip selects
   }
 
   delay(5000);
