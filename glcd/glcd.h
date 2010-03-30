@@ -79,6 +79,11 @@ class glcd : public gText
 	void FillCircle(uint8_t xCenter, uint8_t yCenter, uint8_t radius, uint8_t color= BLACK);	
 	void DrawBitmap(Image_t bitmap, uint8_t x, uint8_t y, uint8_t color= BLACK);
 
+	using glcd_Device::SetDot;
+	using glcd_Device::SetPixels;
+    using glcd_Device::ReadData; 
+    using glcd_Device::WriteData; 
+	
 /// @cond hide_from_doxygen
 	void GotoXY(uint8_t x, uint8_t y);  // overrride for GotoXY in device class
 /// @endcond

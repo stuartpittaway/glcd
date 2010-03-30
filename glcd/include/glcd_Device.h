@@ -58,6 +58,13 @@ typedef struct {
 } lcdCoord;
 /// @endcond
 	
+/*
+ * Note that all data in glcd_Device is static so that all derived instances  
+ * (gText instances for example) share the same device state.
+ * Any added data fields should also be static unless there is explicit reason
+ * to not share the field among the instances 
+ */
+ 
 class glcd_Device : public Print   
 {
   private:
@@ -75,16 +82,18 @@ class glcd_Device : public Print
 	
   public:
     glcd_Device();
+/// @cond hide_from_doxygen
+	protected: 
     void Init(uint8_t invert = false);      // now public, default is non-inverted
-	void GotoXY(uint8_t x, uint8_t y);   
 	void SetDot(uint8_t x, uint8_t y, uint8_t color);
 	void SetPixels(uint8_t x, uint8_t y,uint8_t x1, uint8_t y1, uint8_t color);
     uint8_t ReadData(void);        // now public
     void WriteData(uint8_t data); 
 
-  protected:
+  	void GotoXY(uint8_t x, uint8_t y);   
     static lcdCoord	  	Coord;  
 	static uint8_t	 	Inverted; 
+/// @endcond	
 };
   
 #endif
