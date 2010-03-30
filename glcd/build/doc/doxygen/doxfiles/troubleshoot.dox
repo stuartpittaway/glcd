@@ -11,6 +11,8 @@
  -# Check contrast voltage (typically between -3 and -4 volts) on contrast-in pin of LCD panel. While the sketch is operating, try gradually adjusting the pot through its range. Some displays are very sensitive to this setting. 
  -# Check sketch has compiled ok and downloaded to Arduino. 
  -# Run \ref page_GLCDdiags "GLCDDiags" test sketch.
+- All pixels are dark
+ -# Check contrast voltage (typically between -3 and -4 volts) on contrast-in pin of LCD panel. While the sketch is operating, try gradually adjusting the pot through its range. Some displays are very sensitive to this setting. 
 - Left and right side of image reversed 
  -# Swap CSEL1 and CSEL2 wires (or swap pin assignments in header file) 
 
