@@ -47,7 +47,7 @@
 /*
  * declare a string for a horizontal line in program memory
  */
-P(hline) =  "-----------------------------------------------------\n";
+P(hline) =  "--------------------------------------------------------------------\n";
 
 
 #define xstr(s) str(s)
@@ -358,7 +358,7 @@ uint8_t lcdmemtest(void)
   GLCD.CursorTo(0,1);
   GLCD.print((int)0);
   GLCD.print('-');
-  ((int)GLCD.Right);
+  GLCD.print((int)GLCD.Right);
   delay(1000);
 
 //SerialPrintf("Full Module Horizontal Page Test:Pixels %d-%d\n",  0, GLCD.Right);
@@ -675,8 +675,12 @@ int lcdvpagetest(uint8_t x1, uint8_t x2, uint8_t spage, uint8_t epage, uint8_t s
 void showGLCDconfig(void)
 {
   SerialPrintP(hline);
-  SerialPrintQ("GLCD Lib Configuration: Library VER: ");
-  Serial.println(GLCD_VERSION);
+  SerialPrintQ("GLCD Lib Configuration: glcd ver: ");
+  Serial.print(GLCD_VERSION);
+  SerialPrintQ(" device ver: ");
+  Serial.print(GLCD_Device);
+  SerialPrintQ(" gText ver: ");
+  Serial.println(GTEXT_VERSION);
   SerialPrintP(hline);
   SerialPrintQ("Configuration:");
   SerialPrintQ(glcd_ConfigName);
