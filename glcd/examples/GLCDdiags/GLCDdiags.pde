@@ -151,21 +151,6 @@ void showchipselscreen(void)
   {
      GLCD.DrawVLine( x, 0, map(x, 0, GLCD.Right, 0, GLCD.Bottom));
   }   
-  /*
-   * show sequential ascii characters 
-   */
-  GLCD.CursorTo(0,1); 
-  GLCD.print("GLCD ver ");
-  GLCD.print(GLCD_VERSION, DEC); 
-  GLCD.CursorTo(0,2); 
-  GLCD.print("Device ver ");
-  GLCD.print(GLCD_Device, DEC); // no newline to prevent erase EOL
-  GLCD.CursorTo(0,3); 
-  for(int i=0; i  < GLCD.Width / GLCD.CharWidth(' '); i++ )
-  {
-     GLCD.print(char('A' + i)); // show the ascii character
-  }
-  GLCD.print('\n');
   delay(5000);
   // show chips
   GLCD.ClearScreen();
@@ -177,6 +162,23 @@ void showchipselscreen(void)
   }
 
   delay(5000);
+
+  /*
+   * show Version info and Sequential ascii characters 
+   */
+  GLCD.ClearScreen();
+  GLCD.CursorTo(0,0);
+  GLCD.print("GLCD   ver ");
+  GLCD.println(GLCD_VERSION, DEC); 
+  GLCD.print("gText  ver ");
+  GLCD.println(GTEXT_VERSION, DEC); 
+  GLCD.print("Device ver ");
+  GLCD.println(GLCD_Device, DEC); // no newline to prevent erase EOL
+  for(int i=0; i  < GLCD.Width / GLCD.CharWidth(' '); i++ )
+  {
+     GLCD.print(char('A' + i)); // show the ascii character
+  }
+  delay(5000);
 }
 
 void  loop()
@@ -185,26 +187,20 @@ void  loop()
   int lcount = 1;
   unsigned int glcdspeed, kops, kops_fract;
 
-  /*
-   * Dump GLCD config information *before* trying to talk to the GLCD
-   * in case there is a problem talking to the GLCD.
-   * This way ensures the GLCD information is always available.
-   */
-
-  /*
-   * dump the GLCD library configuration information to
-   * the serial port.
-   */
-  showGLCDconfig();
-
-#ifdef XXX
-  SerialPrintQ("Initializing GLCD\n");
-  GLCD.Init();   // initialise the library, non inverted writes pixels onto a clear screen
-  GLCD.SelectFont(System5x7, BLACK);
-#endif
-
   while(1)
   {
+    /*
+     * Dump GLCD config information *before* trying to talk to the GLCD
+     * in case there is a problem talking to the GLCD.
+     * This way ensures the GLCD information is always available on the serial port.
+     */
+
+    /*
+     * dump the GLCD library configuration information to
+     * the serial port.
+     */
+    showGLCDconfig();
+
 
     SerialPrintP(hline);
     SerialPrintQ("Diag Loop: ");
@@ -267,13 +263,6 @@ void  loop()
 
     delay(5000);
     lcount++;
-    GLCD.ClearScreen();
-    /*
-     * dump the GLCD library configuration information to
-     * the serial port each loop in case it was missed the
-     * the first time around.
-     */
-    showGLCDconfig();
   }
 }
 
