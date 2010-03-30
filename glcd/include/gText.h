@@ -33,6 +33,13 @@
 
 #define GTEXT_VERSION 1 // software version of this code
 
+#ifndef USE_ARDUINO_FLASHSTR
+// these should be replaced when Arduino supports FLASH strings in the base print class
+#include <avr/pgmspace.h>
+typedef class _FlashString {} *FLASHSTRING;
+#define flashStr(x) ((FLASHSTRING)(PSTR((x))))
+#endif
+
 // Font Indices
 #define FONT_LENGTH			0
 #define FONT_FIXED_WIDTH	2
@@ -160,8 +167,8 @@ typedef const uint8_t* Font_t;
 typedef uint8_t (*FontCallback)(Font_t);
 
 uint8_t ReadPgmData(const uint8_t* ptr);	//Standard Read Callback
-static glcd_Device    *device;              // static pointer to the device instance
 static FontCallback	FontRead;               // font callback shared across all instances
+//static glcd_Device    *device;              // static pointer to the device instance
 
 /// @cond hide_from_doxygen
 struct tarea
@@ -244,6 +251,11 @@ class gText : public glcd_Device
     // legacy text output functions 
 	void PrintNumber(long n);
 
+#ifndef USE_ARDUINO_FLASHSTR	
+	// when the following function is supported in arduino it will be removed from this library
+	void printFlash(FLASHSTRING str); //this overrides the Arduino print function to implicilty store the string in flash (progmem)
+    void printFlashln(FLASHSTRING str);
+#endif
 	
 #ifndef GLCD_NO_PRINTF
 	void Printf(const char *format, ...);

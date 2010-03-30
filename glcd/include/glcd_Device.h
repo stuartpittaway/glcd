@@ -35,12 +35,6 @@
 #include "Print.h" // used when deriving this class in Arduino 
 #endif
 
-#ifndef USE_ARDUINO_FLASHSTR
-// these should be replaced when Arduino supports FLASH strings in the base print class
-#include <avr/pgmspace.h>
-typedef class _FlashString {} *FLASHSTRING;
-#define flashStr(x) ((FLASHSTRING)(PSTR((x))))
-#endif
 
 #define GLCD_Device 1 // software version of this class
 
@@ -78,6 +72,7 @@ class glcd_Device : public Print
 	inline void SelectChip(uint8_t chip); 
 	void WaitReady( uint8_t chip);
 	void write(uint8_t); // for Print base class
+	
   public:
     glcd_Device();
     void Init(uint8_t invert = false);      // now public, default is non-inverted
@@ -87,11 +82,6 @@ class glcd_Device : public Print
     uint8_t ReadData(void);        // now public
     void WriteData(uint8_t data); 
 
-#ifndef USE_ARDUINO_FLASHSTR	
-	// when the following function is supported in arduino it will be removed from this library
-	void printFlash(FLASHSTRING str); //this overrides the Arduino print function to implicilty store the string in flash (progmem)
-    void printFlashln(FLASHSTRING str);
-#endif
   protected:
     static lcdCoord	  	Coord;  
 	static uint8_t	 	Inverted; 

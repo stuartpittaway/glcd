@@ -33,7 +33,7 @@ extern "C"
 #endif
 
 	
-extern glcd_Device GLCD; // this is the global GLCD instance, here upcast to the base glcd_Device class 
+//extern glcd_Device GLCD; // this is the global GLCD instance, here upcast to the base glcd_Device class 
 
 // This constructor creates a text area using the entire display
 // The device pointer is initialized using the global GLCD instance
@@ -41,7 +41,7 @@ extern glcd_Device GLCD; // this is the global GLCD instance, here upcast to the
 // if multiple glcd instances need to be supported
 gText::gText()
 {
-    device = (glcd_Device*)&GLCD; 
+   // device = (glcd_Device*)&GLCD; 
     this->DefineArea(0,0,DISPLAY_WIDTH -1,DISPLAY_HEIGHT -1, DEFAULT_SCROLLDIR); // this should never fail
 }
 
@@ -49,14 +49,14 @@ gText::gText()
 // full display area is used if any coordinate is invalid
 gText::gText(uint8_t x1, uint8_t y1, uint8_t x2, uint8_t y2, textMode mode) 
 {
-   device = (glcd_Device*)&GLCD; 
+   //device = (glcd_Device*)&GLCD; 
    if( ! this->DefineArea(x1,y1,x2,y2,mode))
        this->DefineArea(0,0,DISPLAY_WIDTH -1,DISPLAY_HEIGHT -1,mode); // this should never fail
 }
 
 gText::gText(predefinedArea selection, textMode mode)
 {
-   device = (glcd_Device*)&GLCD; 
+   //device = (glcd_Device*)&GLCD; 
    if( ! this->DefineArea(selection,mode))
        this->DefineArea(0,0,DISPLAY_WIDTH -1,DISPLAY_HEIGHT -1,mode); // this should never fail
 
@@ -64,7 +64,7 @@ gText::gText(predefinedArea selection, textMode mode)
 
 gText::gText(uint8_t x1, uint8_t y1, uint8_t columns, uint8_t rows, Font_t font, textMode mode)
 {
-   device = (glcd_Device*)&GLCD; 
+   //device = (glcd_Device*)&GLCD; 
    if( ! this->DefineArea(x1,y1,columns,rows,font, mode))
    {
        this->DefineArea(0,0,DISPLAY_WIDTH -1,DISPLAY_HEIGHT -1,mode); // this should never fail
@@ -84,7 +84,7 @@ void gText::ClearArea(void)
 	 * fill the area with font background color
 	 */
 
-	device->SetPixels(this->tarea.x1, this->tarea.y1, 
+	glcd_Device::SetPixels(this->tarea.x1, this->tarea.y1, 
 		this->tarea.x2, this->tarea.y2, 
 			this->FontColor == BLACK ? WHITE : BLACK);
 	/*
@@ -283,15 +283,15 @@ uint8_t col;
 		 * fill the region with "whitespace" because
 		 * it is being totally scrolled out.
 		 */
-		device->SetPixels(x1, y1, x2, y2, color);
+		glcd_Device::SetPixels(x1, y1, x2, y2, color);
 		return;
 	}
 
 	for(col = x1; col <= x2; col++)
 	{
 		dy = y1;
-		device->GotoXY(col, dy & ~7);
-		dbyte = device->ReadData();
+		glcd_Device::GotoXY(col, dy & ~7);
+		dbyte = glcd_Device::ReadData();
 
 
 		/*
@@ -301,8 +301,8 @@ uint8_t col;
 		dbyte &= (_BV((dy & 7)) - 1);
 
 		sy = dy + pixels;
-		device->GotoXY(col, sy & ~7);
-		sbyte = device->ReadData();
+		glcd_Device::GotoXY(col, sy & ~7);
+		sbyte = glcd_Device::ReadData();
 
 		while(sy <= y2)
 		{
@@ -319,15 +319,15 @@ uint8_t col;
 				 */
 				if(sy < DISPLAY_HEIGHT)
 				{
-					device->GotoXY(col, sy & ~7);
-					sbyte = device->ReadData();
+					glcd_Device::GotoXY(col, sy & ~7);
+					sbyte = glcd_Device::ReadData();
 				}
 			}
 
 			if((dy & 7) == 7)
 			{
-				device->GotoXY(col, dy & ~7);	// Should be able to remove this
-				device->WriteData(dbyte);
+				glcd_Device::GotoXY(col, dy & ~7);	// Should be able to remove this
+				glcd_Device::WriteData(dbyte);
 				dbyte = 0;
 			}
 			dy++;
@@ -350,8 +350,8 @@ uint8_t col;
 
 			if((dy & 7) == 7)
 			{
-				device->GotoXY(col, dy & ~7); // should be able to remove this.
-				device->WriteData(dbyte);
+				glcd_Device::GotoXY(col, dy & ~7); // should be able to remove this.
+				glcd_Device::WriteData(dbyte);
 				dbyte = 0;
 			}
 			dy++;
@@ -366,8 +366,8 @@ uint8_t col;
 		{
 			dy--;
 
-			device->GotoXY(col, dy & ~7);
-			sbyte = device->ReadData();
+			glcd_Device::GotoXY(col, dy & ~7);
+			sbyte = glcd_Device::ReadData();
 			/*
 			 * Preserver bits outside/below region
 			 */
@@ -376,7 +376,7 @@ uint8_t col;
 			sbyte &= ~(_BV((dy & 7)) - 1);
 			dbyte |= sbyte;
 
-			device->WriteData(dbyte);
+			glcd_Device::WriteData(dbyte);
 		}
 	}
 
@@ -402,7 +402,7 @@ uint8_t col;
 		 * fill the region with "whitespace" because
 		 * it is being totally scrolled out.
 		 */
-		device->SetPixels(x1, y1, x2, y2, color);
+		glcd_Device::SetPixels(x1, y1, x2, y2, color);
 		return;
 	}
 
@@ -412,8 +412,8 @@ uint8_t col;
 	for(col = x1; col <= x2; col++)
 	{
 		dy = y2;
-		device->GotoXY(col, dy & ~7);
-		dbyte = device->ReadData();
+		glcd_Device::GotoXY(col, dy & ~7);
+		dbyte = glcd_Device::ReadData();
 
 		/*
 		 * preserve bits outside/below scroll region
@@ -421,8 +421,8 @@ uint8_t col;
 
 		dbyte &= ~(_BV(((dy & 7)+1)) - 1);
 		sy = dy - pixels;
-		device->GotoXY(col, sy & ~7);
-		sbyte = device->ReadData();
+		glcd_Device::GotoXY(col, sy & ~7);
+		sbyte = glcd_Device::ReadData();
 
 		while(sy >= y1)
 		{
@@ -432,8 +432,8 @@ uint8_t col;
 			}
 			if((dy & 7) == 0)
 			{
-				device->GotoXY(col, dy & ~7);	// Should be able to remove this
-				device->WriteData(dbyte);
+				glcd_Device::GotoXY(col, dy & ~7);	// Should be able to remove this
+				glcd_Device::WriteData(dbyte);
 				dbyte = 0;
 			}
 			dy--;
@@ -443,8 +443,8 @@ uint8_t col;
 			sy--;
 			if((sy & 7) == 7)
 			{
-				device->GotoXY(col, sy & ~7);
-				sbyte = device->ReadData();
+				glcd_Device::GotoXY(col, sy & ~7);
+				sbyte = glcd_Device::ReadData();
 			}
 
 		}
@@ -466,8 +466,8 @@ uint8_t col;
 
 			if((dy & 7) == 0)
 			{
-				device->GotoXY(col, dy & ~7); // should be able to remove this.
-				device->WriteData(dbyte);
+				glcd_Device::GotoXY(col, dy & ~7); // should be able to remove this.
+				glcd_Device::WriteData(dbyte);
 				dbyte = 0;
 			}
 			dy--;
@@ -481,15 +481,15 @@ uint8_t col;
 
 		if(dy & 7)
 		{
-			device->GotoXY(col, dy & ~7);
-			sbyte = device->ReadData();
+			glcd_Device::GotoXY(col, dy & ~7);
+			sbyte = glcd_Device::ReadData();
 			/*
 			 * Preserve bits outside/above region
 			 */
 
 			sbyte &= (_BV((dy & 7)) - 1);
 			dbyte |= sbyte;
-			device->WriteData(dbyte);
+			glcd_Device::WriteData(dbyte);
 		}
 
 	}
@@ -518,7 +518,7 @@ void gText::SpecialChar(uint8_t c)
 
 
 		if(this->x < this->tarea.x2)
-			device->SetPixels(this->x, this->y, this->tarea.x2, this->y+height, this->FontColor == BLACK ? WHITE : BLACK);
+			glcd_Device::SetPixels(this->x, this->y, this->tarea.x2, this->y+height, this->FontColor == BLACK ? WHITE : BLACK);
 
 		/*
 		 * Check for scroll up vs scroll down (scrollup is normal)
@@ -783,7 +783,7 @@ int gText::PutChar(uint8_t c)
 
 #ifdef GLCD_OLD_FONTDRAW
 /*================== OLD FONT DRAWING ============================*/
-	device->GotoXY(this->x, this->y);
+	glcd_Device::GotoXY(this->x, this->y);
 
 	/*
 	 * Draw each column of the glyph (character) horizontally
@@ -819,18 +819,18 @@ int gText::PutChar(uint8_t c)
 			}
 			
 			if(this->FontColor == BLACK) {
-				device->WriteData(data);
+				glcd_Device::WriteData(data);
 			} else {
-				device->WriteData(~data);
+				glcd_Device::WriteData(~data);
 			}
 		}
 		// 1px gap between chars
 		if(this->FontColor == BLACK) {
-			device->WriteData(0x00);
+			glcd_Device::WriteData(0x00);
 		} else {
-			device->WriteData(0xFF);
+			glcd_Device::WriteData(0xFF);
 		}
-		device->GotoXY(this->x, device->Coord.y+8);
+		glcd_Device::GotoXY(this->x, glcd_Device::Coord.y+8);
 	}
 	this->x = this->x+width+1;
 
@@ -873,7 +873,7 @@ int gText::PutChar(uint8_t c)
 		 * Align to proper Column and page in LCD memory
 		 */
 
-		device->GotoXY(this->x, (dy & ~7));
+		glcd_Device::GotoXY(this->x, (dy & ~7));
 
 		uint8_t page = p/8 * width;
 
@@ -938,7 +938,7 @@ int gText::PutChar(uint8_t c)
 				 * to paint so a full byte write can be done.
 				 */
 					
-					device->WriteData(fdata);
+					glcd_Device::WriteData(fdata);
 					continue;
 			}
 			else
@@ -946,7 +946,7 @@ int gText::PutChar(uint8_t c)
 					/*
 					 * No, so must fetch byte from LCD memory.
 					 */
-					dbyte = device->ReadData();
+					dbyte = glcd_Device::ReadData();
 			}
 
 			/*
@@ -1003,7 +1003,7 @@ int gText::PutChar(uint8_t c)
 			/*
 			 * Now flush out the painted byte.
 			 */
-			device->WriteData(dbyte);
+			glcd_Device::WriteData(dbyte);
 		}
 
 		/*
@@ -1031,7 +1031,7 @@ int gText::PutChar(uint8_t c)
 		{
 		uint8_t mask = 0;
 
-			dbyte = device->ReadData();
+			dbyte = glcd_Device::ReadData();
 
 			if(dy & 7)
 				mask |= _BV(dy & 7) -1;
@@ -1054,7 +1054,7 @@ int gText::PutChar(uint8_t c)
 				dbyte = 0;
 		}
 
-		device->WriteData(dbyte);
+		glcd_Device::WriteData(dbyte);
 
 		/*
 		 * advance the font pixel for the pixels
@@ -1344,13 +1344,13 @@ void gText::EraseTextLine( eraseLine_t type)
 	switch(type)
 	{
 		case eraseTO_EOL:
-				device->SetPixels(x, y, this->tarea.x2, y+height, color);
+				glcd_Device::SetPixels(x, y, this->tarea.x2, y+height, color);
 				break;
 		case eraseFROM_BOL:
-				device->SetPixels(this->tarea.x1, y, x, y+height, color);
+				glcd_Device::SetPixels(this->tarea.x1, y, x, y+height, color);
 				break;
 		case eraseFULL_LINE:
-				device->SetPixels(this->tarea.x1, y, this->tarea.x2, y+height, color);
+				glcd_Device::SetPixels(this->tarea.x1, y, this->tarea.x2, y+height, color);
 				break;
 	}
 
@@ -1577,7 +1577,26 @@ void gText::write(uint8_t c)
 	this->PutChar(c);
 } 
 
- 
+#ifndef USE_ARDUINO_FLASHSTR
+// functions to store and print strings in Progmem
+// these should be removed when Arduino supports FLASH strings in the base print class
+void gText::printFlash(FLASHSTRING str)
+{
+  char c;
+  const prog_char *p = (const prog_char *)str;
+
+  while (c = pgm_read_byte(p++))
+    write(c);
+}
+
+void gText::printFlashln(FLASHSTRING str)
+{
+  printFlash(str);
+  write('\n');
+}
+#endif
+
+
 #ifndef GLCD_NO_PRINTF
 /*
  * Support for printf().
