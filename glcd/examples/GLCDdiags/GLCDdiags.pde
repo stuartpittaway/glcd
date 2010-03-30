@@ -157,10 +157,18 @@ void showchipselscreen(void)
   GLCD.ClearScreen();
   for(int chip = 0; chip < glcd_CHIP_COUNT; chip++)
   {
-    GLCD.CursorToXY(chip * CHIP_WIDTH,0);
-    GLCD.print("Chip:");
-    GLCD.print(chip);
-    delay(750); // delay is to allow seeing duplicate or overlapping chip selects
+    // delay and flash is to allow seeing duplicate or overlapping chip selects
+    for(uint8_t flash = 0; flash < 4; flash++)
+    {
+      GLCD.CursorToXY(chip * CHIP_WIDTH,0);
+      if(flash & 1)
+        GLCD.SetFontColor(BLACK);
+      else
+        GLCD.SetFontColor(WHITE);
+      GLCD.print("Chip:");
+      GLCD.print(chip);
+      delay(350); 
+    }
   }
 
   delay(5000);
@@ -281,7 +289,7 @@ uint8_t lcdmemtest(void)
 
   SerialPrintQ("Wr/Rd Chip Select Test\n");
 
-  errors = lcdw1test();
+  errors = lcdrwseltest();
   if(errors)
     return(errors);
 
