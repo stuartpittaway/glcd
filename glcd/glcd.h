@@ -51,7 +51,7 @@ typedef const uint8_t* Image_t;
 
 /**
  * @class glcd
- * @brief Functions for Graphics
+ * @brief Functions for GLCD
  */
 class glcd : public gText  
 {
@@ -81,12 +81,10 @@ class glcd : public gText
 
 	using glcd_Device::SetDot;
 	using glcd_Device::SetPixels;
-    using glcd_Device::ReadData; 
-    using glcd_Device::WriteData; 
+	using glcd_Device::ReadData; 
+	using glcd_Device::WriteData; 
 	
-/// @cond hide_from_doxygen
 	void GotoXY(uint8_t x, uint8_t y);  // overrride for GotoXY in device class
-/// @endcond
 
 	//Device Properties - these are read only constants	 
 	static const uint8_t Width = DISPLAY_WIDTH; 	/**< Display width in pixels */

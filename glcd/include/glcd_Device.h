@@ -65,6 +65,11 @@ typedef struct {
  * to not share the field among the instances 
  */
  
+/**
+ * @class glcd_Device
+ * @brief Low level device functions
+ * 
+ */
 class glcd_Device : public Print   
 {
   private:
@@ -82,7 +87,6 @@ class glcd_Device : public Print
 	
   public:
     glcd_Device();
-/// @cond hide_from_doxygen
 	protected: 
     void Init(uint8_t invert = false);      // now public, default is non-inverted
 	void SetDot(uint8_t x, uint8_t y, uint8_t color);
@@ -93,7 +97,6 @@ class glcd_Device : public Print
   	void GotoXY(uint8_t x, uint8_t y);   
     static lcdCoord	  	Coord;  
 	static uint8_t	 	Inverted; 
-/// @endcond	
 };
   
 #endif

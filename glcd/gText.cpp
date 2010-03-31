@@ -1580,15 +1580,25 @@ void gText::write(uint8_t c)
 #ifndef USE_ARDUINO_FLASHSTR
 // functions to store and print strings in Progmem
 // these should be removed when Arduino supports FLASH strings in the base print class
+/**
+ * print a flash based string
+ * @param str pointer to a null terminated character string stored in program memory
+ *
+ * @see Puts_P()
+ */
 void gText::printFlash(FLASHSTRING str)
 {
-  char c;
-  const prog_char *p = (const prog_char *)str;
-
-  while (c = pgm_read_byte(p++))
-    write(c);
+  Puts_P((PGM_P) str);
 }
 
+/**
+ * print a flash based string
+ * @param str pointer to a null terminated character string stored in program memory
+ *
+ * The string is output followed by a newline.
+ *
+ * @see Puts_P()
+ */
 void gText::printFlashln(FLASHSTRING str)
 {
   printFlash(str);

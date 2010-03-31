@@ -33,9 +33,9 @@
 /*
  * define the static variables declared in glcd_Device
  */
+
 uint8_t	 glcd_Device::Inverted; 
 lcdCoord  glcd_Device::Coord;
-
 
 /*
  * Experimental defines
@@ -251,7 +251,7 @@ void glcd_Device::GotoXY(uint8_t x, uint8_t y)
  *
  * @param invert specifices whether display is in normal mode or inverted mode.
  *
- * This should only be called prior by other library code.
+ * This should only be called by other library code.
  *
  * It does all the low level hardware initalization of the display device.
  *
@@ -261,8 +261,14 @@ void glcd_Device::GotoXY(uint8_t x, uint8_t y)
  * To specify dark pixels use the define @b NON-INVERTED and to use light pixels use
  * the define @b INVERTED
  *
- * Upon completion of the initialization, then entire display will be cleared.
+ * Upon completion of the initialization, the entire display will be cleared
+ * and the x,y postion will be set to 0,0
  *
+ */
+
+/*
+ * Note: This Initilization code can be called more than once as the user
+ * is free to re-initliaze the hardware.
  */
 
 void glcd_Device::Init(uint8_t invert)

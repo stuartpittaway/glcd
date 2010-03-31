@@ -57,6 +57,8 @@ glcd::glcd(){
  * the define @b INVERTED
  *
  * Upon completion of the initialization, then entire display will be cleared.
+ * @note
+ * This function can also be called to re-initliaze the display hardware.
  */
 
  
