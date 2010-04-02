@@ -33,13 +33,19 @@ REM #
 REM ##################################################################
 
 REM #
+REM # grab short name of batch file: basename.extension
+REM
+
+set PROGNAME=%~n0.%~x0
+
+REM #
 REM # set PWD variable (grab it from path of batch file)
 REM #
 
 set PWD=%~dp0
 
 REM #
-REM # LOG file name
+REM # LOG file name (create based on baename of batch file)
 REM #
 
 set LOGFILE=%PWD%\%~n0.log
@@ -49,26 +55,48 @@ echo CURRENT WORKING directory: %PWD%
 REM #
 REM # Setup some date variables
 REM #
-
-set MTH=%DATE:~4,2%
-set DAY=%DATE:~7,2%
-set YR=%DATE:~10,4%
-set HR=%TIME:~0,2%
-set HR0=%TIME:~0,1%
-if "%HR0%"==" " set HR=0%TIME:~1,1%
-set MIN=%TIME:~3,2%
-set SEC=%TIME:~6,2%
-set MYDATE=%YR%%MTH%%DAY%
-set MYTIME=%HR%%MIN%%SEC%
-
-REM #
 REM # WARNING:
 REM # you would think that getting date would be a simply
 REM # operation. But this is the world of Windoze.
 REM # since date format can be customized by the user there is no
 REM # no way to detect the format.
-REM # so for now the date stuff cannot be used.
 REM #
+REM # This is screwey because windows is so !@#$!# up that
+REM # you can't even get a date in a consistent format to parse out
+REM # the fields. (it is all localized)
+REM # So we go look for a real date command in Arduino binaries
+REM # and then the WINAVR binaries.
+REM # if none found, then no date variables.
+REM #
+
+
+set ARDUINO_BINDIR=..\..\..\..\tools\avr\utils\bin
+set WINAVR_BINDIR1=%systemDrive%\WinAVR-20090313\utils\bin
+set WINAVR_BINDIR2=%systemDrive%\WinVAR-20100110\utils\bin
+
+echo looking for unix tools
+
+for %%G in (%ARDUINO_BINDIR% %WINAVR_BINDIR1% %WINAVR_BINDIR2%) do (
+	if exist %%G (
+		echo found unix tool dir: %%G
+		set UNIX_TOOLDIR=%%G
+		goto endunixsearch
+	)
+)
+echo no unix tools found
+:endunixsearch
+
+REM #
+REM # now (finally) load up MYDATE and MYTIME variables with date & time
+REM #
+if exist %UNIX_TOOLDIR%\date.exe (
+	for /F %%G IN ('%UNIX_TOOLDIR%\date.exe +%%Y%%m%%d') do set MYDATE=%%G
+	for /F %%G IN ('%UNIX_TOOLDIR%\date.exe +%%H%%M%%S') do set MYTIME=%%G
+) else (
+	echo no unix date command found so no date/time timestamp in zipfile name
+)
+
+:definevars
 
 REM ##################################################################
 REM #
@@ -130,8 +158,11 @@ REM # Name of ZIP file
 REM # has date as part of file name
 REM #
 
-REM set GLCDZIPNAME=%GLCDLIBNAME%-%MYDATE%.zip
-set GLCDZIPNAME=%GLCDLIBNAME%.zip
+if defined MYDATE (
+	set GLCDZIPNAME=%GLCDLIBNAME%-%MYDATE%.zip
+) else (
+	set GLCDZIPNAME=%GLCDLIBNAME%.zip
+)
 
 REM #
 REM # name of manifest file
@@ -217,7 +248,7 @@ pause
 rmdir /S /Q "%GLCDDISTDIR%"
 echo ======== Removed SVN working tree %GLCDDISTDIR% >> "%LOGFILE%"
 
-echo ======== mkzip completed normally >> "%LOGFILE%"
+echo ======== %PROGNAME% completed normally >> "%LOGFILE%"
 :done
-echo %0 Finished
+echo %PROGNAME% Finished
 pause
