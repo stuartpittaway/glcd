@@ -70,13 +70,14 @@ REM # if none found, then no date variables.
 REM #
 
 
-set ARDUINO_BINDIR=..\..\..\..\tools\avr\utils\bin
+if not defined ARDUINO-0017_BINDIR set ARDUINO-0017_BINDIR=..\..\..\..\tools\avr\utils\bin
+if not defined ARDUINO-0018_BINDIR set ARDUINO-0018_BINDIR=..\..\..\..\hardware\tools\avr\utils\bin
 set WINAVR_BINDIR1=%systemDrive%\WinAVR-20090313\utils\bin
 set WINAVR_BINDIR2=%systemDrive%\WinVAR-20100110\utils\bin
 
 echo looking for unix tools
 
-for %%G in (%ARDUINO_BINDIR% %WINAVR_BINDIR1% %WINAVR_BINDIR2%) do (
+for %%G in (%ARDUINO-0017_BINDIR% %ARDUINO-0018_BINDIR% %WINAVR_BINDIR1% %WINAVR_BINDIR2%) do (
 	if exist %%G (
 		echo found unix tool dir: %%G
 		set UNIX_TOOLDIR=%%G
