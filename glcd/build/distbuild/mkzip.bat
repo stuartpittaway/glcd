@@ -30,6 +30,15 @@ REM # you must have doxygen/doxywizard installed.
 REM #	http://www.doxygen.nl/download.html#latestsrc
 REM #	(Make sure to have version 1.6.3 or later)
 REM #
+REM # if you want your zip files to be automatically date stamped:
+REM #	you must either put your glcd working directory in the Arduino
+REM #	distribution "libraries" directory or install WinAVR. This is
+REM #	because Microsoft is so @#$#@ up that they can't produce a date
+REM #	string in a constant format (i.e. no localization) so a unix date command
+REM #	is needed.
+REM #	Alternatively, you can define WINAVR_UTILDIR in your windows enviroment to
+REM #	point to the Arduino unix tool directory (not really recommended)
+REM #
 REM ##################################################################
 
 REM #
@@ -70,14 +79,30 @@ REM # if none found, then no date variables.
 REM #
 
 
-if not defined ARDUINO-0017_BINDIR set ARDUINO-0017_BINDIR=..\..\..\..\tools\avr\utils\bin
-if not defined ARDUINO-0018_BINDIR set ARDUINO-0018_BINDIR=..\..\..\..\hardware\tools\avr\utils\bin
-set WINAVR_BINDIR1=%systemDrive%\WinAVR-20090313\utils\bin
-set WINAVR_BINDIR2=%systemDrive%\WinVAR-20100110\utils\bin
+REM #
+REM # relative paths assuming glcd is in Arduino distribution tree
+REM #
+
+set ARDUINO-0017_UTILDIR=..\..\..\..\tools\avr\utils\bin
+set ARDUINO-0018_UTILDIR=..\..\..\..\hardware\tools\avr\utils\bin
 
 echo looking for unix tools
 
-for %%G in (%ARDUINO-0017_BINDIR% %ARDUINO-0018_BINDIR% %WINAVR_BINDIR1% %WINAVR_BINDIR2%) do (
+REM #
+REM # look for WinAVR installed on the machine
+REM # (somewhat unpredictable which one we end up with if there are multiple)
+REM # if you define WINAVR_UTILDIR, this file will use it 
+REM #
+
+if not defined WINAVR_UTILDIR (
+	for /D %%G IN (%systemDrive%\WinAVR-*) do set WINAVR_UTILDIR=%%G
+)
+
+REM #
+REM # look at all the possible directories (favor Arduino directories)
+REM #
+
+for %%G in (%ARDUINO-0018_UTILDIR% %ARDUINO-0017_UTILDIR% %WINAVR_UTILDIR%) do (
 	if exist %%G (
 		echo found unix tool dir: %%G
 		set UNIX_TOOLDIR=%%G
