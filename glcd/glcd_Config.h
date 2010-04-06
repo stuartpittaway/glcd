@@ -12,12 +12,29 @@
 #define glcd_CONFIG_H
 
  /*
-  * the following list are the files to be included in the release 
-  * all other display specific files are in config/dev_Config.h
-  * Only select one of the following:
-  *
+  * The code below selects a configuration file based on the board selected in the IDE 
+  * These configurations are compatable with wiring used in earlier versions of the library
+  * 
+  * You can select a cusomtized configuration file by uncommenting the next line
  */
+//#define MANUAL_CONFIG_SELECT  // uncomment this to enable explicit manual config selection
+#ifndef MANUAL_CONFIG_SELECT  // define this to bypass automatic config selection
+ 
+#if defined(__AVR_ATmega1280__)
+#include "config/ks0108_Mega_Config.h"      // config for Mega or other 1280 board
+#elif defined (__AVR_ATmega644P__)           
+#include "config/ks0108_Sanguino_Config.h"  // config for Sanguino or other ATmega644p board
+#elif defined(__AVR_AT90USB646__) || defined(__AVR_AT90USB1286__) || defined(__AVR_ATmega32U4__)// Teensy
+#include "config/ks0108_Teensy_Config.h"    // config for Teensy and Teensy++  
+#else
+#include "config/ks0108_Arduino_Config.h"   // config file for standard Arduino using documented wiring 
+#endif
 
+#else
+/*
+ *    Customized configuration selection : 
+ *   if MANUAL_CONFIG_SELECT is defined then select one only of the following config files 
+ */
 #include "config/ks0108_Arduino_Config.h"   // config file for standard Arduino using documented wiring 
 //#include "config/ks0108_Mega_Config.h"      // config for Mega board using same pins as previous library
 //#include "config/ks0108_Sanguino_Config.h"  // config for Sanguino using same pins as previous library
@@ -26,6 +43,7 @@
 
 //#include "config/sed1520_Config.h"          // generic SED1520 configuraition file 
 //#include "config/Modvk5121_Config.h"        // config file for vk5121 panel  
+#endif
 
 /*========================== Optional User Defines ==================================*/
 
