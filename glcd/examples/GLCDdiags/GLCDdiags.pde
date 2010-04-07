@@ -62,14 +62,21 @@ P(hline) =  "-------------------------------------------------------------------
 
 /*
  * print Progmem string to the serial port
+ * (have to insert carriage returns as serial port runs in 'raw' mode)
+ *
  */
+
 void SerialPrintP(  const prog_char * str )
 {
   char c;
   const prog_char *p = str;
 
   while (c = pgm_read_byte(p++))
+  {
+    if(c == '\n')
+      Serial.print('\r');
     Serial.print(c);   
+  }
 }
 
 #ifdef SERIALPRINTF
@@ -84,7 +91,10 @@ void SerialPrintP(  const prog_char * str )
 #define SerialPrintf(fmt, ...) _SerialPrintf(PSTR(fmt), ##__VA_ARGS__)
 
 extern "C" {
-  int serialputc(char c, FILE *fp) { 
+  int serialputc(char c, FILE *fp)
+  { 
+      if(c == '\n')
+        Serial.write('\r'); 
     Serial.write(c); 
   }
 }
@@ -150,7 +160,7 @@ void showchipselscreen(void)
   for(int x = 0; x < GLCD.Width; x++)
   {
      GLCD.DrawVLine( x, 0, map(x, 0, GLCD.Right, 0, GLCD.Bottom));
-     delay(60); // delay is to allow seeing if chip selects are duplicated or overlapping
+     delay(50); // delay is to allow seeing if chip selects are duplicated or overlapping
   }   
   delay(4000);
   // show chips
@@ -685,7 +695,7 @@ void showGLCDconfig(void)
   SerialPrintQ(glcd_ConfigName);
   SerialPrintQ(" GLCD:");
   SerialPrintQ(glcd_DeviceName);
-  Serial.print('\n');
+  Serial.println();
 
 //SerialPrintf("DisplayWidth:%d DisplayHeight:%d\n", GLCD.Width, GLCD.Height);
   SerialPrintQ("DisplayWidth:");
@@ -704,10 +714,6 @@ void showGLCDconfig(void)
   SerialPrintQ(" ChipHeight:");
   Serial.println(CHIP_HEIGHT);
 
-#ifdef glcdRES
-  SerialPrintQ("RES:");
-  SerialPrintPINstr(glcdRES);
-#endif
 #ifdef glcdCSEL1
   SerialPrintQ(" CSEL1:");
   SerialPrintPINstr(glcdCSEL1);
@@ -725,7 +731,12 @@ void showGLCDconfig(void)
   SerialPrintPINstr(glcdCSEL4);
 #endif
 
+  Serial.println();
 
+#ifdef glcdRES
+  SerialPrintQ(" RES:");
+  SerialPrintPINstr(glcdRES);
+#endif
   SerialPrintQ(" RW:");
   SerialPrintPINstr(glcdRW);
 
@@ -746,10 +757,10 @@ void showGLCDconfig(void)
   SerialPrintPINstr(glcdE2);
 #endif
 
-  Serial.print('\n');
+  Serial.println();
 
-//  SerialPrintf("D0:%s", GLCDdiagsPIN2STR(glcdData0Pin));
-  SerialPrintQ("D0:");
+//  SerialPrintf(" D0:%s", GLCDdiagsPIN2STR(glcdData0Pin));
+  SerialPrintQ(" D0:");
   SerialPrintPINstr(glcdData0Pin);
 
   SerialPrintQ(" D1:");
@@ -760,6 +771,8 @@ void showGLCDconfig(void)
 
   SerialPrintQ(" D3:");
   SerialPrintPINstr(glcdData3Pin);
+
+  Serial.println();
 
   SerialPrintQ(" D4:");
   SerialPrintPINstr(glcdData4Pin);
@@ -773,7 +786,7 @@ void showGLCDconfig(void)
   SerialPrintQ(" D7:");
   SerialPrintPINstr(glcdData7Pin);
 
-  Serial.print('\n');
+  Serial.println();
 
 //  SerialPrintf("Delays: tDDR:%d tAS:%d tDSW:%d tWH:%d tWL: %d\n",
 //  GLCD_tDDR, GLCD_tAS, GLCD_tDSW, GLCD_tWH, GLCD_tWL);
@@ -792,24 +805,28 @@ void showGLCDconfig(void)
 
 #ifdef glcd_CHIP0
   SerialPrintQ("ChipSelects:");
-  SerialPrintQ(" CHIP0:");
+  SerialPrintQ(" CHIP0:(");
   SerialPrintQ(xstr(glcd_CHIP0));
+  SerialPrintQ(")");
 #endif
 #ifdef glcd_CHIP1
-  SerialPrintQ(" CHIP1:");
+  SerialPrintQ(" CHIP1:(");
   SerialPrintQ(xstr(glcd_CHIP1));
+  SerialPrintQ(")");
 #endif
 #ifdef glcd_CHIP2
-  SerialPrintQ(" CHIP2:");
+  SerialPrintQ(" CHIP2:(");
   SerialPrintQ(xstr(glcd_CHIP2));
+  SerialPrintQ(")");
 #endif
 #ifdef glcd_CHIP3
-  SerialPrintQ(" CHIP3:");
+  SerialPrintQ(" CHIP3:(");
   SerialPrintQ(xstr(glcd_CHIP3));
+  SerialPrintQ(")");
 #endif
 
 #ifdef glcd_CHIP0
-  Serial.print('\n');
+  Serial.println();
 #endif
 
 
@@ -869,7 +886,7 @@ void showGLCDconfig(void)
     {
       SerialPrintQ("bit i/o");
     }
-    Serial.print('\n');
+    Serial.println();
   }
 
 #endif // _AVRIO_AVRIO_
