@@ -109,28 +109,35 @@
  *
  */
 
+/*
+ * Pin definitions for Teensy v2
+ */
+#if defined(__AVR_ATmega32U4__)
 
+#define glcd_ConfigName "Bills-BB-v2Teensy-vk5121"
 /*
  * Bill's avrio pin assignments 
- * for the Modern Device BBB "arduino" breadboard.project
+ * for the Teensy v2 minimimal pins "arduino" breadboard project
  */
 
-#define glcdData0Pin	PIN_B5
-#define glcdData1Pin	PIN_B4
-#define glcdData2Pin	PIN_B3
-#define glcdData3Pin	PIN_B2
-#define glcdData4Pin	PIN_B1
-#define glcdData5Pin	PIN_B0
-#define glcdData6Pin	PIN_D7
-#define glcdData7Pin	PIN_D6
+#define glcdData0Pin	PIN_F0
+#define glcdData1Pin	PIN_F1
+#define glcdData2Pin	PIN_F4
+#define glcdData3Pin	PIN_F5
+#define glcdData4Pin	PIN_F6
+#define glcdData5Pin	PIN_F7
+#define glcdData6Pin	PIN_B6
+#define glcdData7Pin	PIN_B5
 
-#define glcdRW			PIN_D5
+#define glcdRW			PIN_B4
 
-#define glcdE1			PIN_D4
+#define glcdE1			PIN_D7
 
-#define glcdDI			PIN_D3	// A0 line
+#define glcdDI			PIN_D6
 
-#define glcdE2			PIN_D2
+#define glcdE2			PIN_C7
+
+#endif
 
 
 // defines for panel specific timing 
