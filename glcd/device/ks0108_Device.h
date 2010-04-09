@@ -77,8 +77,12 @@
 /*
  * Status register bits/flags -----------------------------------------------
  */
-#define LCD_BUSY_FLAG		0x80 
+
 #define LCD_BUSY_BIT		7
+#define LCD_BUSY_FLAG		0x80 
+
+#define LCD_RESET_BIT		4
+#define LCD_RESET_FLAG		0x10
 
 /*
  * Define primitives used by glcd_Device.cpp --------------------------------

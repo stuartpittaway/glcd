@@ -99,9 +99,8 @@
  */
 #define lcdDataIn()		lcd_avrReadByte()
 
-
 #define lcdIsBusy()		(avrio_ReadPin(GLCD_STATUS_BIT2PIN(LCD_BUSY_BIT)))
-
+#define lcdIsReset()		(avrio_ReadPin(GLCD_STATUS_BIT2PIN(LCD_RESET_BIT)))
 
 #ifdef glcdRES
 #define lcdReset()		avrio_WritePin(glcdRES, 0)

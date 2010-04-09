@@ -73,6 +73,9 @@
 #define LCD_ADC_FLAG		0x40	// ADC status 1 = nomral /forward 0=leftward/reverse
 #define LCD_ADC_BIT			6		// ADC status 1 = nomral /forward 0=leftward/reverse
 
+#define LCD_RESET_BIT		4
+#define LCD_RESET_FLAG		0x10
+
 /*
  * Define primitives used by glcd_Device.cpp --------------------------------
  */
@@ -98,7 +101,7 @@ do									\
 {									\
 	if(chip == 0)					\
        lcdfastWrite(glcdE1, HIGH);	\
-	if(chip == 1)					\
+	else							\
        lcdfastWrite(glcdE2, HIGH);	\
 }while(0)
 
@@ -107,7 +110,7 @@ do									\
 {									\
 	if(chip == 0)					\
 	   lcdfastWrite(glcdE1, LOW);	\
-	if(chip == 1)					\
+	else							\ 
 	   lcdfastWrite(glcdE2, LOW);	\
 }while(0)
 

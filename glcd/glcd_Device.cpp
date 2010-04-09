@@ -55,6 +55,38 @@ lcdCoord  glcd_Device::Coord;
 						//
 						// current RECOMMENDED setting: OFF
 
+#define GLCD_TEENSY_PCB_RESET_WAIT	// turns on code to deal with slow rising reset on Teensy PCB ADAPTER
+								// this code is only turned on when library is compiled for teensy boards.
+							// The reason for this was to support a ks0108 GLCD adapter PCB for the Teensy.
+							// The reset signal created on that board is 250ms long 
+							// but rises very slow so reset polling
+							// does not work properly. So for now the code simply does a wait of 250ms
+							// to give the Teensy PCB reset circuit time to clear.
+							//
+
+//#define GLCD_POLL_RESET	// turns on code to poll glcd module RESET signal
+							// While this would be optimal, it turns out that on slow
+							// rising reset signals to the GLCD the reset bit will clear
+							// in the status *before* reset to the actual glcd chips.
+							// this creates a situation where the code starts sending commands
+							// to the display prior to it being ready. And unfortunately, the first
+							// commands sent are to turn on the display. Since the glcd command protocol
+							// only has a busy bit, commands appear to work as busy will not be
+							// asserted during this reset "grey area". 
+							//
+							// If you turn this on, additional code will be created to poll reset.
+							// and to work with the Teensy GLCD adapter, the blind delay for teensy is disabled
+							// and after reset goes away an additional 50ms will be added to work with the
+							// Teensy PCB. 
+							//
+							// When enabled the code is 50+ bytes larger than a dumb/blind wait and it isn't
+							// clear if reset polling works the same across all glcds as the datasheets don't
+							// fully document how it works.
+							//
+							// So for now, this is disabled, and the teensy code will get a blind delay 
+							// if the RESET_WAIT define above is turned on.
+
+
 #ifdef GLCD_READDATA_ORIG
 #undef GLCD_XCOL_SUPPORT // original readdata()/DoRead() code doesn't support x colum stff
 #endif
@@ -215,7 +247,6 @@ void glcd_Device::GotoXY(uint8_t x, uint8_t y)
 	   	this->WriteCommand(cmd, chip);	
 	}
 	
-	x = glcd_DevXval2ChipCol(x);
 	/*
 	 * NOTE: For now, the "if" below is intentionally commented out.
 	 * In order for this to work, the code must properly track
@@ -224,11 +255,12 @@ void glcd_Device::GotoXY(uint8_t x, uint8_t y)
 	 * way right now.
 	 */
 
+	x = glcd_DevXval2ChipCol(x);
+
 #ifdef GLCD_XCOL_SUPPORT
 	if(x != this->Coord.chip[chip].col)
 #endif
 	{
-		x = glcd_DevXval2ChipCol(x);
 
 #ifdef GLCD_XCOL_SUPPORT
 		this->Coord.chip[chip].col = x;
@@ -339,41 +371,45 @@ void glcd_Device::Init(uint8_t invert)
 	lcdReset();
 	lcdDelayMilliseconds(2);  
 	lcdUnReset();
-	lcdDelayMilliseconds(5);
+	lcdDelayMilliseconds(10);
+#endif
+
+#if defined(GLCD_TEENSY_PCB_RESET_WAIT) && defined(CORE_TEENSY) && !defined(GLCD_POLL_RESET)
+	/*
+	 * Delay for Teensy ks0108 PCB adapter reset signal
+	 * Reset polling is not realiable by itself so this is easier and much less code
+	 * - see long comment above where GLCD_POLL_RESET is defined
+	 */
+	lcdDelayMilliseconds(250);
 #endif
 	
+	for(uint8_t chip=0; chip < glcd_CHIP_COUNT; chip++)
+	{
+
+		/*
+		 * flush out internal state to force first GotoXY() to work
+		 */
+		this->Coord.chip[chip].page = -1;
+#ifdef GLCD_XCOL_SUPPORT
+		this->Coord.chip[chip].col = -1;
+#endif
+
+#ifdef GLCD_POLL_RESET
+		/*
+		 * Wait to make sure reset is really complete
+		 */
+		this->WaitReset(chip);
+		lcdDelayMilliseconds(50); // extra delay for *very* slow rising reset signals
+#endif
+
 #ifdef glcd_DeviceInit // this provides override for chip specific init -  mem 8 Dec 09
-	
-	for(uint8_t chip=0; chip < glcd_CHIP_COUNT; chip++){
-
-		/*
-		 * flush out internal state to force first GotoXY() to work
-		 */
-		this->Coord.chip[chip].page = -1;
-#ifdef GLCD_XCOL_SUPPORT
-		this->Coord.chip[chip].col = -1;
-#endif
-
-       	lcdDelayMilliseconds(10);  			
         glcd_DeviceInit(chip);  // call device specific initialization if defined    
-	}
 #else
-	for(uint8_t chip=0; chip < glcd_CHIP_COUNT; chip++){
-       		lcdDelayMilliseconds(10);  
-
-		/*
-		 * flush out internal state to force first GotoXY() to work
-		 */
-		this->Coord.chip[chip].page = -1;
-#ifdef GLCD_XCOL_SUPPORT
-		this->Coord.chip[chip].col = -1;
+		this->WriteCommand(LCD_ON, chip);			// display on
+		this->WriteCommand(LCD_DISP_START, chip);	// display start line = 0
 #endif
 
-		this->WriteCommand(LCD_ON, chip);			// power on
-		this->WriteCommand(LCD_DISP_START, chip);	// display start line = 0
-
 	}
-#endif // glcd_DeviceInit
 
 	/*
 	 * All hardware initialization is complete.
@@ -395,27 +431,19 @@ void glcd_Device::Init(uint8_t invert)
 #ifdef glcd_CHIP0  // if at least one chip select string
 __inline__ void glcd_Device::SelectChip(uint8_t chip)
 {  
-
-#ifdef XXX
-	if(chip == 0) lcdChipSelect(glcd_CHIP0);
-	else lcdChipSelect(glcd_CHIP1);
-#endif
-	
-
-	if(chip == 0) lcdChipSelect(glcd_CHIP0);
-#ifdef glcd_CHIP1
-	else if(chip == 1) lcdChipSelect(glcd_CHIP1);
-#endif
-#ifdef glcd_CHIP2
-	else if(chip == 2) lcdChipSelect(glcd_CHIP2);
+#ifdef glcd_CHIP4
+	if(chip == 4) lcdChipSelect(glcd_CHIP4); else
 #endif
 #ifdef glcd_CHIP3
-	else if(chip == 3) lcdChipSelect(glcd_CHIP3);
+	if(chip == 3) lcdChipSelect(glcd_CHIP3); else
 #endif
-#ifdef glcd_CHIP4
-	else if(chip == 4) lcdChipSelect(glcd_CHIP4);
+#ifdef glcd_CHIP2
+	if(chip == 2) lcdChipSelect(glcd_CHIP2); else
 #endif
-
+#ifdef glcd_CHIP1
+	if(chip == 1) lcdChipSelect(glcd_CHIP1); else
+#endif
+	lcdChipSelect(glcd_CHIP0);
 }
 #endif
 
@@ -436,6 +464,27 @@ void glcd_Device::WaitReady( uint8_t chip)
 	}
 	glcd_DevENstrobeLo(chip);
 }
+
+#ifdef GLCD_POLL_RESET
+void glcd_Device::WaitReset( uint8_t chip)
+{
+	// wait until LCD busy bit goes to zero
+	glcd_DevSelectChip(chip);
+	lcdDataDir(0x00);
+	lcdfastWrite(glcdDI, LOW);	
+	lcdfastWrite(glcdRW, HIGH);	
+//	lcdDelayNanoseconds(GLCD_tAS);
+	glcd_DevENstrobeHi(chip);
+	lcdDelayNanoseconds(GLCD_tDDR);
+
+	while(lcdIsReset())
+	{
+       ;
+	}
+	glcd_DevENstrobeLo(chip);
+}
+#endif
+
 
 #if defined(GLCD_READDATA_ORIG)
 
