@@ -12,10 +12,15 @@
  * Note: with 1 chip there is not really a need for chip select, so strap them
  * 	 to save AVR pins.
  *
- *	CS1B	- Strap to gnd
+ *	CS1B	- Strap to Gnd
  *	CS2		- Strap to Vcc
  */
 
+/****************************************************************************************
+ * Experimental file - this file has not been tested and is provided to support testing
+ * KS0713 is not officially supported in this version of the library
+ *******************************************************************************************/
+ 
 #ifndef	GLCD_PANEL_CONFIG_H
 #define GLCD_PANEL_CONFIG_H
 

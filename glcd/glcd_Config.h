@@ -1,11 +1,11 @@
 /*
  * glcd_Config.h - User specific configuration for Arduino GLCD library
  *
+ * This file is shipped to automatically configure the library for a 
+ * 128x64 ks0108 panel using the wiring described in the documentation.
+ *
  * Use this file to select the active glcd configuration file
  * Then edit the selected panel file to configure parameters for that panel.
- *
- * This file is shipped to automatically configure the library for a 
- * 128x64 ks0108 panel using the wiring described in the documenation.
  *
  * This wiring is identical to the wiring used in the previous ks0108 library.
  * For Teensy devices the wiring selected matches the wiring documented on the Teensy website.
@@ -17,19 +17,18 @@
 
  /*
   * You can select a configuration file by uncommenting one line to include the
-  * the proper configuration file.
+  * the desired configuration file.
   *
   * Select 1 and only 1 configuration file.
   *
   * The "AutoConfig" configuration files will configure the library based on a set of
-  * pre-customized configurations for each Arduino board type. 
+  * pre-customized configurations for the supported Arduino board type. 
   *
-  * These configurations match the the panel configurations
-  * and wiring diagrams in the library documenation based on the type of board selected
-  * in the Arduino IDE.
-  * These configurations are compatable with wiring used in earlier versions of the ks0108 library
+  * These configurations match the the panel configurations and wiring diagrams
+  * in the library documentation based on the type of board selected in the Arduino IDE
+  * and are compatible with wiring used in earlier versions of the ks0108 library
   *
-  * NOTE: if you have a panel that is different dimensions than the canned configuration you can either
+  * NOTE: if you have a panel that has different dimensions than the canned configuration, you can either
   * edit the supplied configuration file for that board type or create a fully custom configuration file.
   *
   * The configuration file for each board type when using auto configuration can be found in the "config"
@@ -39,40 +38,38 @@
   * {BOARDNAME} is the glcd panel type.
   *
   * So for example, the auto configuration file name for a ks0108 config file for the 
-  * standard arduino board would be: "ks0108_Arduino_Config.h"
+  * standard Arduino board would be: "ks0108_Arduino_Config.h"
   * and for a "mega" board it would be: "ks0108_Mega_Config.h"
   * 
   */
 
-
-/*
- * ALPHA TEST NOTE:
- * For now there is only a single "autoconfig" configuration file.
- * In the future there will be more for different panel types, like sed1520, ks0713, etc..
- */
-
-#include "config/ks0108_AutoConfig_Config.h" // automatically configure library for a ks0108 panel
-
 /***********************************************************************************************************
  *
  * ALPHA TEST NOTE:
- * For now, (during early alpha testing) the "real" ks0108 config files are *NOT* included or mentioned
- * here in this file.
- * We will need to make a decision on this very soon as to whether to add them here
- * And refer to them as "manual" configuration files or whether users get "full autoconfig"
- * or else drop down to "custom".
+ * The configuration mechanism used here is not finalized and feedback is welcome.
+ *  - Does the autoconfig work correctly in your environment with your boards and displays?
+ *  - Is the mechanism to make a custom configuration easy to use?
+ *  - We want your comments and suggestions for making configuration easer, particularly for novices
  *
- * The "Custom" file for the ks0108 will be shipped matching the ks0108_Arduino_Config.h
- *
- * The other custom files don't matter at this point as there is no past history or documentation for them so
- * users are kind of on their own.
+ * For now there is only a single "autoconfig" configuration file.
+ * In the future there will be more for different panel types, like sed1520, ks0713, etc..
+ * Not all custom configuration files that may be supplied in the release are included in the alpha distribution
  *
  ***********************************************************************************************************/
 
+
+ /*
+  * autoconfig includes - (comment this out if using custom configurations, see below)
+  */
+#include "config/ks0108_AutoConfig_Config.h" // automatically configure library for a ks0108 panel
+
 /*
- * For using a fully custom configuration that is not supported by one of the canned configurations,
- * edit the desired supplied custom configuration file, which is a template for the desired panel and
- * fill in or modify the configuration information to match your configuration.
+ * If you want to manually select a custom configuration you can edit the desired custom configuration
+ * to fill in or modify the configuration information to meet your needs.
+ * You can also use these files as a template to make customized copies to hold your configuration.
+ *
+ * Remember that to activate your custom configuration you uncomment the #include for the desired file
+ * and make sure that all the other config  #includes are commented (including the autoconfig above) 
  */
 
 
@@ -90,7 +87,7 @@
 
 /*
  * ALPHA TEST NOTE:
- * Should the default be "atomic" even though it will be a bit slower on standard arduino boards?
+ * Should the default be "atomic" even though it will be a bit slower on standard Arduino boards?
  */
 
 //#define GLCD_ATOMIC_IO	// Generate code that ensures all pin i/o operations are atomic
@@ -104,7 +101,7 @@
 
 /*
  * ALPHA TEST NOTE:
- * These defines will probably disapear
+ * These defines will probably disappear
  */
 
 //#define GLCD_OLD_FONTDRAW	// uncomment this define to get old font rendering (not recommended)

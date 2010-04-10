@@ -1,5 +1,5 @@
 /*
- * glcd_Arduino_Config.h - User specific configuration for Arduino GLCD library
+ * ks0108_Arduino_Config.h - User specific configuration for Arduino GLCD library
  *
  * vi:ts=4
  *
@@ -49,8 +49,10 @@
  */
 #define glcdCSEL1			14
 #define glcdCSEL2			15
-// uncomment the next line  if more than two chip select pins are needed
+// uncomment the following if more than two chip select pins are needed
 //#define glcdCSEL3			3   // third chip select line on pin 3 if needed
+//#define glcdCSEL4			2   // fourth chip select if needed
+
 #define glcdRW				16
 #define glcdDI				17
 #define glcdEN				18
@@ -61,8 +63,11 @@
 /*  Chip Select pin assignments                          */
 /*********************************************************/
 #define CS_2Chips_2Pins    // default has two chips selected using two pins
-//#define CS_3Chips_2Pins  // 3 chips selected using two pins
-//#define CS_3Chips_3Pins  // 3 chips selected using three pins
+//#define CS_2Chips_1Pin   // 2 chips selected using one CS pin (the other CS is inverted in hardware)
+//#define CS_3Chips_2Pins  // 3 chips selected using two CS pins
+//#define CS_3Chips_3Pins  // 3 chips selected using three CS pins
+//#define CS_4Chips_2Pins  // 4 chips selected using two CS pins
+//#define CS_4Chips_4Pins  // 4 chips selected using 4 CS pins
 
 /*
  * Two Chip panels using two select pins
@@ -71,6 +76,13 @@
 #ifdef CS_2Chips_2Pins
 #define glcd_CHIP0 glcdCSEL1,HIGH, glcdCSEL2,LOW
 #define glcd_CHIP1 glcdCSEL1,LOW, glcdCSEL2,HIGH
+
+/*
+ * Two Chip panels using one select pin
+ */
+ #elif defined  CS_2Chips_1Pin
+#define glcd_CHIP0 glcdCSEL1,LOW
+#define glcd_CHIP1 glcdCSEL1,HIGH
 
 /*
  * Three Chip panel using two select pins
@@ -93,6 +105,25 @@ pin assignments)
 #define glcd_CHIP2 glcdCSEL1,LOW, glcdCSEL2,LOW,glcdCSEL3,HIGH
 #endif
 
+/*
+ * Four Chip panel using four select pins
+ *
+ * Don't forget that glcdCSEL3 and glcdCSEL4 need to defined
+ */
+#elif defined CS_4Chips_4Pins
+#define glcd_CHIP0 glcdCSEL1,HIGH, glcdCSEL2,LOW, glcdCSEL3, LOW, glcdCSEL4, LOW
+#define glcd_CHIP1 glcdCSEL1,LOW, glcdCSEL2,HIGH, glcdCSEL3, LOW, glcdCSEL4, LOW
+#define glcd_CHIP2 glcdCSEL1,LOW, glcdCSEL2,LOW, glcdCSEL3, HIGH, glcdCSEL4, LOW
+#define glcd_CHIP3 glcdCSEL1,LOW, glcdCSEL2,LOW, glcdCSEL3, LOW, glcdCSEL4, HIGH
+
+/*
+ * Four Chip panel using two select pins
+ */
+#elif defined CS_4Chips_2Pins
+#define glcd_CHIP0 glcdCSEL1,LOW, glcdCSEL2,LOW
+#define glcd_CHIP1 glcdCSEL1,HIGH, glcdCSEL2,LOW
+#define glcd_CHIP2 glcdCSEL1,HIGH, glcdCSEL2,HIGH
+#define glcd_CHIP3 glcdCSEL1,LOW, glcdCSEL2,HIGH
 
 /*
  * The following defines are for panel specific low level timing.

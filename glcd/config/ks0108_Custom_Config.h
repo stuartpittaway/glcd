@@ -59,6 +59,7 @@
 #define glcdCSEL2		15
 // uncomment the next line  if more than two chip select pins are needed
 //#define glcdCSEL3		3   // third chip select line on pin 3 if needed
+//#define glcdCSEL4			2   // fourth chip select if needed
 #define glcdRW			16
 #define glcdDI			17
 #define glcdEN			18
@@ -69,8 +70,11 @@
 /*  Chip Select pin assignments                          */
 /*********************************************************/
 #define CS_2Chips_2Pins    // default has two chips selected using two pins
-//#define CS_3Chips_2Pins  // 3 chips selected using two pins
-//#define CS_3Chips_3Pins  // 3 chips selected using three pins
+//#define CS_2Chips_1Pin   // 2 chips selected using one CS pin (the other CS is inverted in hardware)
+//#define CS_3Chips_2Pins  // 3 chips selected using two CS pins
+//#define CS_3Chips_3Pins  // 3 chips selected using three CS pins
+//#define CS_4Chips_2Pins  // 4 chips selected using two CS pins
+//#define CS_4Chips_4Pins  // 4 chips selected using 4 CS pins
 
 /*
  * Two Chip panels using two select pins

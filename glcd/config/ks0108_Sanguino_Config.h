@@ -28,7 +28,7 @@
 #define CHIP_WIDTH     64  // pixels per chip 
 #define CHIP_HEIGHT    64  // pixels per chip 
 
-// calculate number of chips & round up if width is not evenly divisable
+// calculate number of chips & round up if width is not evenly divisible
 #define glcd_CHIP_COUNT ((DISPLAY_WIDTH + CHIP_WIDTH - 1)  / CHIP_WIDTH)
 
 /*********************************************************/
