@@ -37,21 +37,21 @@
 
 #define glcd_ConfigName "Teensy++ ks0108"   // define name for configuration
 
-#define glcdCSEL1               0
-#define glcdCSEL2               1 
-#define glcdRW                  2
-#define glcdDI                  3
-#define glcdEN                  4
-#define glcdRES		            5	// Reset Bit 
+#define glcdCSEL1               PIN_E6 
+#define glcdCSEL2               PIN_E7
+#define glcdRW                  PIN_E0
+#define glcdDI                  PIN_E1
+#define glcdEN                  PIN_D7
+//#define glcdRES                 PIN_D5	// Reset Bit
 
-#define glcdData0Pin            10
-#define glcdData1Pin            11
-#define glcdData2Pin            12
-#define glcdData3Pin            13
-#define glcdData4Pin            14
-#define glcdData5Pin            15
-#define glcdData6Pin            16
-#define glcdData7Pin            17
+#define glcdData0Pin            PIN_C0
+#define glcdData1Pin            PIN_C1
+#define glcdData2Pin            PIN_C2
+#define glcdData3Pin            PIN_C3
+#define glcdData4Pin            PIN_C4
+#define glcdData5Pin            PIN_C5
+#define glcdData6Pin            PIN_C6
+#define glcdData7Pin            PIN_C7
 
 #warning "KS0108 using pins for teensy++"
 
@@ -62,21 +62,21 @@
 
 #define glcd_ConfigName "Teensy ks0108"   // define name for configuration
 
-#define glcdCSEL1               12	// normal connection for control signals
-#define glcdCSEL2               13
-#define glcdRW                  14
-#define glcdDI                  15
-#define glcdEN                  16
-#define glcdRES		            17	// Reset Bit 
+#define glcdCSEL1               PIN_D2	// normal connection for control signals
+#define glcdCSEL2               PIN_D3
+#define glcdRW                  PIN_D1
+#define glcdDI                  PIN_D0
+#define glcdEN                  PIN_C6
+//#define glcdRES                 PIN_F6	// Reset Bit 
 
-#define glcdData0Pin            0
-#define glcdData1Pin            1
-#define glcdData2Pin            2
-#define glcdData3Pin            3
-#define glcdData4Pin            5
-#define glcdData5Pin            6
-#define glcdData6Pin            7
-#define glcdData7Pin            8
+#define glcdData0Pin            PIN_B0
+#define glcdData1Pin            PIN_B1
+#define glcdData2Pin            PIN_B2
+#define glcdData3Pin            PIN_B3
+#define glcdData4Pin            PIN_B4
+#define glcdData5Pin            PIN_B5
+#define glcdData6Pin            PIN_B6
+#define glcdData7Pin            PIN_B7
 
 #warning "KS0108 using pins for teensy 2.0"
 #endif

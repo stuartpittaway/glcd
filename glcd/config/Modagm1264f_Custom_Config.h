@@ -1,7 +1,5 @@
 /*
- * Modagm1264f_Config.h - User specific configuration for Arduino GLCD library
- *
- * vi:ts=4
+ * Modagm1264f_Custom_Config.h - User specific configuration for Arduino GLCD library
  *
  * Use this file to set io pins and LCD panel parameters
  *
@@ -110,9 +108,9 @@
  */
 
 
-#define glcdDI			    14
-#define glcdRW			    2
-#define glcdEN			    3
+#define glcdDI			14
+#define glcdRW			2
+#define glcdEN			3
 
 #define glcdData0Pin		PIN_D4
 #define glcdData1Pin		0xd5
@@ -123,10 +121,10 @@
 #define glcdData6Pin		10
 #define glcdData7Pin		11
 
-#define glcdCSEL1		    12
-#define glcdCSEL2		    13
+#define glcdCSEL1		12
+#define glcdCSEL2		13
 
-#define glcdRES 		    15
+#define glcdRES			15
 
 // bitmask to sequence chip select 
 // you can swap around the elements below if your display is reversed
@@ -149,7 +147,7 @@
 #define GLCD_tDDR	320	/* Data Delay time (E high to valid read data) 		*/
 #define GLCD_tAS	140	/* Address setup time (ctrl line changes to E high)	*/
 #define GLCD_tDSW	200	/* Data setup time (data lines setup to dropping E)	*/
-#define GLCD_tWH    450	/* E hi level width (minimum E hi pulse width)		*/
+#define GLCD_tWH	450	/* E hi level width (minimum E hi pulse width)		*/
 #define GLCD_tWL	450	/* E lo level width (minimum E lo pulse width)		*/
 
 

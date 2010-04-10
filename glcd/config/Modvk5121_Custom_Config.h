@@ -1,7 +1,5 @@
 /*
- * Modvk5121_Config.h - User specific configuration for Arduino GLCD library
- *
- * vi:ts=4
+ * Modvk5121_Custom_Config.h - User specific Custom configuration for Arduino GLCD library
  *
  * Use this file to set io pins and LCD panel parameters
  *
@@ -15,7 +13,7 @@
  *	The backlight can be hardwired on, off, or can even be controlled by a AVR Pin.
  *
  *	Pixels are slightly taller than they are wide (0.42mm x 0.53mm) so that things
- *  like circles may look slightly squashed.
+ *	like circles may look slightly squashed.
  *
  *	The datasheet can be downloaded from here:
  *	http://www.carriernetglobal.com/Graphic/VK5121.pdf
@@ -119,23 +117,23 @@
 #define glcdData6Pin	PIN_D7
 #define glcdData7Pin	PIN_D6
 
-#define glcdRW			PIN_D5
+#define glcdRW		PIN_D5
 
-#define glcdE1			PIN_D4
+#define glcdE1		PIN_D4
 
-#define glcdDI			PIN_D3	// A0 line
+#define glcdDI		PIN_D3	// A0 line
 
-#define glcdE2			PIN_D2
+#define glcdE2		PIN_D2
 
 
 // defines for panel specific timing 
 #define GLCD_tDDR	290	/* tACC6: Data Delay time (E high to valid read data) 			*/
 #define GLCD_tAS	20	/* tAW6:  Address setup time (ctrl line changes to E high)		*/
 #define GLCD_tDSW	200	/* tDS6:  Data setup time (Write data lines setup to dropping E)*/
-#define GLCD_tWH    450	/* tEW:   E hi level width (minimum E hi pulse width)			*/ 
-						/* NOTE: this probably violate tCYC6, it needs to be tested in	*/
-						/* an environment with full byte accesses  to see if it matters	*/
-						/* If it doesn't work, set it back to 450						*/
+#define GLCD_tWH	450	/* tEW:   E hi level width (minimum E hi pulse width)			*/ 
+				/* NOTE: this probably violate tCYC6, it needs to be tested in	*/
+				/* an environment with full byte accesses  to see if it matters	*/
+				/* If it doesn't work, set it back to 450						*/
 #define GLCD_tWL	450	/* E lo level width (minimum E lo pulse width)					*/
 
 

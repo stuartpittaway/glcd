@@ -1,7 +1,6 @@
 /*
- * sed1520_Config.h - User specific configuration for Arduino GLCD library
+ * sed1520_Custom_Config.h - User specific configuration for Arduino GLCD library
  *
- * vi:ts=4
  *
  * Use this file to set io pins and LCD panel parameters for 
  *	sed1520 based modules. This includes modules like VK5121
@@ -14,7 +13,7 @@
 /*
  * define name for configuration
  */
-#define glcd_ConfigName "Generic-sed1520"
+#define glcd_ConfigName "Custom-sed1520"
 
 /*********************************************************/
 /*  Configuration for LCD panel specific configuration   */
@@ -31,8 +30,11 @@
 /*********************************************************/
 
 /*
- * Bill's avrio pin assignments 
- * for the Modern Device BBB "arduino" breadboard.project
+ * Pins can be assigned using arduino pin numbers 0-n
+ * Pins can also be assigned using PIN_Pb 
+ *		where P is port A-L and b is bit 0-7
+ *		Example: port D pin 3 is PIN_D3
+ *
  */
 
 #define glcdData0Pin	PIN_B5
@@ -44,13 +46,13 @@
 #define glcdData6Pin	PIN_D7
 #define glcdData7Pin	PIN_D6
 
-#define glcdRW			PIN_D5
+#define glcdRW		PIN_D5
 
-#define glcdE1			PIN_D4
+#define glcdE1		PIN_D4
 
-#define glcdDI			PIN_D3	// A0 line
+#define glcdDI		PIN_D3	// A0 line
 
-#define glcdE2			PIN_D2
+#define glcdE2		PIN_D2
 
 
 // defines for panel specific timing 
@@ -58,7 +60,7 @@
 #define GLCD_tDDR	320	/* tACC6: Data Delay time (E high to valid read data) 			*/
 #define GLCD_tAS	20	/* tAW6:  Address setup time (ctrl line changes to E high)		*/
 #define GLCD_tDSW	200	/* tDS6:  Data setup time (Write data lines setup to dropping E)*/
-#define GLCD_tWH    450	/* tEW:   E hi level width (minimum E hi pulse width)			*/ 
+#define GLCD_tWH	450	/* tEW:   E hi level width (minimum E hi pulse width)			*/ 
 #define GLCD_tWL	450	/* E lo level width (minimum E lo pulse width)					*/
 
 
