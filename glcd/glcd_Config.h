@@ -74,7 +74,7 @@
 
 
 //#include "config/ks0108_Custom_Config.h"	// generic ks0108 configuration
-//#include "config/sed1520_Custom_Config.h"	// generic sed1520 configuration
+
 //#include "config/Modadm12864f_Custom_Config.h" // configuration for BGMicro 128x64 display with pinout diagram
 //#include "config/Modvk5121_Custom_Config.h"    // configuration for vk5121 122x32 display with pinout diagram
 

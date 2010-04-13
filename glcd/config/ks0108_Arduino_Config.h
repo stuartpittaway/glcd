@@ -1,8 +1,6 @@
 /*
  * ks0108_Arduino_Config.h - User specific configuration for Arduino GLCD library
  *
- * vi:ts=4
- *
  * Use this file to set io pins and LCD panel parameters
  * This version is for a standard ks0108 display
  * connected using the default Arduino wiring
@@ -47,15 +45,15 @@
 /* Arduino pins used for Commands
  * default assignment uses the first five analog pins
  */
-#define glcdCSEL1			14
-#define glcdCSEL2			15
+#define glcdCSEL1		14
+#define glcdCSEL2		15
 // uncomment the following if more than two chip select pins are needed
-//#define glcdCSEL3			3   // third chip select line on pin 3 if needed
-//#define glcdCSEL4			2   // fourth chip select if needed
+//#define glcdCSEL3		3   // third chip select line on pin 3 if needed
+//#define glcdCSEL4		2   // fourth chip select if needed
 
-#define glcdRW				16
-#define glcdDI				17
-#define glcdEN				18
+#define glcdRW			16
+#define glcdDI			17
+#define glcdEN			18
 // Reset Bit  - uncomment the next line if reset is connected to an output pin
 //#define glcdRES	        19	// Reset Bit
 
