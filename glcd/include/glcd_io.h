@@ -29,6 +29,15 @@
 #define GLCD_IO_H
 
 #include "include/arduino_io.h"    // these macros map arduino pins
+
+/*
+ * Must set AVRIO modes before including avrio
+ */
+
+#ifdef GLCD_ATOMIC_IO
+#define AVRIO_NO4BIT // for now disable nibble mode
+#endif
+
 #include "include/avrio.h"         // these macros do direct port io    
 
  
@@ -50,9 +59,6 @@
 #define OUTPUT 1
 #define lcdPinMode(pin, mode)  avrio_PinMode(pin, mode) 
 
-#ifdef GLCD_ATOMIC_IO
-#define AVRIO_NO4BIT // for now disable nibble mode
-#endif
 
 
 /*
