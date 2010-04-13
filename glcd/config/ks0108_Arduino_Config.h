@@ -101,7 +101,6 @@ pin assignments)
 #define glcd_CHIP0 glcdCSEL1,HIGH, glcdCSEL2,LOW,glcdCSEL3,LOW
 #define glcd_CHIP1 glcdCSEL1,LOW, glcdCSEL2,HIGH,glcdCSEL3,LOW
 #define glcd_CHIP2 glcdCSEL1,LOW, glcdCSEL2,LOW,glcdCSEL3,HIGH
-#endif
 
 /*
  * Four Chip panel using four select pins
@@ -122,7 +121,7 @@ pin assignments)
 #define glcd_CHIP1 glcdCSEL1,HIGH, glcdCSEL2,LOW
 #define glcd_CHIP2 glcdCSEL1,HIGH, glcdCSEL2,HIGH
 #define glcd_CHIP3 glcdCSEL1,LOW, glcdCSEL2,HIGH
-
+#endif
 /*
  * The following defines are for panel specific low level timing.
  *
