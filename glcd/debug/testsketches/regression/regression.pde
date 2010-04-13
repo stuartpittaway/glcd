@@ -26,8 +26,8 @@ setup()
 	/*
 	 * create/restore full display for "default" text area.
 	 */
-  	GLCD.Text.DefineArea(textAreaFULL);
-  	GLCD.Text.SelectFont(System5x7, BLACK);
+  	GLCD.DefineArea(textAreaFULL);
+  	GLCD.SelectFont(System5x7, BLACK);
 	GLCD.ClearScreen();
 }
 
