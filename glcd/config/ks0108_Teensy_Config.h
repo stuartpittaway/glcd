@@ -43,7 +43,9 @@
 #if defined(__AVR_AT90USB646__) || defined(__AVR_AT90USB1286__) // Teensy++
 
 #define glcd_ConfigName "Teensy++ ks0108"   // define name for configuration
-
+/*
+ *                         Arduino pin    AVR pin
+ */ 
 #define glcdCSEL1               18      // PIN_E6 
 #define glcdCSEL2               19      // PIN_E7
 #define glcdRW                  8       // PIN_E0
@@ -68,7 +70,9 @@
 #elif defined(__AVR_ATmega32U4__)   // Teensy 2.0
 
 #define glcd_ConfigName "Teensy ks0108"   // define name for configuration
-
+/*
+ *                         Arduino pin    AVR pin
+ */ 
 #define glcdCSEL1               7        // PIN_D2	// normal connection for control signals
 #define glcdCSEL2               8        // PIN_D3
 #define glcdRW                  6        // PIN_D1
@@ -124,6 +128,25 @@ pin assignments)
 #define glcd_CHIP2 glcdCSEL1,LOW, glcdCSEL2,LOW,glcdCSEL3,HIGH
 #endif
 
+/*
+ * Four Chip panel using four select pins
+ *
+ * Don't forget that glcdCSEL3 and glcdCSEL4 need to be defined
+ */
+#elif defined CS_4Chips_4Pins
+#define glcd_CHIP0 glcdCSEL1,HIGH, glcdCSEL2,LOW, glcdCSEL3, LOW, glcdCSEL4, LOW
+#define glcd_CHIP1 glcdCSEL1,LOW, glcdCSEL2,HIGH, glcdCSEL3, LOW, glcdCSEL4, LOW
+#define glcd_CHIP2 glcdCSEL1,LOW, glcdCSEL2,LOW, glcdCSEL3, HIGH, glcdCSEL4, LOW
+#define glcd_CHIP3 glcdCSEL1,LOW, glcdCSEL2,LOW, glcdCSEL3, LOW, glcdCSEL4, HIGH
+
+/*
+ * Four Chip panel using two select pins
+ */
+#elif defined CS_4Chips_2Pins
+#define glcd_CHIP0 glcdCSEL1,LOW, glcdCSEL2,LOW
+#define glcd_CHIP1 glcdCSEL1,HIGH, glcdCSEL2,LOW
+#define glcd_CHIP2 glcdCSEL1,HIGH, glcdCSEL2,HIGH
+#define glcd_CHIP3 glcdCSEL1,LOW, glcdCSEL2,HIGH
 
 /*
  * The following defines are for panel specific low level timing.
