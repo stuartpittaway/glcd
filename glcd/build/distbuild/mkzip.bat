@@ -193,7 +193,7 @@ if defined MYDATE (
 REM #
 REM # name of manifest file
 REM #
-set GLCDMANIFEST=%GLCDDISTDIR%\manifest.txt
+set GLCDMANIFEST=%GLCDDISTDIR%\SVNmanifest.txt
 
 REM ##################################################################
 REM # Now start to actually do something
@@ -229,20 +229,6 @@ goto done
 echo Working tree is ready for processing
 pause
 
-echo Creating SVN Manifest file
-echo Distribution files created %DATE% %TIME% >"%GLCDMANIFEST%"
-echo =====================================================================>>"%GLCDMANIFEST%"
-cd "%GLCDDISTDIR%"
-%SVNINFO% >>"%GLCDMANIFEST%"
-echo =====================================================================>>"%GLCDMANIFEST%"
-%SVNLIST% >>"%GLCDMANIFEST%"
-cd %PWD%
-
-echo Removing SVN control files 
-cd ""%GLCDDISTDIR%""
-for /D /r %%G in (.svn) DO rmdir /S /Q %%G 
-cd %PWD%
-
 REM # Must build doxygen docs before build directory is removed
 echo Building Doxygen Documents
 echo ======== Building Doxygen Documents >> "%LOGFILE%"
@@ -257,12 +243,54 @@ rmdir /S /Q debug
 rmdir /S /Q build
 cd %PWD%
 
+echo Creating SVN Manifest file
+echo Distribution files created %DATE% %TIME% >"%GLCDMANIFEST%"
+echo =====================================================================>>"%GLCDMANIFEST%"
+cd "%GLCDDISTDIR%"
+
+REM for time being, no full SVN info as it shows the SVN repository information.
+REM %SVNINFO% >>"%GLCDMANIFEST%"
+REM #
+REM # the goobldeygook below is to essentially to simulate a simple %SVNINFO%|grep Revision
+REM # sad that microsoft sucks so bad that is so complicated.
+REM
+for /f "usebackq tokens=1,2* delims=:" %%i in (`%SVNINFO%`) do (
+	if /i %%i==Revision (
+	  echo %%i %%j >> "%GLCDMANIFEST%"
+	  echo =====================================================================>>"%GLCDMANIFEST%"
+	)
+)
+
+
+REM #
+REM # Now create a list of all the files and their svn revision
+REM # unfortunately even though we removed the debug and build directories
+REM # svn knows about them and will report them in this list.
+REM #
+
+%SVNLIST% >>"%GLCDMANIFEST%"
+cd %PWD%
+
+REM #
+REM # Note: the stupid for /D command creates every combination
+REM # of directory not just ones that are real/exist
+REM # so we have to check to see if it is real directory.
+REM # MSFT is so stupid.....
+REM #
+
+echo Removing SVN control files 
+cd ""%GLCDDISTDIR%""
+for /D /r %%G in (.svn) DO (
+	if exist %%G (
+		rmdir /S /Q %%G
+	)
+)
+cd %PWD%
+
 
 echo Creating Zip file
 echo ======== Creating Zip file from %GLCDDISTDIR%>> "%LOGFILE%"
 if exist "%GLCDZIPNAME%" erase /F "%GLCDZIPNAME%"
-echo About to create zip file from %GLCDDISTDIR%
-pause
 %ZIPCMD% %GLCDZIPNAME% "%GLCDDISTDIR%" >> "%LOGFILE%"
 
 echo Zip file %GLCDZIPNAME% created
