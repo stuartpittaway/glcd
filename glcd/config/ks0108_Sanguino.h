@@ -33,7 +33,7 @@
 #define glcdCSEL3    29   // third chip select if needed
 #endif
 
-#ifdef CS_4_CHIPS_4Pins
+#ifdef CS_4Chips_4Pins
 #define glcdCSEL4    30   // fourth chip select if needed
 #endif
 

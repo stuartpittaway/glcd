@@ -44,7 +44,7 @@
 //#define glcdCSEL3    ?   // third chip select if needed
 #endif
 
-#ifdef CS_4_CHIPS_4Pins
+#ifdef CS_4Chips_4Pins
 #error Missing glcdCSEL4 define
 //#define glcdCSEL4    ?   // fourth chip select if needed
 #endif
@@ -77,12 +77,12 @@
 #define glcdEN          9        // PIN_C6
 //#define glcdRES         17        //PIN_F6    // Reset Bit 
 
-#ifdef CS_3Chips_3Pins
+#if defined CS_3Chips_3Pins  || defined(CS_4Chips_4Pins)
 #error Missing glcdCSEL3 define
 //#define glcdCSEL3    ?   // third chip select if needed
 #endif
 
-#ifdef CS_4_CHIPS_4Pins
+#ifdef CS_4Chips_4Pins
 #error Missing glcdCSEL4 define
 //#define glcdCSEL4    ?   // fourth chip select if needed
 #endif
