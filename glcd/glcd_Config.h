@@ -51,7 +51,7 @@
  *  - Is the mechanism to make a custom configuration easy to use?
  *  - We want your comments and suggestions for making configuration easer, particularly for novices
  *
- * For now there is only a single "autoconfig" configuration file.
+ * Additional "autoconfig" files can be created, there is an example for 192x64 panels in this distribution.
  * In the future there will be more for different panel types, like sed1520, ks0713, etc..
  * Not all custom configuration files that may be supplied in the release are included in the alpha distribution
  *
@@ -65,11 +65,11 @@
 //#include "config/ks0108-192x64_panel.h"   // automatically configure library for a ks0108 192x64 panel
 
 /*
- * If you want to manually select a custom configuration you can edit the desired custom configuration
+ * If you want to explicitly select a manual configuration, you can edit the desired manual configuration
  * to fill in or modify the configuration information to meet your needs.
- * You can also use these files as a template to make customized copies to hold your configuration.
+ * You can also use these files as a template to make customized copies to hold specific configurations.
  *
- * Remember that to activate your custom configuration you uncomment the #include for the desired file
+ * Remember that to activate your manual configuration you uncomment the #include for the desired file
  * and make sure that all the other config  #includes are commented (including the autoconfig above) 
  */
 

@@ -80,40 +80,44 @@
 //#define CS_4Chips_4Pins  // 4 chips selected using 4 CS pins
 
 /*
+ * Changing the CHIP_SELECTED define from HIGH to LOW swaps chips on two chip panels 
+ * Making this change inverts the chip select lines (from active HIGH to active LOW) 
+ */  
+#define CHIP_SELECTED     HIGH   // Change this to LOW to invert chip selects 
+#define CHIP_UNSELECTED  (!CHIP_SELECTED) // don't change this
+ 
+/*
  * Two Chip panels using two select pins
  */
-
 #ifdef CS_2Chips_2Pins
-#define glcd_CHIP0 glcdCSEL1,HIGH, glcdCSEL2,LOW
-#define glcd_CHIP1 glcdCSEL1,LOW, glcdCSEL2,HIGH
+#define glcd_CHIP0 glcdCSEL1,CHIP_SELECTED,   glcdCSEL2,CHIP_UNSELECTED
+#define glcd_CHIP1 glcdCSEL1,CHIP_UNSELECTED, glcdCSEL2,CHIP_SELECTED
 
 /*
  * Two Chip panels using one select pin
  */
- #elif defined  CS_2Chips_1Pin
-#define glcd_CHIP0 glcdCSEL1,LOW
-#define glcd_CHIP1 glcdCSEL1,HIGH
+#elif defined  CS_2Chips_1Pin
+#define glcd_CHIP0 glcdCSEL1,CHIP_UNSELECTED
+#define glcd_CHIP1 glcdCSEL1,CHIP_SELECTED
 
 /*
  * Three Chip panel using two select pins
  */
 #elif defined CS_3Chips_2Pins
-#define glcd_CHIP0 glcdCSEL1,LOW, glcdCSEL2,HIGH
-#define glcd_CHIP1 glcdCSEL1,HIGH, glcdCSEL2,LOW
-#define glcd_CHIP2 glcdCSEL1,LOW, glcdCSEL2,LOW
+#define glcd_CHIP0 glcdCSEL1,CHIP_UNSELECTED, glcdCSEL2,CHIP_SELECTED
+#define glcd_CHIP1 glcdCSEL1,CHIP_SELECTED,   glcdCSEL2,CHIP_UNSELECTED
+#define glcd_CHIP2 glcdCSEL1,CHIP_UNSELECTED, glcdCSEL2,CHIP_UNSELECTED
 
- /*
+/*
  * example of three Chip panel using three select pins
  * in this example, the chip is selected by setting a corresponding pin LOW
  *
- * Don't forget that glcdCSEL3 needs to defined (uncommented in the command
-pin assignments)
+ * Don't forget that glcdCSEL3 needs to defined (uncommented in the command pin assignments)
  */
 #elif defined CS_3Chips_3Pins
-#define glcd_CHIP0 glcdCSEL1,HIGH, glcdCSEL2,LOW,glcdCSEL3,LOW
-#define glcd_CHIP1 glcdCSEL1,LOW, glcdCSEL2,HIGH,glcdCSEL3,LOW
-#define glcd_CHIP2 glcdCSEL1,LOW, glcdCSEL2,LOW,glcdCSEL3,HIGH
-#endif
+#define glcd_CHIP0 glcdCSEL1,CHIP_SELECTED,   glcdCSEL2,CHIP_UNSELECTED, glcdCSEL3,CHIP_UNSELECTED
+#define glcd_CHIP1 glcdCSEL1,CHIP_UNSELECTED, glcdCSEL2,CHIP_SELECTED,   glcdCSEL3,CHIP_UNSELECTED
+#define glcd_CHIP2 glcdCSEL1,CHIP_UNSELECTED, glcdCSEL2,CHIP_UNSELECTED, glcdCSEL3,CHIP_SELECTED
 
 /*
  * Four Chip panel using four select pins
@@ -121,19 +125,20 @@ pin assignments)
  * Don't forget that glcdCSEL3 and glcdCSEL4 need to defined
  */
 #elif defined CS_4Chips_4Pins
-#define glcd_CHIP0 glcdCSEL1,HIGH, glcdCSEL2,LOW, glcdCSEL3, LOW, glcdCSEL4, LOW
-#define glcd_CHIP1 glcdCSEL1,LOW, glcdCSEL2,HIGH, glcdCSEL3, LOW, glcdCSEL4, LOW
-#define glcd_CHIP2 glcdCSEL1,LOW, glcdCSEL2,LOW, glcdCSEL3, HIGH, glcdCSEL4, LOW
-#define glcd_CHIP3 glcdCSEL1,LOW, glcdCSEL2,LOW, glcdCSEL3, LOW, glcdCSEL4, HIGH
+#define glcd_CHIP0 glcdCSEL1,CHIP_SELECTED,   glcdCSEL2,CHIP_UNSELECTED, glcdCSEL3,CHIP_UNSELECTED, glcdCSEL4,CHIP_UNSELECTED
+#define glcd_CHIP1 glcdCSEL1,CHIP_UNSELECTED, glcdCSEL2,CHIP_SELECTED,   glcdCSEL3,CHIP_UNSELECTED, glcdCSEL4,CHIP_UNSELECTED
+#define glcd_CHIP2 glcdCSEL1,CHIP_UNSELECTED, glcdCSEL2,CHIP_UNSELECTED, glcdCSEL3,CHIP_SELECTED,   glcdCSEL4,CHIP_UNSELECTED
+#define glcd_CHIP3 glcdCSEL1,CHIP_UNSELECTED, glcdCSEL2,CHIP_UNSELECTED, glcdCSEL3,CHIP_UNSELECTED, glcdCSEL4,CHIP_SELECTED
 
 /*
  * Four Chip panel using two select pins
  */
 #elif defined CS_4Chips_2Pins
-#define glcd_CHIP0 glcdCSEL1,LOW, glcdCSEL2,LOW
-#define glcd_CHIP1 glcdCSEL1,HIGH, glcdCSEL2,LOW
-#define glcd_CHIP2 glcdCSEL1,HIGH, glcdCSEL2,HIGH
-#define glcd_CHIP3 glcdCSEL1,LOW, glcdCSEL2,HIGH
+#define glcd_CHIP0 glcdCSEL1,CHIP_UNSELECTED, glcdCSEL2,CHIP_UNSELECTED
+#define glcd_CHIP1 glcdCSEL1,CHIP_SELECTED,   glcdCSEL2,CHIP_UNSELECTED
+#define glcd_CHIP2 glcdCSEL1,CHIP_SELECTED,   glcdCSEL2,CHIP_SELECTED
+#define glcd_CHIP3 glcdCSEL1,CHIP_UNSELECTED, glcdCSEL2,CHIP_SELECTED
+#endif
 
 /*
  * The following defines are for panel specific low level timing.

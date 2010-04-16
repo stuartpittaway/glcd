@@ -32,14 +32,14 @@
 /*
  *                         Arduino pin    AVR pin
  */ 
-#define glcdCSEL1	18      // PIN_E6 
+#define glcdCSEL1       18      // PIN_E6 
 #define glcdCSEL2       19      // PIN_E7
 #define glcdRW          8       // PIN_E0
 #define glcdDI          9       // PIN_E1
 #define glcdEN          7       // PIN_D7
 //#define glcdRES         5       // PIN_D5
 
-#ifdef CS_3Chips_3Pins
+#if defined CS_3Chips_3Pins  || defined(CS_4Chips_4Pins)
 #error Missing glcdCSEL3 define
 //#define glcdCSEL3	?   // third chip select if needed
 #endif

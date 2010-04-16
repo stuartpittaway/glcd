@@ -28,14 +28,12 @@
 #define glcdDI		36	// D/I Bit 
 #define glcdEN		37	// EN Bit
 
-#ifdef CS_3Chips_3Pins
-#error Missing glcdCSEL3 define
-//#define glcdCSEL3	?   // third chip select if needed
+#if defined CS_3Chips_3Pins  || defined(CS_4Chips_4Pins)
+#define glcdCSEL3	32   // third chip select if needed
 #endif
 
 #ifdef CS_4_CHIPS_4Pins
-#error Missing glcdCSEL4 define
-//#define glcdCSEL4	?   // fourth chip select if needed
+#define glcdCSEL4	31   // fourth chip select if needed
 #endif
 
 /*
