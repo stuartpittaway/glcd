@@ -10,7 +10,7 @@
  *
 */
 
-#ifndef	GLCD_PIN_CONFIG_H
+#ifndef    GLCD_PIN_CONFIG_H
 #define GLCD_PIN_CONFIG_H
 
 /**********************************************************/
@@ -20,8 +20,8 @@
 /*
  * Pins can be assigned using arduino pin numbers 0-n
  * Pins can also be assigned using PIN_Pb 
- *		where P is port A-L and b is bit 0-7
- *		Example: port D pin 3 is PIN_D3
+ *    where P is port A-L and b is bit 0-7
+ *    Example: port D pin 3 is PIN_D3
  *
  */
 
@@ -30,7 +30,7 @@
 
 #define glcd_PinConfigName "ks0108-Teensy++"   // define name for configuration
 /*
- *                         Arduino pin    AVR pin
+ *                Arduino pin    AVR pin
  */ 
 #define glcdCSEL1       18      // PIN_E6 
 #define glcdCSEL2       19      // PIN_E7
@@ -41,12 +41,12 @@
 
 #if defined CS_3Chips_3Pins  || defined(CS_4Chips_4Pins)
 #error Missing glcdCSEL3 define
-//#define glcdCSEL3	?   // third chip select if needed
+//#define glcdCSEL3    ?   // third chip select if needed
 #endif
 
 #ifdef CS_4_CHIPS_4Pins
 #error Missing glcdCSEL4 define
-//#define glcdCSEL4	?   // fourth chip select if needed
+//#define glcdCSEL4    ?   // fourth chip select if needed
 #endif
 
 
@@ -70,21 +70,21 @@
 /*
  *                         Arduino pin    AVR pin
  */ 
-#define glcdCSEL1       7        // PIN_D2	// normal connection for control signals
+#define glcdCSEL1       7        // PIN_D2    // normal connection for control signals
 #define glcdCSEL2       8        // PIN_D3
 #define glcdRW          6        // PIN_D1
 #define glcdDI          5        // PIN_D0
 #define glcdEN          9        // PIN_C6
-//#define glcdRES         17        //PIN_F6	// Reset Bit 
+//#define glcdRES         17        //PIN_F6    // Reset Bit 
 
 #ifdef CS_3Chips_3Pins
 #error Missing glcdCSEL3 define
-//#define glcdCSEL3	?   // third chip select if needed
+//#define glcdCSEL3    ?   // third chip select if needed
 #endif
 
 #ifdef CS_4_CHIPS_4Pins
 #error Missing glcdCSEL4 define
-//#define glcdCSEL4	?   // fourth chip select if needed
+//#define glcdCSEL4    ?   // fourth chip select if needed
 #endif
 
 #define glcdData0Pin    0        // PIN_B0

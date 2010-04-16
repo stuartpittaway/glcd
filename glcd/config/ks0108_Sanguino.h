@@ -8,7 +8,7 @@
  *
 */
 
-#ifndef	GLCD_PIN_CONFIG_H
+#ifndef GLCD_PIN_CONFIG_H
 #define GLCD_PIN_CONFIG_H
 
 /*
@@ -23,32 +23,32 @@
  * pins used for Commands
  */
 
-#define glcdCSEL1	24 	// CS1 Bit   // swap pin assignments with CSEL2 if left/right image is reversed
-#define glcdCSEL2	25 	// CS2 Bit
-#define glcdRW		26 	// R/W Bit
-#define glcdDI		27 	// D/I Bit 
-#define glcdEN		28 	// EN Bit
+#define glcdCSEL1    24     // CS1 Bit   // swap pin assignments with CSEL2 if left/right image is reversed
+#define glcdCSEL2    25     // CS2 Bit
+#define glcdRW       26     // R/W Bit
+#define glcdDI       27     // D/I Bit 
+#define glcdEN       28     // EN Bit
 
 #if defined CS_3Chips_3Pins  || defined(CS_4Chips_4Pins)
-#define glcdCSEL3	29   // third chip select if needed
+#define glcdCSEL3    29   // third chip select if needed
 #endif
 
 #ifdef CS_4_CHIPS_4Pins
-#define glcdCSEL4	30   // fourth chip select if needed
+#define glcdCSEL4    30   // fourth chip select if needed
 #endif
 
 /*
  * Data pin definitions
  * This version uses pins 0-7 for LCD Data 
  */
-#define glcdData0Pin	0
-#define glcdData1Pin	1
-#define glcdData2Pin	2
-#define glcdData3Pin	3
-#define glcdData4Pin	4
-#define glcdData5Pin	5
-#define glcdData6Pin	6
-#define glcdData7Pin	7
+#define glcdData0Pin    0
+#define glcdData1Pin    1
+#define glcdData2Pin    2
+#define glcdData3Pin    3
+#define glcdData4Pin    4
+#define glcdData5Pin    5
+#define glcdData6Pin    6
+#define glcdData7Pin    7
 
 
 #endif //GLCD_PANEL_CONFIG_H

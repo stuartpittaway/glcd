@@ -7,7 +7,7 @@
  *
 */
 
-#ifndef	GLCD_PANEL_CONFIG_H
+#ifndef GLCD_PANEL_CONFIG_H
 #define GLCD_PANEL_CONFIG_H
 
 /*
@@ -37,37 +37,37 @@
 /*
  * Pins can be assigned using arduino pin numbers 0-n
  * Pins can also be assigned using PIN_Pb 
- *		where P is port A-L and b is bit 0-7
- *		Example: port D pin 3 is PIN_D3
+ *   where P is port A-L and b is bit 0-7
+ *   Example: port D pin 3 is PIN_D3
  *
  */
 
 
 /* Data pin definitions
  */
-#define glcdData0Pin		8
-#define glcdData1Pin		9
-#define glcdData2Pin		10
-#define glcdData3Pin		11
-#define glcdData4Pin		4
-#define glcdData5Pin		5
-#define glcdData6Pin		6
-#define glcdData7Pin		7
+#define glcdData0Pin        8
+#define glcdData1Pin        9
+#define glcdData2Pin        10
+#define glcdData3Pin        11
+#define glcdData4Pin        4
+#define glcdData5Pin        5
+#define glcdData6Pin        6
+#define glcdData7Pin        7
 
 /* Arduino pins used for Commands
  * default assignment uses the first five analog pins
  */
-#define glcdCSEL1		14
-#define glcdCSEL2		15
+#define glcdCSEL1        14
+#define glcdCSEL2        15
 // uncomment the following if more than two chip select pins are needed
-//#define glcdCSEL3		3   // third chip select line on pin 3 if needed
-//#define glcdCSEL4		2   // fourth chip select if needed
+//#define glcdCSEL3        3   // third chip select line on pin 3 if needed
+//#define glcdCSEL4        2   // fourth chip select if needed
 
-#define glcdRW			16
-#define glcdDI			17
-#define glcdEN			18
+#define glcdRW            16
+#define glcdDI            17
+#define glcdEN            18
 // Reset Bit  - uncomment the next line if reset is connected to an output pin
-//#define glcdRES	        19	// Reset Bit
+//#define glcdRES            19    // Reset Bit
 
 /*********************************************************/
 /*  Chip Select pin assignments                          */
@@ -147,11 +147,11 @@
  * All defines below are in nanoseconds.
  */
 
-#define GLCD_tDDR	320	/* Data Delay time (E high to valid read data) 		*/
-#define GLCD_tAS	140	/* Address setup time (ctrl line changes to E high)	*/
-#define GLCD_tDSW	200	/* Data setup time (data lines setup to dropping E)	*/
-#define GLCD_tWH	450	/* E hi level width (minimum E hi pulse width)		*/
-#define GLCD_tWL	450	/* E lo level width (minimum E lo pulse width)		*/
+#define GLCD_tDDR   320    /* Data Delay time (E high to valid read data)        */
+#define GLCD_tAS    140    /* Address setup time (ctrl line changes to E high)   */
+#define GLCD_tDSW   200    /* Data setup time (data lines setup to dropping E)   */
+#define GLCD_tWH    450    /* E hi level width (minimum E hi pulse width)        */
+#define GLCD_tWL    450    /* E lo level width (minimum E lo pulse width)        */
 
 
 // calculate number of chips & round up if width is not evenly divisable

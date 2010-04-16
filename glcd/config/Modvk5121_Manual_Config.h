@@ -3,21 +3,21 @@
  *
  * Use this file to set io pins and LCD panel parameters
  *
- *	This configuration file is for the vk5121 module manufactured by VIKAY.
- *	This module uses 2 sed1520 chips each controlling one half of the display.
- *	It also contains an onboard contrast pot along with a high voltage
- *	blue elctroluminescent backlight with onboard high voltage power supply.
- *	The backlight can be turned on/off via EL control pin.
+ *    This configuration file is for the vk5121 module manufactured by VIKAY.
+ *    This module uses 2 sed1520 chips each controlling one half of the display.
+ *    It also contains an onboard contrast pot along with a high voltage
+ *    blue elctroluminescent backlight with onboard high voltage power supply.
+ *    The backlight can be turned on/off via EL control pin.
  *
- *	This Display is very easy to hook up as it needs no additional components.
- *	The backlight can be hardwired on, off, or can even be controlled by a AVR Pin.
+ *    This Display is very easy to hook up as it needs no additional components.
+ *    The backlight can be hardwired on, off, or can even be controlled by a AVR Pin.
  *
- *	Pixels are slightly taller than they are wide (0.42mm x 0.53mm) so that things
- *	like circles may look slightly squished.
+ *    Pixels are slightly taller than they are wide (0.42mm x 0.53mm) so that things
+ *    like circles may look slightly squished.
  *
- *	The datasheet can be downloaded from here:
- *	http://www.carriernetglobal.com/Graphic/VK5121.pdf
- *	
+ *    The datasheet can be downloaded from here:
+ *    http://www.carriernetglobal.com/Graphic/VK5121.pdf
+ *    
  *
  *
  *    <-------------------------------- 120 Pixels -------------------------------->
@@ -77,7 +77,7 @@
  *
  */
 
-#ifndef	GLCD_PANEL_CONFIG_H
+#ifndef GLCD_PANEL_CONFIG_H
 #define GLCD_PANEL_CONFIG_H
 
 /*
@@ -108,36 +108,36 @@
 /*
  * Pins can be assigned using arduino pin numbers 0-n
  * Pins can also be assigned using PIN_Pb 
- *		where P is port A-L and b is bit 0-7
- *		Example: port D pin 3 is PIN_D3
+ *    where P is port A-L and b is bit 0-7
+ *     Example: port D pin 3 is PIN_D3
  *
  */
 
 
-#define glcdData0Pin	8
-#define glcdData1Pin	9
-#define glcdData2Pin	10
-#define glcdData3Pin	11
-#define glcdData4Pin	4
-#define glcdData5Pin	5
-#define glcdData6Pin	6
-#define glcdData7Pin	7
+#define glcdData0Pin    8
+#define glcdData1Pin    9
+#define glcdData2Pin    10
+#define glcdData3Pin    11
+#define glcdData4Pin    4
+#define glcdData5Pin    5
+#define glcdData6Pin    6
+#define glcdData7Pin    7
 
-#define glcdRW		14
+#define glcdRW         14
 
-#define glcdE1		15
+#define glcdE1         15
 
-#define glcdDI		16	// A0 line
+#define glcdDI         16    // A0 line
 
-#define glcdE2		17
+#define glcdE2         17
 
 
 // defines for panel specific timing 
-#define GLCD_tDDR	290	/* tACC6: Data Delay time (E high to valid read data) 			*/
-#define GLCD_tAS	20	/* tAW6:  Address setup time (ctrl line changes to E high)		*/
-#define GLCD_tDSW	200	/* tDS6:  Data setup time (Write data lines setup to dropping E)	*/
-#define GLCD_tWH	450	/* tEW:   E hi level width (minimum E hi pulse width)			*/ 
-#define GLCD_tWL	450	/* E lo level width (minimum E lo pulse width)				*/
+#define GLCD_tDDR    290    /* tACC6: Data Delay time (E high to valid read data)             */
+#define GLCD_tAS      20    /* tAW6:  Address setup time (ctrl line changes to E high)        */
+#define GLCD_tDSW    200    /* tDS6:  Data setup time (Write data lines setup to dropping E)  */
+#define GLCD_tWH     450    /* tEW:   E hi level width (minimum E hi pulse width)             */ 
+#define GLCD_tWL     450    /* E lo level width (minimum E lo pulse width)                    */
 
 
 #include "device/sed1520_Device.h"
