@@ -1,5 +1,5 @@
 /*
- * Modagm1264f_Custom_Config.h - User specific configuration for Arduino GLCD library
+ * Modagm1264f_Manual_Config.h - User specific configuration for Arduino GLCD library
  *
  * Use this file to set io pins and LCD panel parameters
  *
@@ -80,9 +80,9 @@
 #define GLCD_PANEL_CONFIG_H
 
 /*
- * define name for configuration
+ * define name for panel configuration
  */
-#define glcd_ConfigName "Custom-AGM1264F"
+#define glcd_PanelConfigName "AGM1264F-Manual"
 
 /*********************************************************/
 /*  Configuration for LCD panel specific configuration   */
@@ -94,12 +94,14 @@
 #define CHIP_WIDTH     64  // pixels per chip
 #define CHIP_HEIGHT    64  // pixels per chip
 
-// calculate number of chips & round up if width is not evenly divisable
-#define glcd_CHIP_COUNT ((DISPLAY_WIDTH + CHIP_WIDTH - 1)  / CHIP_WIDTH)
-
 /*********************************************************/
 /*  Configuration for assigning LCD bits to Arduino Pins */
 /*********************************************************/
+
+/*
+ * define name for pin configuration
+ */
+#define glcd_PinConfigName "AGM1264F-Manual"
 
 /*
  * Pins can be assigned using arduino pin numbers 0-n
@@ -126,9 +128,6 @@
  */
 #define glcdCSEL1		14
 #define glcdCSEL2		15
-// uncomment the following if more than two chip select pins are needed
-//#define glcdCSEL3		3   // third chip select line on pin 3 if needed
-//#define glcdCSEL4		2   // fourth chip select if needed
 
 #define glcdRW			16
 #define glcdDI			17
@@ -139,68 +138,13 @@
 /*********************************************************/
 /*  Chip Select pin assignments                          */
 /*********************************************************/
-#define CS_2Chips_2Pins    // default has two chips selected using two pins
-//#define CS_2Chips_1Pin   // 2 chips selected using one CS pin (the other CS is inverted in hardware)
-//#define CS_3Chips_2Pins  // 3 chips selected using two CS pins
-//#define CS_3Chips_3Pins  // 3 chips selected using three CS pins
-//#define CS_4Chips_2Pins  // 4 chips selected using two CS pins
-//#define CS_4Chips_4Pins  // 4 chips selected using 4 CS pins
 
 /*
- * Two Chip panels using two select pins
+ * Two Chip panel using two select pins
  */
 
-#ifdef CS_2Chips_2Pins
 #define glcd_CHIP0 glcdCSEL1,HIGH, glcdCSEL2,LOW
 #define glcd_CHIP1 glcdCSEL1,LOW, glcdCSEL2,HIGH
-
-/*
- * Two Chip panels using one select pin
- */
- #elif defined  CS_2Chips_1Pin
-#define glcd_CHIP0 glcdCSEL1,LOW
-#define glcd_CHIP1 glcdCSEL1,HIGH
-
-/*
- * Three Chip panel using two select pins
- */
-#elif defined CS_3Chips_2Pins
-#define glcd_CHIP0 glcdCSEL1,LOW, glcdCSEL2,HIGH
-#define glcd_CHIP1 glcdCSEL1,HIGH, glcdCSEL2,LOW
-#define glcd_CHIP2 glcdCSEL1,LOW, glcdCSEL2,LOW
-
- /*
- * example of three Chip panel using three select pins
- * in this example, the chip is selected by setting a corresponding pin LOW
- *
- * Don't forget that glcdCSEL3 needs to defined (uncommented in the command
-pin assignments)
- */
-#elif defined CS_3Chips_3Pins
-#define glcd_CHIP0 glcdCSEL1,HIGH, glcdCSEL2,LOW,glcdCSEL3,LOW
-#define glcd_CHIP1 glcdCSEL1,LOW, glcdCSEL2,HIGH,glcdCSEL3,LOW
-#define glcd_CHIP2 glcdCSEL1,LOW, glcdCSEL2,LOW,glcdCSEL3,HIGH
-#endif
-
-/*
- * Four Chip panel using four select pins
- *
- * Don't forget that glcdCSEL3 and glcdCSEL4 need to defined
- */
-#elif defined CS_4Chips_4Pins
-#define glcd_CHIP0 glcdCSEL1,HIGH, glcdCSEL2,LOW, glcdCSEL3, LOW, glcdCSEL4, LOW
-#define glcd_CHIP1 glcdCSEL1,LOW, glcdCSEL2,HIGH, glcdCSEL3, LOW, glcdCSEL4, LOW
-#define glcd_CHIP2 glcdCSEL1,LOW, glcdCSEL2,LOW, glcdCSEL3, HIGH, glcdCSEL4, LOW
-#define glcd_CHIP3 glcdCSEL1,LOW, glcdCSEL2,LOW, glcdCSEL3, LOW, glcdCSEL4, HIGH
-
-/*
- * Four Chip panel using two select pins
- */
-#elif defined CS_4Chips_2Pins
-#define glcd_CHIP0 glcdCSEL1,LOW, glcdCSEL2,LOW
-#define glcd_CHIP1 glcdCSEL1,HIGH, glcdCSEL2,LOW
-#define glcd_CHIP2 glcdCSEL1,HIGH, glcdCSEL2,HIGH
-#define glcd_CHIP3 glcdCSEL1,LOW, glcdCSEL2,HIGH
 
 /*
  * The following defines are for panel specific low level timing.
@@ -214,6 +158,9 @@ pin assignments)
 #define GLCD_tDSW	200	/* Data setup time (data lines setup to dropping E)	*/
 #define GLCD_tWH	450	/* E hi level width (minimum E hi pulse width)		*/
 #define GLCD_tWL	450	/* E lo level width (minimum E lo pulse width)		*/
+
+// calculate number of chips & round up if width is not evenly divisable
+#define glcd_CHIP_COUNT ((DISPLAY_WIDTH + CHIP_WIDTH - 1)  / CHIP_WIDTH)
 
 
 #include "device/ks0108_Device.h"

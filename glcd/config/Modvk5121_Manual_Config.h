@@ -1,5 +1,5 @@
 /*
- * Modvk5121_Custom_Config.h - User specific Custom configuration for Arduino GLCD library
+ * Modvk5121_Manual_Config.h - User specific Custom configuration for Arduino GLCD library
  *
  * Use this file to set io pins and LCD panel parameters
  *
@@ -81,9 +81,9 @@
 #define GLCD_PANEL_CONFIG_H
 
 /*
- * define name for configuration
+ * define name for panel configuration
  */
-#define glcd_ConfigName "Generic-vk5121"
+#define glcd_PanelConfigName "vk5121-Manual"
 
 /*********************************************************/
 /*  Configuration for LCD panel specific configuration   */
@@ -98,6 +98,12 @@
 /*********************************************************/
 /*  Configuration for assigning LCD bits to Arduino Pins */
 /*********************************************************/
+
+/*
+ * define name for pin configuration
+ */
+#define glcd_PinConfigName "vk5121-Manual"
+
 
 /*
  * Pins can be assigned using arduino pin numbers 0-n

@@ -4,6 +4,8 @@
  * This sketch tests the memory and interface to the GLCD module as well as report
  * the current GLCD library configuration to the serial port.
  *
+ * The serial port is configured to 9600 baud.
+ *
  * It also displays a set of visual screens on the GLCD that can aid in diagnosing
  * mis-configured/wired chip select lines.
  *
@@ -690,15 +692,27 @@ void showGLCDconfig(void)
   Serial.print(GLCD_Device);
   SerialPrintQ(" gText ver: ");
   Serial.println(GTEXT_VERSION);
-  SerialPrintP(hline);
-  SerialPrintQ("Configuration:");
+/*
+ * Temporary ifdef to support older config files.
+ */
+#ifdef glcd_ConfigName
+  SerialPrintQ("Config File:");
   SerialPrintQ(glcd_ConfigName);
-  SerialPrintQ(" GLCD:");
-  SerialPrintQ(glcd_DeviceName);
+#else
+  SerialPrintQ("Panel Configuration:");
+  SerialPrintQ(glcd_PanelConfigName);
   Serial.println();
+  SerialPrintQ("Pin Configuration:");
+  SerialPrintQ(glcd_PinConfigName);
+#endif
+  Serial.println();
+  SerialPrintP(hline);
+
+  SerialPrintQ("GLCD:");
+  SerialPrintQ(glcd_DeviceName);
 
 //SerialPrintf("DisplayWidth:%d DisplayHeight:%d\n", GLCD.Width, GLCD.Height);
-  SerialPrintQ("DisplayWidth:");
+  SerialPrintQ(" DisplayWidth:");
   Serial.print((int)GLCD.Width);
   SerialPrintQ(" DisplayHeight:");
   Serial.println((int)GLCD.Height);
@@ -731,7 +745,10 @@ void showGLCDconfig(void)
   SerialPrintPINstr(glcdCSEL4);
 #endif
 
+#if defined(glcdCSEL1) || defined(glcdCSEL2) || defined(glcdCSEL3) || defined(glcdCSEL4)
   Serial.println();
+#endif
+
 
 #ifdef glcdRES
   SerialPrintQ(" RES:");
