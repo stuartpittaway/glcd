@@ -64,7 +64,7 @@
  /*
   * autoconfig includes - (comment this out if using manual configurations, see below)
   */
-//#include "config/ks0108_panel.h"          // automatically configure library for a ks0108 panel
+#include "config/ks0108_panel.h"          // automatically configure library for a ks0108 panel
 //#include "config/ks0108-192x64_panel.h"   // automatically configure library for a ks0108 192x64 panel
 
 /*
@@ -77,7 +77,7 @@
  */
 
 
-#include "config/ks0108_Manual_Config.h"       // generic ks0108 configuration
+//#include "config/ks0108_Manual_Config.h"       // generic ks0108 configuration
 
 //#include "config/Modadm12864f_Manual_Config.h" // configuration for BGMicro 128x64 display with pinout diagram
 //#include "config/Modvk5121_Manual_Config.h"    // configuration for vk5121 122x32 display with pinout diagram
