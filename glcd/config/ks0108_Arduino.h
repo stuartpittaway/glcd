@@ -36,11 +36,11 @@
 #define glcdCSEL1        14
 #define glcdCSEL2        15
 
-#if defined CS_3Chips_3Pins  || defined(CS_4Chips_4Pins)
+#if NBR_CHIP_SELECT_PINS > 2
 #define glcdCSEL3         3   // third chip select if needed
 #endif
 
-#ifdef CS_4Chips_4Pins
+#if NBR_CHIP_SELECT_PINS > 3
 #define glcdCSEL4         2   // fourth chip select if needed
 #endif
 

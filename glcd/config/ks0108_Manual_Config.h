@@ -35,7 +35,7 @@
 #define glcd_PinConfigName "ks0108-Manual"
 
 /*
- * Pins can be assigned using arduino pin numbers 0-n
+ * Pins can be assigned using Arduino pin numbers 0-n
  * Pins can also be assigned using PIN_Pb 
  *   where P is port A-L and b is bit 0-7
  *   Example: port D pin 3 is PIN_D3
@@ -69,76 +69,94 @@
 // Reset Bit  - uncomment the next line if reset is connected to an output pin
 //#define glcdRES            19    // Reset Bit
 
+/*
+ * the following is the calculation of the number of chips - do not change
+ */
+#define glcd_CHIP_COUNT ((DISPLAY_WIDTH + CHIP_WIDTH - 1)  / CHIP_WIDTH) 
+
 /*********************************************************/
-/*  Chip Select pin assignments                          */
+/*  Chip Select Configuration                            */
 /*********************************************************/
-#define CS_2Chips_2Pins    // default has two chips selected using two pins
-//#define CS_2Chips_1Pin   // 2 chips selected using one CS pin (the other CS is inverted in hardware)
-//#define CS_3Chips_2Pins  // 3 chips selected using two CS pins
-//#define CS_3Chips_3Pins  // 3 chips selected using three CS pins
-//#define CS_4Chips_2Pins  // 4 chips selected using two CS pins
-//#define CS_4Chips_4Pins  // 4 chips selected using 4 CS pins
 
 /*
- * Changing the CHIP_SELECTED define from HIGH to LOW swaps chips on two chip panels 
- * Making this change inverts the chip select lines (from active HIGH to active LOW) 
+ * Change the following define to match the number of Chip Select pins for this panel
+ * Most panels use two pins for chip select,
+ * but check your datasheet to see if a different number is required
+ */
+#define NBR_CHIP_SELECT_PINS   2 // the number of chip select pins required for this panel 
+
+/*
+ * The following conditional statements determine the relationship between the chip select
+ * pins and the physical chips.
+ * If the chips are displayed in the wrong order, you can swap the glcd_CHIPx defines 
  */  
-#define CHIP_SELECTED     HIGH   // Change this to LOW to invert chip selects 
-#define CHIP_UNSELECTED  (!CHIP_SELECTED) // don't change this
- 
-/*
- * Two Chip panels using two select pins
- */
-#ifdef CS_2Chips_2Pins
-#define glcd_CHIP0 glcdCSEL1,CHIP_SELECTED,   glcdCSEL2,CHIP_UNSELECTED
-#define glcd_CHIP1 glcdCSEL1,CHIP_UNSELECTED, glcdCSEL2,CHIP_SELECTED
+
+/* 
+ * Defines for Panels using two Chip Select pins
+ */  
+#if  NBR_CHIP_SELECT_PINS == 2
 
 /*
- * Two Chip panels using one select pin
+ * Two Chip panels using two select pins (the most common panel type)
  */
-#elif defined  CS_2Chips_1Pin
-#define glcd_CHIP0 glcdCSEL1,CHIP_UNSELECTED
-#define glcd_CHIP1 glcdCSEL1,CHIP_SELECTED
+#if glcd_CHIP_COUNT == 2
+#define glcd_CHIP0 glcdCSEL1,HIGH,   glcdCSEL2,LOW
+#define glcd_CHIP1 glcdCSEL1,LOW,    glcdCSEL2,HIGH    
 
 /*
  * Three Chip panel using two select pins
  */
-#elif defined CS_3Chips_2Pins
-#define glcd_CHIP0 glcdCSEL1,CHIP_UNSELECTED, glcdCSEL2,CHIP_SELECTED
-#define glcd_CHIP1 glcdCSEL1,CHIP_SELECTED,   glcdCSEL2,CHIP_UNSELECTED
-#define glcd_CHIP2 glcdCSEL1,CHIP_UNSELECTED, glcdCSEL2,CHIP_UNSELECTED
+#elif  glcd_CHIP_COUNT == 3 
 
-/*
- * example of three Chip panel using three select pins
- * in this example, the chip is selected by setting a corresponding pin LOW
- *
- * Don't forget that glcdCSEL3 needs to defined (uncommented in the command pin assignments)
- */
-#elif defined CS_3Chips_3Pins
-#define glcd_CHIP0 glcdCSEL1,CHIP_SELECTED,   glcdCSEL2,CHIP_UNSELECTED, glcdCSEL3,CHIP_UNSELECTED
-#define glcd_CHIP1 glcdCSEL1,CHIP_UNSELECTED, glcdCSEL2,CHIP_SELECTED,   glcdCSEL3,CHIP_UNSELECTED
-#define glcd_CHIP2 glcdCSEL1,CHIP_UNSELECTED, glcdCSEL2,CHIP_UNSELECTED, glcdCSEL3,CHIP_SELECTED
-
-/*
- * Four Chip panel using four select pins
- *
- * Don't forget that glcdCSEL3 and glcdCSEL4 need to defined
- */
-#elif defined CS_4Chips_4Pins
-#define glcd_CHIP0 glcdCSEL1,CHIP_SELECTED,   glcdCSEL2,CHIP_UNSELECTED, glcdCSEL3,CHIP_UNSELECTED, glcdCSEL4,CHIP_UNSELECTED
-#define glcd_CHIP1 glcdCSEL1,CHIP_UNSELECTED, glcdCSEL2,CHIP_SELECTED,   glcdCSEL3,CHIP_UNSELECTED, glcdCSEL4,CHIP_UNSELECTED
-#define glcd_CHIP2 glcdCSEL1,CHIP_UNSELECTED, glcdCSEL2,CHIP_UNSELECTED, glcdCSEL3,CHIP_SELECTED,   glcdCSEL4,CHIP_UNSELECTED
-#define glcd_CHIP3 glcdCSEL1,CHIP_UNSELECTED, glcdCSEL2,CHIP_UNSELECTED, glcdCSEL3,CHIP_UNSELECTED, glcdCSEL4,CHIP_SELECTED
+#define glcd_CHIP0  glcdCSEL1,LOW,  glcdCSEL2,HIGH    
+#define glcd_CHIP1  glcdCSEL1,HIGH, glcdCSEL2,LOW
+#define glcd_CHIP2  glcdCSEL1,LOW,  glcdCSEL2,LOW
 
 /*
  * Four Chip panel using two select pins
  */
-#elif defined CS_4Chips_2Pins
-#define glcd_CHIP0 glcdCSEL1,CHIP_UNSELECTED, glcdCSEL2,CHIP_UNSELECTED
-#define glcd_CHIP1 glcdCSEL1,CHIP_SELECTED,   glcdCSEL2,CHIP_UNSELECTED
-#define glcd_CHIP2 glcdCSEL1,CHIP_SELECTED,   glcdCSEL2,CHIP_SELECTED
-#define glcd_CHIP3 glcdCSEL1,CHIP_UNSELECTED, glcdCSEL2,CHIP_SELECTED
+#elif  glcd_CHIP_COUNT == 4 
+#define glcd_CHIP0  glcdCSEL1,LOW,  glcdCSEL2,LOW
+#define glcd_CHIP1  glcdCSEL1,HIGH, glcdCSEL2,LOW
+#define glcd_CHIP2  glcdCSEL1,HIGH, glcdCSEL2,HIGH    
+#define glcd_CHIP3  glcdCSEL1,LOW,  glcdCSEL2,HIGH    
 #endif
+
+/*
+ * Defines for Two Chip panels using one Chip Select pin 
+ */
+#elif  (NBR_CHIP_SELECT_PINS == 1 && glcd_CHIP_COUNT == 2)  
+#define glcd_CHIP0  glcdCSEL1,LOW
+#define glcd_CHIP1  glcdCSEL1,HIGH    
+
+/*
+ * Defines for Three Chip panels using three select pins
+ */
+#elif (NBR_CHIP_SELECT_PINS == 3 && glcd_CHIP_COUNT == 3)  
+#define glcd_CHIP0  glcdCSEL1,HIGH, glcdCSEL2,LOW,  glcdCSEL3,LOW
+#define glcd_CHIP1  glcdCSEL1,LOW,  glcdCSEL2,HIGH, glcdCSEL3,LOW
+#define glcd_CHIP2  glcdCSEL1,LOW,  glcdCSEL2,LOW,  glcdCSEL3,HIGH    
+
+/*
+ * Defines for Four Chip panel using four select pins
+ */
+#elif  (NBR_CHIP_SELECT_PINS == 4 && glcd_CHIP_COUNT == 4) 
+#define glcd_CHIP0  glcdCSEL1,HIGH, glcdCSEL2,LOW,  glcdCSEL3,LOW,  glcdCSEL4,LOW
+#define glcd_CHIP1  glcdCSEL1,LOW,  glcdCSEL2,HIGH, glcdCSEL3,LOW,  glcdCSEL4,LOW
+#define glcd_CHIP2  glcdCSEL1,LOW,  glcdCSEL2,LOW,  glcdCSEL3,HIGH, glcdCSEL4,LOW
+#define glcd_CHIP3  glcdCSEL1,LOW,  glcdCSEL2,LOW,  glcdCSEL3,LOW,  glcdCSEL4,HIGH    
+
+/*
+ * Here if the Number of Chip Selects is not supported for the selected panel size and chip size
+ */
+#else
+#error "The number of Chips and Chip Select pins does not match an option in ks0108_Panel.h"
+#error "Check that the number of Chip Select pins is correct for the configured panel size"
+#endif
+
+/*********************************************************/
+/*  End of Chip Select Configuration                     */
+/*********************************************************/
 
 /*
  * The following defines are for panel specific low level timing.
@@ -152,10 +170,6 @@
 #define GLCD_tDSW   200    /* Data setup time (data lines setup to dropping E)   */
 #define GLCD_tWH    450    /* E hi level width (minimum E hi pulse width)        */
 #define GLCD_tWL    450    /* E lo level width (minimum E lo pulse width)        */
-
-
-// calculate number of chips & round up if width is not evenly divisable
-#define glcd_CHIP_COUNT ((DISPLAY_WIDTH + CHIP_WIDTH - 1)  / CHIP_WIDTH)
 
 #include "device/ks0108_Device.h"
 #endif //GLCD_PANEL_CONFIG_H
