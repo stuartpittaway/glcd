@@ -140,5 +140,8 @@
 #define GLCD_tWL     450    /* E lo level width (minimum E lo pulse width)                    */
 
 
+// calculate number of chips & round up if width is not evenly divisable
+#define glcd_CHIP_COUNT ((DISPLAY_WIDTH + CHIP_WIDTH - 1)  / CHIP_WIDTH)
+
 #include "device/sed1520_Device.h"
 #endif //GLCD_PANEL_CONFIG_H
