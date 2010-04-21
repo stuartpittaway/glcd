@@ -76,6 +76,7 @@
  * and make sure that all the other config  #includes are commented (including the autoconfig above) 
  */
 
+//#include "config/Nokia6610_Manual_Config.h"
 
 //#include "config/ks0108_Manual_Config.h"       // generic ks0108 configuration
 

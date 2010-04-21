@@ -60,6 +60,18 @@
  * @see gText::EraseTextLine(eraseLine_t type)
  */
 #define ClearSysTextLine(line) FillRect(0, (line*8), (DISPLAY_WIDTH-1), ((line*8)+ 7), WHITE )
+/**
+ * @ingroup glcd_deprecated
+ * @hideinitializer
+ * @brief Clear an 8 pixel high row
+ * @details
+ * This function should no longer be used.\n
+ * It has been replaced by FillRect
+ * @deprecated
+ * @see glcd::FillRect()
+ * @see gText::EraseTextLine(eraseLine_t type)
+ */
+#define ClearPage(line, color) FillRect(0, (line*8), (DISPLAY_WIDTH-1), ((line*8)+ 7), color )
 
 /**
  * @ingroup glcd_deprecated

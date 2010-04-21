@@ -66,83 +66,9 @@ glcd::glcd(){
 void glcd::Init(uint8_t invert){
 	glcd_Device::Init(invert);  
 }		
-	
-// Note that the ClearPage functions are now private and probably no longer be necessary - mem 21 Jan
-// if ClearScreen coding is modifed to do the clear page	
-/**
- * Clear a full row of LCD memory pages
- *
- * @param page the row of pages to clear
- * @param color the color to
- *
- * An LCD memory page is 1 byte of memory that consists of 8 vertical pixels 
- * This function will fill every page from x address 0 through
- * GLCD.Width-1 with pixels of the specified color.
- *
- * row is a value from 0 to GLCD.Height/8
- *
- * Color is optional and defaults to WHITE.
- *
- * @see ClearScreen()
- */
-
-void glcd::ClearPage(uint8_t page, uint8_t color){
-	this->ClearPage(page, 0, DISPLAY_WIDTH, color );	 
-}
-
-/**
- * Clear a specified LCD memory pages
- *
- * @param page the row of pages to clear
- * @startX starting x addres within row
- * @length amound of pages to clear
- * @param color the color to
- *
- * An LCD memory page is 1 byte of memory that consists of 8 vertical pixels 
- * This function will fill @em length pages from x address @em x through
- * GLCD.Width-1 with pixels of the specified color.
- *
- * row is a value from 0 to GLCD.Height/8
- * 
- * Color is optional and defaults to WHITE.
- */
-
-void glcd::ClearPage(uint8_t page, uint8_t startX, uint8_t length, uint8_t color){
-	if(startX + length > DISPLAY_WIDTH)
-		length = DISPLAY_WIDTH - startX;
-
-	/*
-  	 * calls to GotoXY from within this class call the device GotoXY method directly
-	 * calls to GotoXY from user programs are overriden to call CursorToXY
-	 */
-	glcd_Device::GotoXY(startX, page * 8); 
-	while(length--){
-		this->WriteData(color);
-	}
-}
-
-/**
- * Clear the lcd display
- *
- * @param color BLACK or WHITE
- *
- * Sets all the pixels on the display from 0,0 to GLCD.Width-1,GLCD.Height-1
- * to the specified color.
- *
- * Color is optional and defaults to WHITE.
- *
- * @note
- * If the display is in INVERTED mode, then the color WHITE will paint the screen
- * BLACK and the color BLACK will paint the screen WHITE.
- *
- *
- */
 
 void glcd::ClearScreen(uint8_t color){
- uint8_t page;
-   for( page = 0; page < 8; page++){
-	  ClearPage(page, color);
- }
+	this->SetPixels(0,0,GLCD.Width-1,GLCD.Height-1, color);
 }
 
 /*

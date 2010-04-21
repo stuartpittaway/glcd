@@ -152,8 +152,7 @@ unsigned int generate(){
     int page = 0;
     for(int row = 0; row < ROWS; row++)
     {
-      while( (row * CELL_SIZE)/ 8  >= page)
-        GLCD.ClearPage(page++); 
+      GLCD.FillRect(0,row*8, GLCD.Width-1, row*8 + 7, WHITE  ); 
       for(int column = 0; column < COLUMNS; column++)
       {
         if(isAlive(thisGeneration,row,column))     
@@ -281,6 +280,3 @@ boolean isNeighborAlive( byte generation , byte row, byte column, byte dir){
   if(nrow==ROWS) nrow = 0;
   return isAlive(generation,nrow,ncol);
 }
-
-
-
