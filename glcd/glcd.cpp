@@ -67,6 +67,23 @@ void glcd::Init(uint8_t invert){
 	glcd_Device::Init(invert);  
 }		
 
+/**
+ * Clear the lcd display
+ *
+ * @param color BLACK or WHITE
+ *
+ * Sets all the pixels on the display from 0,0 to GLCD.Width-1,GLCD.Height-1
+ * to the specified color.
+ *
+ * Color is optional and defaults to WHITE.
+ *
+ * @note
+ * If the display is in INVERTED mode, then the color WHITE will paint the screen
+ * BLACK and the color BLACK will paint the screen WHITE.
+ *
+ *
+ */
+
 void glcd::ClearScreen(uint8_t color){
 	this->SetPixels(0,0,GLCD.Width-1,GLCD.Height-1, color);
 }
