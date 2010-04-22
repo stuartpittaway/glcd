@@ -76,8 +76,6 @@
  * and make sure that all the other config  #includes are commented (including the autoconfig above) 
  */
 
-//#include "config/Nokia6610_Manual_Config.h"
-
 //#include "config/ks0108_Manual_Config.h"       // generic ks0108 configuration
 
 //#include "config/Modadm12864f_Manual_Config.h" // configuration for BGMicro 128x64 display with pinout diagram
