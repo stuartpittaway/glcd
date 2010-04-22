@@ -114,7 +114,7 @@
  * on the ks0108 are powers of 2
  */
 #if CHIP_HEIGHT < DISPLAY_HEIGHT
-#define glcd_DevXYval2Chip(x,y)		((y/CHIP_HEIGHT))	
+#define glcd_DevXYval2Chip(x,y) ((x/CHIP_WIDTH) + ((y/CHIP_HEIGHT) * (DISPLAY_HEIGHT/CHIP_HEIGHT)))
 #else
 #define glcd_DevXYval2Chip(x,y)		((x/CHIP_WIDTH))	
 #endif

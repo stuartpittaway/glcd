@@ -34,6 +34,16 @@
 #include "include/glcd_io.h"
 #include "fonts/SystemFont5x7.h"       // system font
 
+/*
+ * Macros to convert chip#s to upper and lower pixel coordinates.
+ * x1,y1 is upper left pixel coordinate and x2,y2 is lower left right coordinate.
+ */
+
+#define chip2x1(chip) ((chip * CHIP_WIDTH) % DISPLAY_WIDTH)
+#define chip2y1(chip) (((chip * CHIP_WIDTH)/DISPLAY_WIDTH) * CHIP_HEIGHT)
+#define chip2x2(chip) ((chip2x1(chip) + CHIP_WIDTH) >= DISPLAY_WIDTH ? DISPLAY_WIDTH-1 : chip2x1(chip) + CHIP_WIDTH-1)
+#define chip2y2(chip) ((chip2y1(chip) + CHIP_HEIGHT) >= DISPLAY_HEIGHT ? DISPLAY_HEIGHT-1 : chip2y1(chip) + CHIP_HEIGHT-1)
+
 #include <avr/pgmspace.h>
 #define P(name)   static const prog_char name[] PROGMEM   // declare a static string in AVR Progmem
 
@@ -172,7 +182,7 @@ void showchipselscreen(void)
     // delay and flash is to allow seeing duplicate or overlapping chip selects
     for(uint8_t flash = 0; flash < 4; flash++)
     {
-      GLCD.CursorToXY(chip * CHIP_WIDTH,0);
+      GLCD.CursorToXY(chip2x1(chip), chip2y1(chip));
       if(flash & 1)
         GLCD.SetFontColor(BLACK);
       else
@@ -309,15 +319,15 @@ uint8_t lcdmemtest(void)
 
   SerialPrintQ("Testing GLCD memory pages\n");
 
-  uint8_t col = 0;
-  uint8_t ecol = CHIP_WIDTH-1;
   for(uint8_t chip = 0; chip < glcd_CHIP_COUNT; chip++)
   {
+    uint8_t col = chip2x1(chip);
+    uint8_t ecol = chip2x2(chip);
 
     if(col >= CHIP_WIDTH)
-      GLCD.CursorToXY(0,0);
+      GLCD.CursorToXY(0,chip2y1(chip));
     else
-      GLCD.CursorToXY(CHIP_WIDTH,0);
+      GLCD.CursorToXY(CHIP_WIDTH,chip2y1(chip));
     GLCD.print("Chip:");
     GLCD.print((int)chip);
 
@@ -325,9 +335,9 @@ uint8_t lcdmemtest(void)
      * Assumes font is 8 pixels high
      */
     if(col >= CHIP_WIDTH)
-      GLCD.CursorToXY(0,8);
+      GLCD.CursorToXY(0,chip2y1(chip)+8);
     else
-      GLCD.CursorToXY(CHIP_WIDTH,8);
+      GLCD.CursorToXY(CHIP_WIDTH,chip2y1(chip)+8);
     GLCD.print((int)col);
     GLCD.print('-');
     GLCD.print((int)ecol);
@@ -342,7 +352,7 @@ uint8_t lcdmemtest(void)
     Serial.print('-');
     Serial.println((unsigned int)ecol);
 
-    errors += lcdhpagetest(col, ecol, 0, GLCD.Height/8 - 1, 0, 255);
+    errors += lcdhpagetest(col, ecol, chip2y1(chip)/8, (chip2y2(chip)+1)/8 - 1, 0, 255);
 
 
 //  SerialPrintf("Vertical Page Test Chip: %d Pixels %d-%d\n", chip, col, ecol);
@@ -354,7 +364,7 @@ uint8_t lcdmemtest(void)
     Serial.print('-');
     Serial.println((int)ecol);
 
-    errors += lcdvpagetest(col, ecol, 0, GLCD.Height/8 - 1, 0, 255);
+    errors += lcdvpagetest(col, ecol, chip2y1(chip)/8, (chip2y2(chip)+1)/8 - 1, 0, 255);
     GLCD.ClearScreen();
 
     col += CHIP_WIDTH;
@@ -444,14 +454,14 @@ lcdrwseltest()
   uint8_t data;
 
 
-  for(uint8_t chip = 0, addr = 0; chip < glcd_CHIP_COUNT; chip++, addr += CHIP_WIDTH)
+  for(uint8_t chip = 0; chip < glcd_CHIP_COUNT; chip++)
   {
-    GLCD.GotoXY(addr, 0);
+    GLCD.GotoXY(chip2x1(chip), chip2y1(chip));
     GLCD.WriteData(chip);
   }
-  for(uint8_t chip = 0, addr = 0; chip < glcd_CHIP_COUNT; chip++, addr += CHIP_WIDTH)
+  for(uint8_t chip = 0; chip < glcd_CHIP_COUNT; chip++)
   {
-    GLCD.GotoXY(addr, 0);
+    GLCD.GotoXY(chip2x1(chip), chip2y1(chip));
     data = GLCD.ReadData();
     if(data != chip)
     {
@@ -466,14 +476,14 @@ lcdrwseltest()
     }
   }
 
-  for(int chip = glcd_CHIP_COUNT - 1, addr = (glcd_CHIP_COUNT-1)*CHIP_WIDTH; chip >= 0; chip--, addr -= CHIP_WIDTH)
+  for(int chip = glcd_CHIP_COUNT - 1; chip >= 0; chip--)
   {
-    GLCD.GotoXY(addr, 0);
+    GLCD.GotoXY(chip2x1(chip), chip2y1(chip));
     GLCD.WriteData(chip);
   }
-  for(int chip = glcd_CHIP_COUNT - 1, addr = (glcd_CHIP_COUNT-1)*CHIP_WIDTH; chip >= 0; chip--, addr -= CHIP_WIDTH)
+  for(int chip = glcd_CHIP_COUNT - 1; chip >= 0; chip--)
   {
-    GLCD.GotoXY(addr, 0);
+    GLCD.GotoXY(chip2x1(chip), chip2y1(chip));
     data = GLCD.ReadData();
     if(data != chip)
     {

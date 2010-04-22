@@ -385,7 +385,6 @@ void glcd_Device::Init(uint8_t invert)
 	
 	for(uint8_t chip=0; chip < glcd_CHIP_COUNT; chip++)
 	{
-
 		/*
 		 * flush out internal state to force first GotoXY() to work
 		 */
@@ -431,9 +430,7 @@ void glcd_Device::Init(uint8_t invert)
 #ifdef glcd_CHIP0  // if at least one chip select string
 __inline__ void glcd_Device::SelectChip(uint8_t chip)
 {  
-#ifdef glcd_CHIP4
-	if(chip == 4) lcdChipSelect(glcd_CHIP4); else
-#endif
+
 #ifdef glcd_CHIP3
 	if(chip == 3) lcdChipSelect(glcd_CHIP3); else
 #endif
