@@ -319,7 +319,7 @@ void FPS( const byte width, const byte height)
     GLCD.DrawRoundRect(CenterX + 2, 0, CenterX - 3, Bottom, 5);  // rounded rectangle around text area   
     for(int i=0; i < Bottom; i += 4)
       GLCD.DrawLine(1,1, CenterX-1, i);  // draw lines from upper left down right side of rectangle  
-    GLCD.DrawCircle(CenterX/2, CenterY-1, CenterY-2);   // draw circle centered in the left side of screen  
+    GLCD.DrawCircle(GLCD.CenterX/2, GLCD.CenterY-1, min(GLCD.CenterX/2, GLCD.CenterY)-2);   // draw circle centered in the left side of screen
     GLCD.FillRect( CenterX + CenterX/2-8 , CenterY + CenterY/2 -8,16,16, WHITE); // clear previous spinner position  
     drawSpinner(loops++, CenterX + CenterX/2, CenterY + CenterY/2);       // draw new spinner position
     GLCD.GotoXY(CenterX/2, Bottom -15);          

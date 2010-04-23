@@ -46,7 +46,7 @@ void  loop()
     GLCD.DrawRoundRect(GLCD.CenterX + 2, 0, GLCD.CenterX - 3, GLCD.Bottom, 5);  // rounded rectangle around text area   
     for(int i=0; i < GLCD.Bottom; i += 4)
       GLCD.DrawLine(1,1, GLCD.CenterX-1, i);  // draw lines from upper left down right side of rectangle  
-    GLCD.DrawCircle(GLCD.CenterX/2, GLCD.CenterY-1, GLCD.CenterY-2);   // draw circle centered in the left side of screen  
+    GLCD.DrawCircle(GLCD.CenterX/2, GLCD.CenterY-1, min(GLCD.CenterX/2, GLCD.CenterY)-2);   // draw circle centered in the left side of screen  
     GLCD.FillRect( GLCD.CenterX + GLCD.CenterX/2-8 ,GLCD.CenterY + GLCD.CenterY/2 -8,16,16, WHITE); // clear previous spinner position  
     drawSpinner(loops++, GLCD.CenterX + GLCD.CenterX/2, GLCD.CenterY + GLCD.CenterY/2);       // draw new spinner position
     GLCD.GotoXY(GLCD.CenterX/2, GLCD.Bottom -15);          
