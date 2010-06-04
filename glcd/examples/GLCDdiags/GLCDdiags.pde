@@ -698,7 +698,7 @@ void showGLCDconfig(void)
   SerialPrintP(hline);
   SerialPrintQ("GLCD Lib Configuration: glcd ver: ");
   Serial.print(GLCD_VERSION);
-  SerialPrintQ(" device ver: ");
+  SerialPrintQ(" glcd_Device ver: ");
   Serial.print(GLCD_Device);
   SerialPrintQ(" gText ver: ");
   Serial.println(GTEXT_VERSION);
