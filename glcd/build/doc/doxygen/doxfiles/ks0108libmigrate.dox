@@ -4,7 +4,7 @@
 
 /**
 @page page_ks0108_migrate ks0108 library migration
-@image html ks0108_small.jpg
+@image html ks0108lib.jpg
 
 The glcd library is an extensive modification of the ks0108 library. It now supports more
 chips and is easier to integrate with different panels.
@@ -28,9 +28,8 @@ configuration information will need modification to work with the new library.
 
 Configuration has been significantly improved in this release to give a wider
 choice of pins, support for more processor types and more display panels.
-There is now a single file used to set panel and pin configuration.
 
-Processor type is now determined from the board selected when the sketch is built.\n
+Processor type is now automatically determined from the board selected when the sketch is built.\n
 See the library configuration page for full details:
 @ref page_configuring
 

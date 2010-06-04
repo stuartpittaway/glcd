@@ -6,21 +6,55 @@
 /**
 @page page_configuring Configuration
 
-Configuration is handled by a single file used to set panel and pin configuration.
-The configuration capability alows creation of configuration files to allows a wide
-choice of pins, support for several different processor types and different display panels.
-Panel configuration defines the overall display height and width and the height
-and width of the display controller chips. 
-The display timing can also be easily configured, but most displays will now work without
-requiring a configuration change for timing. However, you should check the datasheet
-for your panel to verify the timing values in the configuration file.
+Configuration is handled by a set of configuration files used to set panel and pin configuration.
+The configuration capability allows creation of configuration files to support a wide
+choice of pins, several different processor types, and different display panels.
 
-Processor type is determined from the board selected when the sketch is built, 
+If you are using a standard Arduino board (168/328) or a Mega, Sanguino, Teensy, or Teensy++;  
+and you have a 128x64 KS-0108 panel wired according to the pin connections table above,
+you do not need to make any changes to configuration files. 
+
+If you use different wiring or use a different panel type you will need to modify one
+of the supplied configurations or you can create your own.
+These configuration files set the panel parameters (display height, and width, timing, etc) to match
+your hardware and allows selection of the Arduino pins used to connect to the display.
+
+While display panel timing can also be easily configured, most displays will work without
+requiring a configuration change for timing. However, you should check the datasheet
+for your panel to verify the timing values in the panel configuration file.
+
+The active configuration when the sketch is compiled is selected in a master configuration file named glcd_Config.h. The default configuration file (named "config/ks0108_panel.h")  is for 128x64 ks0108 type panel.  
+The panel configuration file naming is:
+  "{PANELNAME}_panel.h"
+ Where:
+    {PANELNAME} is the glcd panel type. (for example, ks0108)
+
+The panel configuration file includes a board specific configuration file that specifies the
+pins used for each specific board type.
+The pin configuration file naming is a follows:
+  "{PANELNAME}_{BOARDNAME}.h"
+    {PANELNAME} is the glcd panel type. (for example, ks0108)
+    {BOARDNAME} is the name of the board (as selected in the Arduino IDE).
+
+For example, the ks0108 pin configuration file name for a standard Arduino board is: "ks0108_Arduino.h"
+The equivalent file for the "Mega" board is: "ks0108_Mega.h"
+
+If you change the active configuration in the master configuration file glcd_Config.h,
+make sure that one and only one configuration file is included.
+
+Processor type is automatically determined from the board selected when the sketch is built, 
 this allows Arduino style pin numbers to be mapped to fast direct port IO used by the library.
 Pin numbering for the following processor types are supported:
 - Standard Arduino (ATmega8,168,328)
 - Mega(ATmega1280)
 - Sanguino (ATmega644P)
-- Teensy and Teensy++
+- Teensy and Teensy++ (AT90USB646, AT90USB1286, ATmega32U4)
+
+
+In summary:
+
+glcd_Config.h includes a panel file "config/{PANELNAME}_panel.h" (the active congiguration)
+that in turn includes a board specific pin mapping file based on arduino board type, 
+"config/{PANELNAME}_panel_{BOARDNAME}.h"
 
 */
