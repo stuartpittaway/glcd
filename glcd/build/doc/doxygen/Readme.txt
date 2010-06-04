@@ -9,5 +9,6 @@ The GLCDref.htm file is a dummy wrapper that will bring up the documents over
 in glcd/doc/html
 
 .dox files can be tossed into the doxfiles directory and they will be processed automatically.
-and .dox file can use image references to image files in the doxfiles directory.
+and .dox file can use image references to image files in the doxfiles directory or prefereably
+in the "images" directory under the doxfiles directory.
 

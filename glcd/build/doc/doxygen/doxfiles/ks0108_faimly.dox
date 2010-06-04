@@ -8,8 +8,10 @@
 The KS0108 is a popular controller chip used in GLCD displays but
 the wiring for these panels is not standardized and it is important
 to check the datasheet for your panel to confirm how it should be wired.
-Incorrect connections of the signal lines are the most common cause of problems,
-and particular care should be taken with the power leads as wiring these incorrectly can destroy a panel.
+Incorrect connections of the signal lines are the most common cause of problems.
+
+@warning
+Particular care should be taken with the power leads as wiring these incorrectly can destroy a panel.
 
 Most GLCD panels require an external preset pot to set the LCD working voltage (contrast)
 and a fixed resistor to limit the current in the backlight.

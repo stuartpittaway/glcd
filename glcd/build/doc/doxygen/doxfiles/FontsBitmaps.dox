@@ -1,0 +1,100 @@
+/*
+ * glcd library Font and Bitmap documenation
+ */
+
+/**
+@page page_FontsBitmaps Fonts and Bitmaps
+
+While the GLCD library distribution comes with a few fonts and bitmaps, 
+the library supports user defined custom fonts and bitmaps.
+Additional fonts and bitmaps can be added and included in sketches.
+
+@subpage page_Fonts
+
+@subpage page_Bitmaps
+
+*/
+
+/**
+@page page_Fonts Using Fonts
+
+There is a free java application available that can convert PC fonts for use with this library. 
+The software is called FontCreator2 and it can produce a header file that can be included in your sketch.
+
+Here is a link:
+
+The header files should be placed in the directory named fonts and included in your sketch.
+For example, if you create a font named myfont in a header named myfont.h then copy myfont.h
+to the fonts directory and in your sketch:
+@code
+  #include "fonts/myfont.h"       // system font
+@endcode
+To use the font in your sketch you select the font as follows: 
+@code
+  GLCD.SelectFont(myfont);   // use myfont 
+@endcode
+
+Note that the distribution contains a file named allFonts.h that includes all the distributed fonts, so you can include these files instead of explicitly including the individual fonts
+@code
+#include "fonts/allFonts.h"       // all distributed fonts
+@endcode
+
+Font definitions are stored in program memory and this can be significant
+for larger fonts. The 7 pixel high system font uses under 500 bytes,
+the supplied Arial14 font uses 1200 bytes of program memory.
+
+Here are some links to additional free fonts that can be downloaded:
+
+Pixel/Bitmap fonts: <a href="http://www.1001freefonts.com/bitmap-pixel-fonts.php">1001 Free Fonts</a>\n
+Pixel/Bitmap as well as Dingbat fonts: <a href="http://www.dafont.com/bitmap.php">dafonts</a>
+
+A few tips to keep in mind is that not all the characters have to saved. You can save
+only a portion or range of the characters. This can be very useful to save
+memory space if all you need is numbers.
+Or in some cases fonts may contain characters that can be used as icons or tiny bitmaps.
+This is particularly true of many of the digbat fonts on the
+<a href="http://www.dafont.com/bitmap.php">dafonts</a>
+site.
+
+
+*/
+
+
+/**
+@page page_Bitmaps Using Bitmaps
+You can use the distributed bitmaps or create your own. 
+The distribution contains a file named allBitmaps.h that includes all the distributed bitmaps, 
+so you can include this to make the bitmaps available:
+@code
+#include "bitmaps/allBitmaps.h"  // all distributed bitmaps
+@endcode
+
+Note that included bitmaps will not consume any memory if they are not explicitly referenced in
+your sketch with the DrawBitmap() function.
+
+You can also display your own images in your sketch.
+ A utility located in the glcdMakeBitmap directory (below the bitmap directory) converts a gif,
+jpg, bmp, tga or  png  file to a header file that can be used by your sketch.
+The glcdMakeBitmap directory contains a sketch that can be run using the
+Processing environment. There are also three directories containing executable versions
+for Linux, Mac and Windows.
+Run the utility and drop the image file to be converted into the glcdMakeBitmap window. 
+If the image can be converted, A header file is created in the bitmap directory.
+If the image file name is image.bmp, the header is named image.h
+Add the following line to the sketch:
+@code
+#include "bitmaps/image.h"
+@endcode
+and display the image using the following code:
+@code
+  GLCD.DrawBitmap(image, x, y);
+@endcode
+where x and y are the desired location of the upper left edge of the bitmap.
+
+Images are stored in program memory, a 128x64 pixel image takes 1k bytes of flash.
+Bear in mind that each different image used in a sketch will reduce the amount of
+code in a sketch. The utility displays the amount of
+memory required for the image and other useful information when it does the conversion. 
+
+
+*/

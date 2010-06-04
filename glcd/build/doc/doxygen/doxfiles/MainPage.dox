@@ -17,10 +17,14 @@ to the new library.
 
 @subpage page_configuring "Configuration"
 
+@subpage page_GLCD_methods "GLCD Methods"
+
+@subpage page_FontsBitmaps "Using Fonts and Bitmaps"
+
 @subpage page_troubleshoot "Troubleshooting"
 
 @subpage glcd_deprecated "Deprecated ks0108 Functions"
 
-@subpage page_ks0108_migrate "Migrating from ks0108 library"
+@subpage page_ks0108_libmigrate "Migrating from ks0108 library"
 
 */

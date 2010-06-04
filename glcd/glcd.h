@@ -60,10 +60,19 @@ class glcd : public gText
   public:
 	glcd();
 	
+/** @name CONTROL FUNCTIONS
+ * The following control functions are available
+ */
+/*@{*/
 	// Control functions
 	void Init(uint8_t invert = NON_INVERTED);
 	void SetDisplayMode(uint8_t mode); //NON_INVERTED or INVERTED,   was SetInverted(uint8_t invert);
+/*@}*/
 	
+/** @name DRAWING FUNCTIONS
+ * The following graphic functions are available
+ */
+/*@{*/
 	// Graphic Functions
 	void ClearScreen(uint8_t color = WHITE);
 	void DrawVLine(uint8_t x, uint8_t y, uint8_t height, uint8_t color= BLACK);
@@ -77,20 +86,36 @@ class glcd : public gText
 	void FillCircle(uint8_t xCenter, uint8_t yCenter, uint8_t radius, uint8_t color= BLACK);	
 	void DrawBitmap(Image_t bitmap, uint8_t x, uint8_t y, uint8_t color= BLACK);
 
+#ifdef DOXYGEN
+	/*
+	 * Define functions to get them to show up properly
+	 * in doxygen
+	 */
+	void SetDot(uint8_t x, uint8_t y, uint8_t color);
+	void SetPixels(uint8_t x, uint8_t y,uint8_t x1, uint8_t y1, uint8_t color);
+	uint8_t ReadData(void);        // now public
+    void WriteData(uint8_t data); 
+#else
 	using glcd_Device::SetDot;
 	using glcd_Device::SetPixels;
 	using glcd_Device::ReadData; 
 	using glcd_Device::WriteData; 
-	
+#endif
+
+
+
 	void GotoXY(uint8_t x, uint8_t y);  // overrride for GotoXY in device class
+
+
+/*@}*/
 
 	//Device Properties - these are read only constants	 
 	static const uint8_t Width = DISPLAY_WIDTH; 	/**< Display width in pixels */
 	static const uint8_t Height = DISPLAY_HEIGHT;	/**< Display height in pixels */
-	static const uint8_t Right = DISPLAY_WIDTH-1;	/**< Right most pixel on Display */
-	static const uint8_t Bottom = DISPLAY_HEIGHT-1; /**< Bottom most pixel on Display */
-	static const uint8_t CenterX = DISPLAY_WIDTH/2;	/**< Horizontal center pixel on Display */
-	static const uint8_t CenterY = DISPLAY_HEIGHT/2;/**< Vertical center pixel on Display */
+	static const uint8_t Right = DISPLAY_WIDTH-1;	/**< Right most pixel on Display (equals Width -1)*/
+	static const uint8_t Bottom = DISPLAY_HEIGHT-1; /**< Bottom most pixel on Display (equals Height -1)*/
+	static const uint8_t CenterX = DISPLAY_WIDTH/2;	/**< Horizontal center pixel on Display (equals Width/2)*/
+	static const uint8_t CenterY = DISPLAY_HEIGHT/2;/**< Vertical center pixel on Display (equals Height/2)*/
 	
 };
 

@@ -1,0 +1,64 @@
+/*
+ * glcd library API function & methods documenation
+ *
+ */
+
+
+/**
+@page page_GLCD_methods GLCD Methods
+
+@subpage page_GLCD_object
+
+@subpage page_gText_object
+
+@subpage page_coordinates
+
+*/
+
+/**
+@page page_GLCD_object GLCD object API functions
+@subpage glcd "Functions availabe to GLCD object"
+
+*/
+
+
+/**
+@page page_gText_object gText API functions
+@subpage gText "Functions available to user defined gText objects"
+
+*/
+
+
+/**
+@page page_coordinates GLCD coordinate system
+
+The coorindate system used by the GLCD library is not a normal
+cartesian cooridnate system.
+The coordinate system used by the library assigns (0,0) to the upper left
+corner. Y values grow down instead of the normal up direction, but X values
+increment left to right as in normal cartesian coordinates.
+
+Below is an example of the coordinate system which also includes the libraries properties.
+
+@image html Coordinates.jpg
+0,0 is the upper left edge of the display.
+
+
+@em Properties
+
+@ref glcd::Width "GLCD.Width" is the width of the display in pixels
+
+@ref glcd::Height "GLCD.height" is the height of the display in pixels
+
+@ref glcd::Right "GLCD.Right" is the right-most pixel (equals GLCD.Width-1)
+
+@ref glcd::Bottom "GLCD.Bottom" is the bottom pixel (equals GLCD.Height-1)
+
+@ref glcd::CenterX "GLCD.CenterX" is the horizontal center  (equals GLCD.Width/2) 
+
+@ref glcd::CenterY "GLCD.CenterY" is the vertical center (equals GLCD.Height/2) 
+
+
+*/
+
+

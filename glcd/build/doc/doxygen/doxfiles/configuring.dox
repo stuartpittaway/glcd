@@ -53,8 +53,26 @@ Pin numbering for the following processor types are supported:
 
 In summary:
 
-glcd_Config.h includes a panel file "config/{PANELNAME}_panel.h" (the active congiguration)
+glcd_Config.h includes a panel file "config/{PANELNAME}_panel.h" (the active configuration)
 that in turn includes a board specific pin mapping file based on arduino board type, 
 "config/{PANELNAME}_panel_{BOARDNAME}.h"
 
+@subpage page_pindefines "Specifying Pins"
+
 */
+
+/**
+@page page_pindefines AVR Port and Pin numbers
+Pins can be selected by Arduino pin number or by AVR port and pin number.
+The syntax used for avr port and pin number is @em PIN_Pb where Pb represents a PORT and a bit#.
+For example, to specify port D bit 3 you would use PIN_D3
+The following sets glcdCSEL1 (the first chip select) to port D pin 3
+@code
+#define glcdCSEL1	    PIN_D3
+@endcode
+
+See the avrio.h file for more details.
+
+
+*/
+

@@ -20,9 +20,11 @@
  * @endcode
  */
 
+/** @addtogroup glcd_deprecated */
+/*@{*/
+
 
 /**
- * @ingroup glcd_deprecated
  * @hideinitializer
  * @brief Draw a Vertical line
  * @details
@@ -36,7 +38,6 @@
 #define DrawVertLine(x, y, height, color)   DrawVLine(x, y, height, color)
 
 /**
- * @ingroup glcd_deprecated
  * @hideinitializer
  * @brief Draw a Horizontal line
  * @details
@@ -48,7 +49,6 @@
 #define DrawHoriLine(x, y, width, color)   DrawHLine(x, y, width, color)
 
 /**
- * @ingroup glcd_deprecated
  * @hideinitializer
  * @brief Clear a line of system text
  * @details
@@ -60,21 +60,21 @@
  * @see gText::EraseTextLine(eraseLine_t type)
  */
 #define ClearSysTextLine(line) FillRect(0, (line*8), (DISPLAY_WIDTH-1), ((line*8)+ 7), WHITE )
+
 /**
- * @ingroup glcd_deprecated
  * @hideinitializer
  * @brief Clear an 8 pixel high row
  * @details
  * This function should no longer be used.\n
- * It has been replaced by FillRect
+ * It has been replaced by glcd::FillRect()
  * @deprecated
  * @see glcd::FillRect()
  * @see gText::EraseTextLine(eraseLine_t type)
+ * @see gText::EraseTextLine(uint8_t row)
  */
 #define ClearPage(line, color) FillRect(0, (line*8), (DISPLAY_WIDTH-1), ((line*8)+ 7), color )
 
 /**
- * @ingroup glcd_deprecated
  * @hideinitializer
  * @brief Set LCD display mode
  * @details
@@ -83,5 +83,6 @@
  * @see glcd::SetDisplayMode()
  */
 #define SetInverted(invert)	SetDisplayMode(invert)  // function renamed
+/*@}*/
 
 #endif

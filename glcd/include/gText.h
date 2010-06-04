@@ -219,6 +219,10 @@ class gText : public glcd_Device
 
 	//void Init(glcd_Device* _device); // no longer used
 
+/** @name TEXT FUNCTIONS
+ * The following text functions are available
+ */
+/*@{*/
 	// Text area functions
 
 	uint8_t DefineArea(uint8_t x1, uint8_t y1, uint8_t x2, uint8_t y2, textMode mode=DEFAULT_SCROLLDIR);
@@ -261,6 +265,7 @@ class gText : public glcd_Device
 	void Printf(const char *format, ...);
 	void Printf_P(const char *format, ...);
 #endif
+/*@}*/
 
 };
 

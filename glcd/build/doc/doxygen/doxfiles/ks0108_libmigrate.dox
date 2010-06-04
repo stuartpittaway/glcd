@@ -3,7 +3,7 @@
  */
 
 /**
-@page page_ks0108_migrate ks0108 library migration
+@page page_ks0108_libmigrate ks0108 library migration
 @image html ks0108lib.jpg
 
 The glcd library is an extensive modification of the ks0108 library. It now supports more
