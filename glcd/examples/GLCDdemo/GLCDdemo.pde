@@ -49,7 +49,7 @@ void  loop()
     GLCD.DrawCircle(GLCD.CenterX/2, GLCD.CenterY-1, min(GLCD.CenterX/2, GLCD.CenterY)-2);   // draw circle centered in the left side of screen  
     GLCD.FillRect( GLCD.CenterX + GLCD.CenterX/2-8 ,GLCD.CenterY + GLCD.CenterY/2 -8,16,16, WHITE); // clear previous spinner position  
     drawSpinner(loops++, GLCD.CenterX + GLCD.CenterX/2, GLCD.CenterY + GLCD.CenterY/2);       // draw new spinner position
-    GLCD.GotoXY(GLCD.CenterX/2, GLCD.Bottom -15);          
+    GLCD.CursorToXY(GLCD.CenterX/2, GLCD.Bottom -15);          
     GLCD.print(iter);            // print current iteration at the current cursor position 
   } 
   // display iterations per second
@@ -78,7 +78,7 @@ void introScreen(){
   countdown(3);
   GLCD.ClearScreen();
   GLCD.SelectFont(Arial_14); // you can also make your own fonts, see playground for details   
-  GLCD.GotoXY(10, 3);
+  GLCD.CursorToXY(10, 3);
   GLCD.print("GLCD ver ");
   GLCD.print(GLCD_VERSION, DEC);
   GLCD.DrawRoundRect(8,0,GLCD.Width-9,17, 5);  // rounded rectangle around text area   
