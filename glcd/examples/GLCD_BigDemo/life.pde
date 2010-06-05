@@ -16,7 +16,7 @@
 
 #define BYTES_PER_COLUMN ((COLUMNS + 7)/ 8)    //this is the number of bytes needed to hold a column
 
-#define DELAY 10           // number of milliseconds to delay between the display of each generation
+#define DELAY 200           // number of milliseconds to delay between the display of each generation
 #define MAX_ITERATIONS  500  // iterations are terminated if this number is exceeded
 #define STABLE_GENERATIONS 4  // must be at least 2, this is the number of back generations checked for stability
 
@@ -171,28 +171,28 @@ unsigned int generate(){
   unsigned int iteration = 0;
   byte thisGeneration,nextGeneration, previousGeneration;  
   thisGeneration = nextGeneration  = 0;
+
+  //display the initial array
+  for(int row = 0; row < ROWS; row++)
+  {
+      for(int column = 0; column < COLUMNS; column++)
+      {
+        if(isAlive(thisGeneration,row,column))     
+           GLCD.DrawRoundRect(column * CELL_SIZE, row * CELL_SIZE,  CELL_SIZE-1, CELL_SIZE-1, CELL_SIZE/2, BLACK) ; 
+        else
+           GLCD.DrawRoundRect(column * CELL_SIZE, row * CELL_SIZE,  CELL_SIZE-1, CELL_SIZE-1, CELL_SIZE/2, WHITE) ; 
+      }
+  }
+
+  delay(1500); // show the seeded condition a little longer 
   do{   
 #ifdef potPin 
-   genPeriod = map(analogRead(potPin),0, 1023, 2, 200);
+   genPeriod = map(analogRead(potPin),0, 1023, 20, 600);
 #endif
     thisGeneration  = iteration % STABLE_GENERATIONS;
     nextGeneration =  (thisGeneration+1) % STABLE_GENERATIONS;
     previousGeneration  =  (thisGeneration-1) % STABLE_GENERATIONS;
-    //display the array
-    int page = 0;
-    for(int row = 0; row < ROWS; row++)
-    {
-      GLCD.FillRect(0,row*8, GLCD.Width-1, row*8 + 7, WHITE  ); 
-      for(int column = 0; column < COLUMNS; column++)
-      {
-        if(isAlive(thisGeneration,row,column))     
-           GLCD.DrawRoundRect(column * CELL_SIZE, row * CELL_SIZE,  CELL_SIZE-1, CELL_SIZE-1, CELL_SIZE/2) ; 
-      }
-    }
-    if(iteration == 0)  
-       delay(1500); // show the seeded condition a little longer 
-    else
-       delay(genPeriod);     
+    delay(genPeriod);     
     memset(generations[nextGeneration],0,sizeof(generations[0])); // clear the array for the next generation
     //see who lives and who dies
     births = deaths = 0;
@@ -203,14 +203,17 @@ unsigned int generate(){
         if(cell == DEAD){
           if(n==3) {
             setLife(nextGeneration,row,column,ALIVE); // birth     
+            GLCD.DrawRoundRect(column * CELL_SIZE, row * CELL_SIZE,  CELL_SIZE-1, CELL_SIZE-1, CELL_SIZE/2, BLACK) ; 
             births++;
           }
         }
         else{
-          if(n==2 || n==3) 
+          if(n==2 || n==3) {
             setLife(nextGeneration,row,column,ALIVE);  //survival
-          else { 
+            // No need to draw cell as it is already there.
+          } else { 
             setLife(nextGeneration,row,column,DEAD); //death 
+            GLCD.DrawRoundRect(column * CELL_SIZE, row * CELL_SIZE,  CELL_SIZE-1, CELL_SIZE-1, CELL_SIZE/2, WHITE) ; 
             deaths++;
           }
         }
