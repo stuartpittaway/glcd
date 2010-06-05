@@ -55,7 +55,7 @@ void  loop()
   // display iterations per second
   unsigned long duration = millis() - startMillis;
   int fps = 10000 / duration;
-  int fps_fract = (10000 % duration) / 10;
+  int fps_fract = (10000 % duration) * 10 / (duration/10);
   GLCD.ClearScreen();               // clear the screen  
   GLCD.CursorToXY(GLCD.CenterX + 16, 9);
   GLCD.print("GLCD ");
@@ -67,6 +67,8 @@ void  loop()
   GLCD.print("FPS=");               // print a text string
   GLCD.print(fps);                  // print an integer value
   GLCD.print(".");
+  if(fps_fract < 10)
+    GLCD.print((int)0);             // have to manually print the leading 0 when necessary
   GLCD.print(fps_fract);
 }
 
