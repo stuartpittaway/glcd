@@ -8,7 +8,8 @@
 #include "fonts/SystemFont5x7.h"       // system font
  
 /********* user configurable defines ************/
-#define CELL_SIZE 4          // the height and width of each cell
+#define CELL_SIZE 4        // the height and width of each cell
+#define DELAY    50        // number of milliseconds delay between the display of each generation
 
 /******* end of user configurable defines ********/
 #define ROWS    (DISPLAY_HEIGHT / CELL_SIZE)
@@ -16,7 +17,6 @@
 
 #define BYTES_PER_COLUMN ((COLUMNS + 7)/ 8)    //this is the number of bytes needed to hold a column
 
-#define DELAY 200           // number of milliseconds to delay between the display of each generation
 #define MAX_ITERATIONS  500  // iterations are terminated if this number is exceeded
 #define STABLE_GENERATIONS 4  // must be at least 2, this is the number of back generations checked for stability
 
