@@ -52,7 +52,9 @@ typedef struct {
 	uint8_t x;
 	uint8_t y;
 	struct {
+#ifdef GLCD_XCOL_SUPPORT
 		uint8_t col;
+#endif
 		uint8_t page;
 	} chip[glcd_CHIP_COUNT];
 } lcdCoord;
@@ -74,11 +76,7 @@ class glcd_Device : public Print
 {
   private:
   // Control functions
-#if defined(GLCD_READDATA_ORIG)
-	uint8_t DoReadData(uint8_t first);
-#elif !defined(GLCD_READATA_XFAST)
 	uint8_t DoReadData(void);
-#endif
 	void WriteCommand(uint8_t cmd, uint8_t chip);
 	inline void Enable(void);
 	inline void SelectChip(uint8_t chip); 

@@ -32,6 +32,12 @@ extern "C"
 }
 #endif
 
+/*
+ * Experimental defines
+ */
+
+//#define GLCD_OLD_FONTDRAW    // uncomment this define to get old font rendering (not recommended)
+
 	
 //extern glcd_Device GLCD; // this is the global GLCD instance, here upcast to the base glcd_Device class 
 

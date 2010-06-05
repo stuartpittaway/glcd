@@ -48,8 +48,7 @@
 
 /***********************************************************************************************************
  *
- * ALPHA TEST NOTE:
- * The configuration mechanism used here is not finalized and feedback is welcome.
+ * BETA TEST NOTE:
  *  - Does the autoconfig work correctly in your environment with your boards and displays?
  *  - Is the mechanism to make a custom configuration easy to use?
  *  - We want your comments and suggestions for making configuration easer, particularly for novices
@@ -85,28 +84,21 @@
 /*========================== Optional User Defines ==================================*/
 
 //#define GLCD_NO_SCROLLDOWN    // disable reverse scrolling (saves ~600 bytes of code)
-                // This will allow those tight on FLASH space to save a bit of code space
+                                // This will allow those tight on FLASH space to save a bit of code space
 
 /*
- * ALPHA TEST NOTE:
+ * BETA TEST NOTE:
  * Should the default be "atomic" even though it will be a bit slower on standard Arduino boards?
  */
 
-//#define GLCD_ATOMIC_IO    // Generate code that ensures all pin i/o operations are atomic
-                // including any potential nibble operations.
-                // Without this option enabled, nibble operations will be slightly faster but
-                // might have issues if a pin used shares a processor i/o port with an
-                // interrupt routine that updates pins/bits on the same port.
+//#define GLCD_ATOMIC_IO        // Generate code that ensures all pin i/o operations are atomic
+                                // including any potential nibble operations.
+                                // Without this option enabled, nibble operations will be slightly faster but
+                                // might have issues if a pin used shares a processor i/o port with an
+                                // interrupt routine that updates pins/bits on the same port.
 
 
 //#define GLCD_NODEFER_SCROLL    // uncomment to disable deferred newline processing
 
-/*
- * ALPHA TEST NOTE:
- * These defines will probably disappear
- */
-
-//#define GLCD_OLD_FONTDRAW    // uncomment this define to get old font rendering (not recommended)
-//#define GLCD_READDATA_XFAST    // uncomment to enable experimental code that speeds up LCD read operations.
 
 #endif
