@@ -10,7 +10,7 @@ ks0108 library so existing ks0108 sketches should work with little or no modific
 The configuration mechanism allows using a broad range of GLCD panels and ATmega controllers.
 Configuration in this library is handled differently than the previous ks0108 library
 so any ks0108 configuration information will need modification to work with the library. 
-See \ref page_ks0108_migrate for details on how to migrate existing code or configurations
+See \ref page_ks0108_libmigrate for details on how to migrate existing code or configurations
 to the new library.
 
 @subpage page_wiring "Wiring"
@@ -23,8 +23,8 @@ to the new library.
 
 @subpage page_troubleshoot "Troubleshooting"
 
-@subpage glcd_deprecated "Deprecated ks0108 Functions"
-
 @subpage page_ks0108_libmigrate "Migrating from ks0108 library"
+
+@subpage glcd_deprecated "Deprecated ks0108 Functions"
 
 */

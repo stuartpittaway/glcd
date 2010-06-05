@@ -21,9 +21,16 @@ Additional fonts and bitmaps can be added and included in sketches.
 There is a free java application available that can convert PC fonts for use with this library. 
 The software is called FontCreator2 and it can produce a header file that can be included in your sketch.
 
-Here is a link:
+@note
+GLCDFontCreator2 should not be confused with GLCD FontCreator 1.1 mikroElektronica Edition, 
+which is an entirely different product/tool. FontCreator2 is a free open source Java based application
+while GLCD FontCreator 1.1 is a Windows based font tool for use with microElectronica s/w products.
+The mikroElektronica Edition s/w encodes the font data differently and the free
+version of the software does not allow saving a full character set.
 
-The header files should be placed in the directory named fonts and included in your sketch.
+Here is a link to a zip image for FontCreator2: <a href="http://www.mikrocontroller.net/attachment/22095/GLCDFontCreator2.zip">FontCreator2 Zip Image</a>
+
+The font header files created should be placed in the directory named fonts and included in your sketch.
 For example, if you create a font named myfont in a header named myfont.h then copy myfont.h
 to the fonts directory and in your sketch:
 @code
@@ -34,10 +41,16 @@ To use the font in your sketch you select the font as follows:
   GLCD.SelectFont(myfont);   // use myfont 
 @endcode
 
-Note that the distribution contains a file named allFonts.h that includes all the distributed fonts, so you can include these files instead of explicitly including the individual fonts
+Note that the distribution contains a file named allFonts.h that includes all the distributed fonts,
+so you can include these files instead of explicitly including the individual fonts
 @code
 #include "fonts/allFonts.h"       // all distributed fonts
 @endcode
+
+In order to make newly created installed fonts "known" by the allFonts.h you will need
+to not only copy the font header to the fonts directory
+but also place an include for the font header file in the allFonts.h file.
+
 
 Font definitions are stored in program memory and this can be significant
 for larger fonts. The 7 pixel high system font uses under 500 bytes,
