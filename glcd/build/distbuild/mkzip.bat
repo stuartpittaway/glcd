@@ -65,7 +65,7 @@ REM #
 REM # Setup some date variables
 REM #
 REM # WARNING:
-REM # you would think that getting date would be a simply
+REM # you would think that getting date would be a simple
 REM # operation. But this is the world of Windoze.
 REM # since date format can be customized by the user there is no
 REM # no way to detect the format.
@@ -191,9 +191,9 @@ if defined MYDATE (
 )
 
 REM #
-REM # name of manifest file
+REM # name of Build Information file
 REM #
-set GLCDMANIFEST=%GLCDDISTDIR%\SVNmanifest.txt
+set GLCDBUILDINFO=%GLCDDISTDIR%\Buildinfo.txt
 
 REM ##################################################################
 REM # Now start to actually do something
@@ -219,6 +219,7 @@ goto working_tree_ready
 :get_svnfiles
 echo Checking out SVN working tree: %GLCDDISTDIR%
 echo ======== Checkout SVN tree to %GLCDDISTDIR% >> "%LOGFILE%"
+echo %SVNCMD% %GLCDREPO% "%GLCDDISTDIR%" >>"%LOGFILE%"
 %SVNCMD% %GLCDREPO% "%GLCDDISTDIR%" >>"%LOGFILE%"
 
 if not ERRORLEVEL 1 goto working_tree_ready
@@ -243,21 +244,19 @@ rmdir /S /Q debug
 rmdir /S /Q build
 cd %PWD%
 
-echo Creating SVN Manifest file
-echo Distribution files created %DATE% %TIME% >"%GLCDMANIFEST%"
-echo =====================================================================>>"%GLCDMANIFEST%"
+echo Creating BuildInfo file
+echo Distribution files created %DATE% %TIME% >"%GLCDBUILDINFO%"
+echo =====================================================================>>"%GLCDBUILDINFO%"
 cd "%GLCDDISTDIR%"
 
-REM for time being, no full SVN info as it shows the SVN repository information.
-REM %SVNINFO% >>"%GLCDMANIFEST%"
 REM #
 REM # the goobldeygook below is to essentially to simulate a simple %SVNINFO%|grep Revision
 REM # sad that microsoft sucks so bad that is so complicated.
 REM
 for /f "usebackq tokens=1,2* delims=:" %%i in (`%SVNINFO%`) do (
 	if /i %%i==Revision (
-	  echo %%i %%j >> "%GLCDMANIFEST%"
-	  echo =====================================================================>>"%GLCDMANIFEST%"
+	  echo BuildNumber %%j >> "%GLCDBUILDINFO%"
+	  echo =====================================================================>>"%GLCDBUILDINFO%"
 	)
 )
 
@@ -268,7 +267,11 @@ REM # unfortunately even though we removed the debug and build directories
 REM # svn knows about them and will report them in this list.
 REM #
 
-%SVNLIST% >>"%GLCDMANIFEST%"
+REM echo Adding SVN information to Buildinfo file
+
+REM for time being, no full SVN info as it shows the SVN repository information.
+REM %SVNINFO% >>"%GLCDBUILDINFO%"
+REM %SVNLIST% >"%GLCDBUILDINFO%"
 cd %PWD%
 
 REM #
