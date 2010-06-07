@@ -95,7 +95,7 @@ REM # if you define WINAVR_UTILDIR, this file will use it
 REM #
 
 if not defined WINAVR_UTILDIR (
-	for /D %%G IN (%systemDrive%\WinAVR-*) do set WINAVR_UTILDIR=%%G
+	for /D %%G IN (%systemDrive%\WinAVR-*) do set WINAVR_UTILDIR=%%G\utils\bin
 )
 
 REM #
