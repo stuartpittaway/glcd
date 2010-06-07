@@ -31,18 +31,24 @@
   * NOTE: if you have a panel that has different dimensions than the distributed configuration, you can either
   * edit the supplied configuration file for that board type or create a fully custom configuration file.
   *
-  * The auto configuration file (default is named  "config/ks0108_panel.h") selects the appropriate board
-  * configuration file based on the current board selection in the Arduino IDE.
+  * The auto configuration file (default is named  "config/ks0108_Panel.h") selects the appropriate board
+  * pin configuration file based on the current board selection in the Arduino IDE.
   *   
-  * The configuration files for each board type can be found in the "config" directory, the naming is:
-  *  "{PANEL}_{BOARDNAME}_Config.h"
+  * The auto configuration panel configuration files can be found in the "config" directory, the naming is:
+  *  "{PANELNAME}_Panel.h"
   * Where:
-  *   {PANEL} is the glcd panel type. (for example, ks0108)
+  *   {PANELNAME} is the glcd panel type. (for example, ks0108)
+  *
+  * The pin configuration files for each board type can also be found in the "config" directory, the naming is:
+  *  "{PANELNAME}_{BOARDNAME}.h"
+  * Where:
+  *   {PANELNAME} is the glcd panel type. (for example, ks0108)
   *   {BOARDNAME} is the name of the board (as selected in the Arduino IDE).
   *
-  * So for example, the auto configuration file name for a ks0108 config file for the 
-  * standard Arduino board would be: "ks0108_Arduino_Config.h"
-  * and for a "Mega" board it would be: "ks0108_Mega_Config.h"
+  * So for example, the auto configuration file name for a ks0108 panel
+  * would be: "ks0108_Panel.h"
+  * The ks0108 pin configuration file for a "Arduino" board would be: "ks0108_Arduino.h"
+  * and the pin configuration file for a "Mega": "ks0108_Mega.h"
   * 
   */
 
@@ -63,8 +69,8 @@
  /*
   * autoconfig includes - (comment this out if using manual configurations, see below)
   */
-#include "config/ks0108_panel.h"          // automatically configure library for a ks0108 panel
-//#include "config/ks0108-192x64_panel.h"   // automatically configure library for a ks0108 192x64 panel
+#include "config/ks0108_Panel.h"          // automatically configure library for a ks0108 panel
+//#include "config/ks0108-192x64_Panel.h"   // automatically configure library for a ks0108 192x64 panel
 
 /*
  * If you want to explicitly select a manual configuration, you can edit the desired manual configuration
