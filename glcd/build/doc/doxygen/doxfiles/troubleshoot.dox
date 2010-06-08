@@ -32,7 +32,7 @@ Unfortunately, the nature of glcd hardware interfaces is such that nearly all th
 to be correctly configured and wired up correctly in order to initialize the glcd and see anything.
 If your display is not working properly then check the information displayed
 in the serial monitor. This shows what information the library is using and
-you can use this to help verify if the sketch is configured correctly. 
+you can use this to help verify if the library is configured correctly. 
 
 The tests conclude with a final display screen that indicates whether all the tests
 finished successfully and also reports the speed of the glcd::SetDot() API function call

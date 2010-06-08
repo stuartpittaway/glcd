@@ -11,8 +11,9 @@ The configuration capability allows creation of configuration files to support a
 choice of pins, several different processor types, and different display panels.
 
 If you are using a standard Arduino board (168/328) or a Mega, Sanguino, Teensy, or Teensy++;  
-and you have a 128x64 KS-0108 panel wired according to the pin connections table above,
-you do not need to make any changes to configuration files. 
+and you have a 128x64 KS-0108 panel wired according to the pin connections table 
+in the @ref page_ks0108_family wiring section
+you do not need to make any changes to configuration files and it should work "out of the box".
 
 If you use different wiring or use a different panel type you will need to modify one
 of the supplied configurations or you can create your own.
