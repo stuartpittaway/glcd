@@ -24,9 +24,11 @@ While display panel timing can also be easily configured, most displays will wor
 requiring a configuration change for timing. However, you should check the datasheet
 for your panel to verify the timing values in the panel configuration file.
 
-The active configuration when the sketch is compiled is selected in a master configuration file named glcd_Config.h. The default configuration file (named "config/ks0108_panel.h")  is for 128x64 ks0108 type panel.  
+The active configuration when the sketch is compiled is selected
+in a master configuration file named glcd_Config.h.
+The default configuration file (named "config/ks0108_Panel.h")  is for 128x64 ks0108 type panel.  
 The panel configuration file naming is:
-  "{PANELNAME}_panel.h"
+  "{PANELNAME}_Panel.h"
  Where:
     {PANELNAME} is the glcd panel type. (for example, ks0108)
 
@@ -54,9 +56,9 @@ Pin numbering for the following processor types are supported:
 
 In summary:
 
-glcd_Config.h includes a panel file "config/{PANELNAME}_panel.h" (the active configuration)
+glcd_Config.h includes a panel file "config/{PANELNAME}_Panel.h" (the active configuration)
 that in turn includes a board specific pin mapping file based on arduino board type, 
-"config/{PANELNAME}_panel_{BOARDNAME}.h"
+"config/{PANELNAME}_{BOARDNAME}.h"
 
 @subpage page_pindefines "Specifying Pins"
 
