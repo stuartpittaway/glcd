@@ -1,3 +1,0 @@
-
-glcdMakeBitmap
-glcdMakeBitmap.jar,core.jar
