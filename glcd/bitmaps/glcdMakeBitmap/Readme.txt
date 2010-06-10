@@ -9,7 +9,7 @@ Also included are a java runtime (glcdMakeBitmap.jar) and java source (glcdMakeB
 
 Run the utility by loading the pde into Processing (or using the jar from the command line) 
 and drop the image file to be converted into the window.
-If the image can be converted, A header file is created in the bitmap directory.
+If the image can be converted, a header file is created in the bitmap directory.
 For example, if the image file name to be converted is named image.bmp, the header is named image.h
 
 The utility can also update the aggregate header file (named allBitmaps.h).
