@@ -87,6 +87,9 @@ your sketch with the DrawBitmap() function.
 
 You can also display your own images in your sketch.
 
+A utility located in the glcdMakeBitmap directory (below the bitmap directory) converts a gif,
+jpg, bmp, tga or  png  file to a header file that can be used by your sketch.
+
 The utility is written in the Processing language; the glcdMakeBitmap.pde file runs
 in the Processing environment on your computer - its not an Arduino sketch.
 See: http://processing.org/
