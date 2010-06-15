@@ -803,7 +803,7 @@ int gText::PutChar(uint8_t c)
 
 	for(uint8_t i=0; i<bytes; i++)	/* each vertical byte */
 	{
-		uint8_t page = i*width;
+		uint16_t page = i*width; // page must be 16 bit to prevent overflow
 		for(uint8_t j=0; j<width; j++) /* each column */
 		{
 			uint8_t data = FontRead(this->Font+index+page+j);
@@ -881,7 +881,7 @@ int gText::PutChar(uint8_t c)
 
 		glcd_Device::GotoXY(this->x, (dy & ~7));
 
-		uint8_t page = p/8 * width;
+		uint16_t page = p/8 * width; // page must be 16 bit to prevent overflow
 
 		for(uint8_t j=0; j<width; j++) /* each column of font data */
 		{
