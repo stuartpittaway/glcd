@@ -105,7 +105,8 @@ Run the utility by either running the java jar file directly or loading the pde 
 @image html glcdMakeBitmap.png
 
 Drop the image file to be converted into the window.
-If the image can be converted, A header file is created in the bitmap directory.
+If the image can be converted, the image will be displayed in the window
+and a header file is created in the bitmap directory.
 For example, if the image file name to be converted is named image.bmp, the header is named image.h
 
 To use the newly created bitmap, add the following line to the sketch:
