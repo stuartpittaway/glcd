@@ -13,7 +13,7 @@
 #include "fonts/allFonts.h"         // system and arial14 fonts are used
 #include "bitmaps/allBitmaps.h"       // all images in the bitmap dir 
 
-Image_t ArduinoIcon;
+Image_t icon;
 
 gText textArea;              // a text area to be defined later in the sketch
 gText textAreaArray[3];      // an array of text areas  
@@ -28,9 +28,9 @@ void setup()
 {
   GLCD.Init();   // initialise the library, non inverted writes pixels onto a clear screen
   if(GLCD.Height >= 64)   
-    ArduinoIcon = ArduinoIcon64x64;  // the 64 pixel high icon
+    icon = ArduinoIcon64x64;  // the 64 pixel high icon
   else
-    ArduinoIcon = ArduinoIcon64x32;  // the 32 pixel high icon
+    icon = ArduinoIcon64x32;  // the 32 pixel high icon
   introScreen();
   GLCD.ClearScreen(); 
 
@@ -74,7 +74,7 @@ void  loop()
 
 
 void introScreen(){  
-  GLCD.DrawBitmap(ArduinoIcon, 32,0); //draw the bitmap at the given x,y position
+  GLCD.DrawBitmap(icon, 32,0); //draw the bitmap at the given x,y position
   countdown(3);
   GLCD.ClearScreen();
   GLCD.SelectFont(Arial_14); // you can also make your own fonts, see playground for details   
@@ -140,8 +140,8 @@ void  textAreaDemo()
 void showArea(predefinedArea area, char *description)
 {
   GLCD.ClearScreen(); 
-  GLCD.DrawBitmap(ArduinoIcon, 0,  0); 
-  GLCD.DrawBitmap(ArduinoIcon, 64, 0); 
+  GLCD.DrawBitmap(icon, 0,  0); 
+  GLCD.DrawBitmap(icon, 64, 0); 
   textArea.DefineArea(area);
   textArea.SelectFont(System5x7);
   textArea.SetFontColor(WHITE); 
