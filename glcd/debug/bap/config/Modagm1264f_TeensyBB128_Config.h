@@ -173,8 +173,16 @@
 #define glcdData7Pin		PIN_C7
 
 // skipped D6 to avoid LED
-#define glcdCSEL1		    PIN_D7
-#define glcdCSEL2		    PIN_B4
+//#define glcdCSEL1		    PIN_D7
+//#define glcdCSEL2		    PIN_B4
+//#define glcdCSEL3		    PIN_B6
+//#define glcdCSEL4		    PIN_F7
+
+#define glcdCSEL1		    PIN_B6
+#define glcdCSEL2		    PIN_F7
+#define glcdCSEL3		    PIN_D7
+#define glcdCSEL4		    PIN_B4
+
 
 #define glcdRES 		    PIN_B5
 
