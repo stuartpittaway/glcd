@@ -8,9 +8,11 @@
  * so there is no penalty to including a font file here if its not used 
  */
 
-#include "fonts/SystemFont5x7.h"       // system font
-#include "fonts/Arial14.h"             // proportional font
-#include "fonts/Verdana_digits_24.h"   // large proportional font - numerals only 
-#include "fonts/fixednums7x15.h"       // fixed width font - numerals only 
-#include "fonts/fixednums8x16.h"       // fixed width font - numerals only 
-#include "fonts/fixednums15x31.h"      // fixed width font - numerals only 
+#include "SystemFont5x7.h"       // system font
+#include "Arial14.h"             // proportional font
+#include "Arial_bold_14.h"       // Bold proportional font
+#include "Corsiva_12.h"
+#include "Verdana_digits_24.h"   // large proportional font - numerals only 
+#include "fixednums7x15.h"       // fixed width font - numerals only 
+#include "fixednums8x16.h"       // fixed width font - numerals only 
+#include "fixednums15x31.h"      // fixed width font - numerals only 
