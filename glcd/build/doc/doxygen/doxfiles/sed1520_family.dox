@@ -9,7 +9,7 @@
 The SED1520 uses different timing commands, and control pins than the \ref page_ks0108_family "KS0108"
 and the most common panels have fewer pixels.
 The distribution contains a generic manual configuration file named 
-Modvk5121_Config.h for the VK5121 panel. 
+Modvk5121_Manual_Config.h for the VK5121 panel. 
 
 @note
 Manual configuration files are different from auto configuration files in that they
