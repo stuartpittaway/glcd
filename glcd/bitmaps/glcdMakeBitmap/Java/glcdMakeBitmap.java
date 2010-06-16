@@ -1,3 +1,22 @@
+import processing.core.*; 
+import processing.xml.*; 
+
+import java.awt.dnd.*; 
+import java.awt.datatransfer.*; 
+
+import java.applet.*; 
+import java.awt.*; 
+import java.awt.image.*; 
+import java.awt.event.*; 
+import java.io.*; 
+import java.net.*; 
+import java.text.*; 
+import java.util.*; 
+import java.util.zip.*; 
+import java.util.regex.*; 
+
+public class glcdMakeBitmap extends PApplet {
+
 /**
  * glcdBitmap. 
  * 
@@ -8,8 +27,8 @@
  * updated  14 Feb 2010  
  */
 
-import java.awt.dnd.*;
-import java.awt.datatransfer.*;
+
+
 
 String sourceImage;
 String destinationOffset  ;
@@ -22,7 +41,7 @@ int imgWidth;
 int imgHeight;  
 int imgPages;
 
-void setup() 
+public void setup() 
 {
   size(256, 256);
   background(255); // background to white
@@ -31,21 +50,21 @@ void setup()
   aFont   = createFont("Arial.bold", 12);
   textFont(aFont) ; 
   clearWindow();
-  destinationOffset =  sketchPath("") + ".." + File.separator ; // up one directory when running from Processing IDE
-  // use the following only when making the EXE versions 
-  //destinationOffset = sketchPath("") + ".." + File.separator + ".." + File.separator ;  
+  //destinationOffset =  sketchPath("") + ".." + File.separator ; // up one directory 
+  // use the following when the code is run two directories below the bitmaps directory 
+  destinationOffset = sketchPath("") + ".." + File.separator + ".." + File.separator ;  
 
 }
 
-void draw()
+public void draw()
 {
 }
 
-void mousePressed() {  
+public void mousePressed() {  
   listImageHeaderFiles( destinationOffset, aggregateHeader );
 }
 
-void clearWindow()
+public void clearWindow()
 {
   fill(255);
   rect(0,0, width, height);
@@ -55,7 +74,7 @@ void clearWindow()
   bitmap = null;  
 }
 
-void convert(String sourceImage)
+public void convert(String sourceImage)
 {
   clearWindow();
   bitmap = loadImage(sourceImage);   // load the image
@@ -91,7 +110,7 @@ void convert(String sourceImage)
   }
 }
 
-void writeFile(String inFileName, String baseName)
+public void writeFile(String inFileName, String baseName)
 {
   print("basename = "); 
   println(baseName);  
@@ -150,7 +169,7 @@ void writeFile(String inFileName, String baseName)
 }
 
 // return the byte representing data a the given page and x offset
-int getValue( int x, int page){  
+public int getValue( int x, int page){  
   //print("page= ");println(page);
   int val = 0; 
   for( byte bit=0; bit < 8; bit++){
@@ -172,7 +191,7 @@ int getValue( int x, int page){
   return val;  
 }
 
-String getBaseName(String fileName) 
+public String getBaseName(String fileName) 
 {
   File tmpFile = new File(fileName);
   tmpFile.getName();
@@ -230,7 +249,7 @@ DropTarget dt = new DropTarget(this, new DropTargetListener() {
 
 
 // this routine creates a file that lists all the H file in destination
-void listImageHeaderFiles(String destination, String outFilename)
+public void listImageHeaderFiles(String destination, String outFilename)
 {  
 
   String outPath = destination + outFilename;
@@ -264,7 +283,7 @@ void listImageHeaderFiles(String destination, String outFilename)
 
 
 // this routine creates a file that lists all the H file in destination
-void listImageHeaderFilesX(String destination, String outFileName)
+public void listImageHeaderFilesX(String destination, String outFileName)
 {  
  
   File dir = new File(destination);
@@ -286,3 +305,8 @@ void listImageHeaderFilesX(String destination, String outFileName)
 
 
 
+
+  static public void main(String args[]) {
+    PApplet.main(new String[] { "--bgcolor=#ece9d8", "glcdMakeBitmap" });
+  }
+}

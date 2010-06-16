@@ -7,7 +7,7 @@ See: http://processing.org/
 
 Also included are a java runtime (glcdMakeBitmap.jar) and java source (glcdMakeBitmap.java)
 
-Run the utility by loading the pde into Processing (or using the jar from the command line) 
+Run the utility by loading the pde into Processing (or click the jar file in the Java directory) 
 and drop the image file to be converted into the window.
 If the image can be converted, a header file is created in the bitmap directory.
 For example, if the image file name to be converted is named image.bmp, the header is named image.h
