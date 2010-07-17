@@ -20,4 +20,14 @@ is no penalty using this file instead of explicitly including header files.
 To update allBitmaps.h to include all header files in the bitmap directory, click the window.
 
 See the glcd documentation for more informaton on using bitmaps.
-
+
+----
+The following are instructions for updating the .jar and .java files in the java directory
+if the Processing sketch is modified.
+
+From the Processing IDE, select File > Export
+This creates a directory below glcdMakeBitmap that will contain the .jar and .java files 
+These should be moved to the GLCD\bitmap\utlis\java directory to ensure the
+correct relative path to the directory containing the bitmap headers.
+
+After the .jar and .java files  are moved, the applet directory can be deleted.

@@ -1,12 +1,14 @@
-/* D:\Documents and Settings\michael\My Documents\My Pictures\ArduinoIcon32.h bitmap file for GLCD library */
-/* Bitmap created from D:\Documents and Settings\michael\My Documents\My Pictures\ArduinoIcon32.bmp        */
-/* Date: 2 Dec 2009                             */
+/* ArduinoIcon32 bitmap file for GLCD library */
+/* Bitmap created from ArduinoIcon32.bmp      */
+/* Date: 17 Jul 2010      */
+/* Image Pixels = 1088    */
+/* Image Bytes  = 136     */
 
 #include <inttypes.h>
 #include <avr/pgmspace.h>
 
-#ifndef D:\Documents and Settings\michael\My Documents\My Pictures\ArduinoIcon32_H
-#define D:\Documents and Settings\michael\My Documents\My Pictures\ArduinoIcon32_H
+#ifndef ArduinoIcon32_H
+#define ArduinoIcon32_H
 
 static uint8_t ArduinoIcon32[] PROGMEM = {
   34, // width
@@ -27,6 +29,6 @@ static uint8_t ArduinoIcon32[] PROGMEM = {
   /* page 3 (lines 24-31) */
   0x1,0x6,0x8,0x10,0x23,0x22,0x22,0x22,0x23,0x10,0x8,0x6,0x1,0x18,0x3f,0x3f,
   0x3f,0xf,0x1,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x1,0xf,0x3f,0x3f,
-  0x3f,0x18
+  0x3f,0x18,
 };
 #endif
