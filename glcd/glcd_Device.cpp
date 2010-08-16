@@ -25,7 +25,7 @@
 */
 
 #include <avr/io.h>
-#include <wiring.h> // needed for arduino io methods
+#include <WProgram.h> // needed for arduino io methods
 
 #include "include/glcd_Device.h"
 #include "include/glcd_io.h"
