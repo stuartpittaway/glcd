@@ -10,7 +10,7 @@ Configuration is handled by a set of configuration files used to set panel and p
 The configuration capability allows creation of configuration files to support a wide
 choice of pins, several different processor types, and different display panels.
 
-If you are using a standard Arduino board (168/328) or a Mega, Sanguino, Teensy, or Teensy++;  
+If you are using a standard Arduino board (168/328) or a Mega (1280/2560), Sanguino, Teensy, or Teensy++;  
 and you have a 128x64 KS-0108 panel wired according to the pin connections table 
 in the @ref page_ks0108_family wiring section
 you do not need to make any changes to configuration files and it should work "out of the box".
@@ -49,7 +49,7 @@ Processor type is automatically determined from the board selected when the sket
 this allows Arduino style pin numbers to be mapped to fast direct port IO used by the library.
 Pin numbering for the following processor types are supported:
 - Standard Arduino (ATmega8,168,328)
-- Mega(ATmega1280)
+- Mega(ATmega1280, ATmega2560)
 - Sanguino (ATmega644P)
 - Teensy and Teensy++ (AT90USB646, AT90USB1286, ATmega32U4)
 

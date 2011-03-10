@@ -8,9 +8,13 @@
  * 
  * Thanks to Paul Stoffregen (http://www.pjrc.com/teensy) 
  * for his expertise in Arduino pin mapping macros
+ *
+ * Warning: when adding new board/procesor types ther are other headers
+ * that have similar dependencies most notabily the ones in glcd/config
 */ 
 
 #include "pins_arduino.h"
+
 #if !(defined(digitalPinToPortReg) && defined(digitalPinToBit))
 #if defined(__AVR_ATmega8__) || defined(__AVR_ATmega168__) || defined(__AVR_ATmega328P__)
 
@@ -20,7 +24,7 @@
 #define digitalPinToBit(P) \
     (((P) >= 0 && (P) <= 7) ? (P) : (((P) >= 8 && (P) <= 13) ? (P) - 8 : (P) - 14))
 
-#elif defined(__AVR_ATmega1280__)
+#elif defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__)
 	// Arduino Mega Pins
 #define digitalPinToPortReg(P) \
     (((P) >= 22 && (P) <= 29) ? &PORTA : \
