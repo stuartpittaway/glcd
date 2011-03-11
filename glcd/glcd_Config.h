@@ -106,5 +106,14 @@
 
 //#define GLCD_NODEFER_SCROLL    // uncomment to disable deferred newline processing
 
+//#define GLCD_READ_CACHE       // Turns on code that uses a frame buffer for a read cache
+				// This adds only ~52 bytes of code but...
+				// will use DISPLAY_HEIGHT/8 * DISPLAY_WIDTH bytes of RAM
+				// A typical 128x64 ks0108 will use 1k of RAM for this.
+				// performance increase is quite noticeable (double or so on FPS test)
+				// This will not work on smaller AVRs like the mega168 that only
+				// have 1k of RAM total.
+
+
 
 #endif

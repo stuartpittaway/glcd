@@ -20,15 +20,13 @@
   along with GLCD.  If not, see <http://www.gnu.org/licenses/>.
  
   The glcd_Device class impliments the protocol for sending and receiving data and commands to a GLCD device.
-  It uses glcd_io.h to for the io primitives and glcd_COnfig.h for user specific configuration.
+  It uses glcd_io.h to for the io primitives and glcd_Config.h for user specific configuration.
 
 */
 
-#include <avr/io.h>
-#include <WProgram.h> // needed for arduino io methods
-
 #include "include/glcd_Device.h"
 #include "include/glcd_io.h"
+
 
 /*
  * define the static variables declared in glcd_Device
@@ -90,6 +88,13 @@ lcdCoord  glcd_Device::Coord;
 							// Believe it or not, the code on the ks0108s runs slower with this
 							// enabled.
 
+
+#ifdef GLCD_READ_CACHE
+/*
+ * Declare a static buffer for the Frame buffer for the Read Cache
+ */
+uint8_t glcd_rdcache[DISPLAY_HEIGHT/8][DISPLAY_WIDTH];
+#endif
 
 	
 glcd_Device::glcd_Device(){
@@ -357,8 +362,8 @@ void glcd_Device::Init(uint8_t invert)
 	lcdfastWrite(glcdDI, LOW);
 	lcdfastWrite(glcdRW, LOW);
 
-	this->Coord.x = 0;
-	this->Coord.y = 0;
+	this->Coord.x = -1;  // invalidate the s/w coordinates so the first GotoXY() works
+	this->Coord.y = -1;  // invalidate the s/w coordinates so the first GotoXY() works
 	
 	this->Inverted = invert;
 
@@ -384,7 +389,7 @@ void glcd_Device::Init(uint8_t invert)
 	for(uint8_t chip=0; chip < glcd_CHIP_COUNT; chip++)
 	{
 		/*
-		 * flush out internal state to force first GotoXY() to work
+		 * flush out internal state to force first GotoXY() to talk to GLCD hardware
 		 */
 		this->Coord.chip[chip].page = -1;
 #ifdef GLCD_XCOL_SUPPORT
@@ -519,6 +524,25 @@ uint8_t glcd_Device::DoReadData()
  * @see WriteData()
  */
 
+#ifdef GLCD_READ_CACHE
+uint8_t glcd_Device::ReadData()
+{
+uint8_t x, data;
+	x = this->Coord.x;
+	if(x >= DISPLAY_WIDTH)
+	{
+		return(0);
+	}
+	data = glcd_rdcache[this->Coord.y/8][x];
+
+	if(this->Inverted)
+	{
+		data = ~data;
+	}
+	return(data);
+}
+#else
+
 inline uint8_t glcd_Device::ReadData()
 {  
 uint8_t x, data;
@@ -544,6 +568,7 @@ uint8_t x, data;
 	this->GotoXY(x, this->Coord.y);	
 	return(data);
 }
+#endif
 
 void glcd_Device::WriteCommand(uint8_t cmd, uint8_t chip)
 {
@@ -626,6 +651,9 @@ void glcd_Device::WriteData(uint8_t data) {
 		lcdDataOut( displayData);					// write data
 		lcdDelayNanoseconds(GLCD_tWH);
 		glcd_DevENstrobeLo(chip);
+#ifdef GLCD_READ_CACHE
+		glcd_rdcache[this->Coord.y/8][this->Coord.x] = displayData; // save to read cache
+#endif
 
 		// second page
 
@@ -665,6 +693,9 @@ void glcd_Device::WriteData(uint8_t data) {
 		lcdDataOut(displayData);		// write data
 		lcdDelayNanoseconds(GLCD_tWH);
 		glcd_DevENstrobeLo(chip);
+#ifdef GLCD_READ_CACHE
+		glcd_rdcache[this->Coord.y/8][this->Coord.x] = displayData; // save to read cache
+#endif
 		this->GotoXY(this->Coord.x+1, ysave);
 	}else 
 	{
@@ -686,6 +717,9 @@ void glcd_Device::WriteData(uint8_t data) {
 		lcdDelayNanoseconds(GLCD_tWH);
 
 		glcd_DevENstrobeLo(chip);
+#ifdef GLCD_READ_CACHE
+		glcd_rdcache[this->Coord.y/8][this->Coord.x] = data; // save to read cache
+#endif
 
 		/*
 		 * NOTE/WARNING:

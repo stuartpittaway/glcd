@@ -57,8 +57,16 @@
 #define lcdfastWrite(pin, pinval) avrio_WritePin(pin, pinval)
 
 #define OUTPUT 1
-#define lcdPinMode(pin, mode)  avrio_PinMode(pin, mode) 
 
+#ifndef LOW
+#define LOW 0
+#endif
+
+#ifndef HIGH
+#define HIGH 1
+#endif
+
+#define lcdPinMode(pin, mode)  avrio_PinMode(pin, mode) 
 
 
 /*
