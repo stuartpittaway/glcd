@@ -196,6 +196,17 @@ _delay_cycles(const double __ticks_d)
     uint32_t __loops;
 
     /*
+     * check for rounding/truncation 
+     * that truncated fractional cycle count down to 0
+     *
+     * If you ask for more than 0 but less than 1
+     * you get 1 cycle.
+     */
+
+    if(__ticks_d && !__ticks)
+        __ticks = 1;
+
+    /*
      * Special optimization for very
      * small delays - not using any register.
      */
