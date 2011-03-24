@@ -122,22 +122,22 @@ void DefRowColtest(void)
 	/*
 	 * create a 10 column, 4 row text area
 	 */
-	GLCD.Text.DefineArea(0,0, 10, 4, System5x7);
-	GLCD.Text.ClearArea();
+	GLCD.DefineArea(0,0, 10, 4, System5x7);
+	GLCD.ClearArea();
 
-	GLCD.Text.print("10x4 chars");
+	GLCD.print("10x4 chars");
 	delay(750);
-	GLCD.Text.print("1234567890");
+	GLCD.print("1234567890");
 	delay(750);
-	GLCD.Text.print("1234567890");
+	GLCD.print("1234567890");
 	delay(750);
-	GLCD.Text.print("1234567890");
+	GLCD.print("1234567890");
 
 	delay(2000);
 
 	for(uint8_t x = 0; x < 5; x++)
 	{
-		GLCD.Text.Printf("line%d\n", x);
+		GLCD.Printf("line%d\n", x);
 		delay(750);
 	}
 	delay(2000);
@@ -145,7 +145,7 @@ void DefRowColtest(void)
 	/*
 	 * Restore default text area
 	 */
-  	GLCD.Text.DefineArea(textAreaFULL);
+  	GLCD.DefineArea(textAreaFULL);
 }
 
 void testfunc(void)
@@ -215,8 +215,8 @@ bapprintf("Serial initialized\n");
 	/*
 	 * create/restore full display for "default" text area.
 	 */
-  	GLCD.Text.DefineArea(textAreaFULL);
-  	GLCD.Text.SelectFont(System5x7, BLACK);
+  	GLCD.DefineArea(textAreaFULL);
+  	GLCD.SelectFont(System5x7, BLACK);
 	GLCD.ClearScreen();
 }
 
