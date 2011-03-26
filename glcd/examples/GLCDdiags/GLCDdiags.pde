@@ -695,6 +695,11 @@ int lcdvpagetest(uint8_t x1, uint8_t x2, uint8_t spage, uint8_t epage, uint8_t s
 
 void showGLCDconfig(void)
 {
+#ifdef ARDUINO
+  SerialPrintP(hline);
+  SerialPrintQ("Reported Arduino Revision: ");
+  Serial.println(ARDUINO);
+#endif
   SerialPrintP(hline);
   SerialPrintQ("GLCD Lib Configuration: glcd ver: ");
   Serial.print(GLCD_VERSION);
