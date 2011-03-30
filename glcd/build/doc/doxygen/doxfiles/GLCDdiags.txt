@@ -1,6 +1,10 @@
 Serial initialized
 --------------------------------------------------------------------
+Reported Arduino Revision: 22
+--------------------------------------------------------------------
 GLCD Lib Configuration: glcd ver: 3 glcd_Device ver: 1 gText ver: 1
+GLCD Lib build date: Tue 03/29/2011 23:11:15.96
+GLCD Lib build number: 406
 Panel Configuration:ks0108
 Pin Configuration:ks0108-Arduino
 --------------------------------------------------------------------
@@ -15,7 +19,7 @@ ChipSelects: CHIP0:(14,0x1, 15,0x0) CHIP1:(14,0x0, 15,0x1)
 Data mode: 
  d0-d3:nibble mode
  d4-d7:nibble mode
---------------------------------------------------------------------
+--------------------------------------------------------------------
 Diag Loop: 1
 Initializing GLCD
 Displaying ChipSelect Screens
