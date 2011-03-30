@@ -31,6 +31,7 @@
 
 
 #include <glcd.h>
+#include "glcd_Buildinfo.h"
 #include "include/glcd_io.h"
 #include "fonts/SystemFont5x7.h"       // system font
 
@@ -707,6 +708,16 @@ void showGLCDconfig(void)
   Serial.print(GLCD_Device);
   SerialPrintQ(" gText ver: ");
   Serial.println(GTEXT_VERSION);
+#ifdef GLCD_GLCDLIB_DATESTR
+  SerialPrintQ("GLCD Lib build date: ");
+  SerialPrintQ(GLCD_GLCDLIB_DATESTR);
+  Serial.println();
+#endif
+#ifdef GLCD_GLCDLIB_BUILDSTR
+  SerialPrintQ("GLCD Lib build number: ");
+  SerialPrintQ(GLCD_GLCDLIB_BUILDSTR);
+  Serial.println();
+#endif
 /*
  * Temporary ifdef to support older config files.
  */

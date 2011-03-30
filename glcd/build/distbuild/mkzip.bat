@@ -144,14 +144,13 @@ REM #
 REM # location of GLCD lib SVN repository
 REM #
 
-set GLCDREPO=http://arduino-glcd.googlecode.com/svn/trunk/glcd
+set GLCDREPO=http://glcd-arduino.googlecode.com/svn/trunk/glcd
 
 REM #
 REM # SVN commands
 REM #
 set SVNCMD=svn checkout
-set SVNINFO=svn info
-set SVNLIST=svn list -vR
+set SVNVERSION=svnversion
 
 REM #
 REM # zip command
@@ -194,6 +193,13 @@ REM #
 REM # name of Build Information file
 REM #
 set GLCDBUILDINFO=%GLCDDISTDIR%\Buildinfo.txt
+set GLCDBUILDINFO_HDR=%GLCDDISTDIR%\glcd_Buildinfo.h
+
+REM #
+REM # names of build string defines
+REM #
+set GLCD_GLCDLIB_DATESTR_NAME=GLCD_GLCDLIB_DATESTR
+set GLCD_GLCDLIB_BUILDSTR_NAME=GLCD_GLCDLIB_BUILDSTR
 
 REM ##################################################################
 REM # Now start to actually do something
@@ -230,7 +236,44 @@ goto done
 echo Working tree is ready for processing
 pause
 
+REM # 
+REM # Must deal with and grab svn build number string before we do any mucking around with tree
+REM #
+cd "%GLCDDISTDIR%"
+for /f "tokens=*" %%a in ('%SVNVERSION%') do set GLCDBUILDVERSION=%%a
+cd %PWD%
+
+REM # Create BuildInfo text file
+echo Creating BuildInfo Text file
+
+echo Distribution files created %DATE% %TIME% >"%GLCDBUILDINFO%"
+echo =====================================================================>>"%GLCDBUILDINFO%"
+echo BuildNumber %GLCDBUILDVERSION% >> "%GLCDBUILDINFO%"
+echo =====================================================================>>"%GLCDBUILDINFO%"
+
+REM # Create BuildInfo Header file
+echo Creating BuildInfo header file
+
+
+echo // > "%GLCDBUILDINFO_HDR%"
+echo // %GLCDLIBNAME% build information >> "%GLCDBUILDINFO_HDR%"
+echo // This headerfile is automatically generated >> "%GLCDBUILDINFO_HDR%"
+echo // >> "%GLCDBUILDINFO_HDR%"
+REM # stupid dos echo syntax to get a blank line below...
+echo.  >> "%GLCDBUILDINFO_HDR%"
+echo #ifndef __GLCD_BUILDINFO_H__  >> "%GLCDBUILDINFO_HDR%"
+echo #define __GLCD_BUILDINFO_H__  >> "%GLCDBUILDINFO_HDR%"
+echo.  >> "%GLCDBUILDINFO_HDR%"
+echo #define %GLCD_GLCDLIB_DATESTR_NAME% "%DATE% %TIME%" >> "%GLCDBUILDINFO_HDR%"
+echo.  >> "%GLCDBUILDINFO_HDR%"
+echo #define %GLCD_GLCDLIB_BUILDSTR_NAME% "%GLCDBUILDVERSION%" >> "%GLCDBUILDINFO_HDR%"
+echo.  >> "%GLCDBUILDINFO_HDR%"
+echo #endif >> "%GLCDBUILDINFO_HDR%"
+
+
+REM #
 REM # Must build doxygen docs before build directory is removed
+REM #
 echo Building Doxygen Documents
 echo ======== Building Doxygen Documents >> "%LOGFILE%"
 cd %DOXYGENDIR%
@@ -242,36 +285,6 @@ echo ======== Removing debug and build directories from %GLCDDISTDIR% >> "%LOGFI
 cd "%GLCDDISTDIR%"
 rmdir /S /Q debug
 rmdir /S /Q build
-cd %PWD%
-
-echo Creating BuildInfo file
-echo Distribution files created %DATE% %TIME% >"%GLCDBUILDINFO%"
-echo =====================================================================>>"%GLCDBUILDINFO%"
-cd "%GLCDDISTDIR%"
-
-REM #
-REM # the goobldeygook below is to essentially to simulate a simple %SVNINFO%|grep Revision
-REM # sad that microsoft sucks so bad that is so complicated.
-REM
-for /f "usebackq tokens=1,2* delims=:" %%i in (`%SVNINFO%`) do (
-	if /i %%i==Revision (
-	  echo BuildNumber %%j >> "%GLCDBUILDINFO%"
-	  echo =====================================================================>>"%GLCDBUILDINFO%"
-	)
-)
-
-
-REM #
-REM # Now create a list of all the files and their svn revision
-REM # unfortunately even though we removed the debug and build directories
-REM # svn knows about them and will report them in this list.
-REM #
-
-REM echo Adding SVN information to Buildinfo file
-
-REM for time being, no full SVN info as it shows the SVN repository information.
-REM %SVNINFO% >>"%GLCDBUILDINFO%"
-REM %SVNLIST% >"%GLCDBUILDINFO%"
 cd %PWD%
 
 REM #
