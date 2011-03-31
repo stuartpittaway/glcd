@@ -47,7 +47,7 @@ Below is a sample of the diagnostic information available on the glcd display.
 <center>
 <table boarder="0">
 <tr>
-	<td> @image html glcddiag1.JPG "Draws from upper left to lower right"</td>
+	<td> @image html glcddiag1.jpg "Draws from upper left to lower right"</td>
 	<td> @image html glcddiag2.jpg "Flashes each chip# sequentially"</td>
 </tr>
 <tr>
