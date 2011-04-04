@@ -160,7 +160,7 @@
 #define GLCD_tWL    450    /* E lo level width (minimum E lo pulse width)        */
 
 // calculate number of chips & round up if width is not evenly divisable
-#define glcd_CHIP_COUNT ((DISPLAY_WIDTH + CHIP_WIDTH - 1)  / CHIP_WIDTH)
+#define glcd_CHIP_COUNT (((DISPLAY_WIDTH + CHIP_WIDTH - 1)  / CHIP_WIDTH) * ((DISPLAY_HEIGHT + CHIP_HEIGHT -1) / CHIP_HEIGHT))
 
 
 #include "device/ks0108_Device.h"

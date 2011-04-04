@@ -28,7 +28,7 @@
 /*
  * the following is the calculation of the number of chips - do not change
  */
-#define glcd_CHIP_COUNT ((DISPLAY_WIDTH + CHIP_WIDTH - 1)  / CHIP_WIDTH) 
+#define glcd_CHIP_COUNT (((DISPLAY_WIDTH + CHIP_WIDTH - 1)  / CHIP_WIDTH) * ((DISPLAY_HEIGHT + CHIP_HEIGHT -1) / CHIP_HEIGHT))
 
 /*********************************************************/
 /*  Chip Select Configuration                            */

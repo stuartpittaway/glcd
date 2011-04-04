@@ -141,7 +141,7 @@
 
 
 // calculate number of chips & round up if width is not evenly divisable
-#define glcd_CHIP_COUNT ((DISPLAY_WIDTH + CHIP_WIDTH - 1)  / CHIP_WIDTH)
+#define glcd_CHIP_COUNT (((DISPLAY_WIDTH + CHIP_WIDTH - 1)  / CHIP_WIDTH) * ((DISPLAY_HEIGHT + CHIP_HEIGHT -1) / CHIP_HEIGHT))
 
 #include "device/sed1520_Device.h"
 #endif //GLCD_PANEL_CONFIG_H
