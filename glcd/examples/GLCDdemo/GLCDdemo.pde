@@ -78,10 +78,10 @@ void introScreen(){
   countdown(3);
   GLCD.ClearScreen();
   GLCD.SelectFont(Arial_14); // you can also make your own fonts, see playground for details   
-  GLCD.CursorToXY(10, 3);
-  GLCD.print("GLCD ver ");
+  GLCD.CursorToXY(GLCD.Width/2 - 44, 3);
+  GLCD.print("GLCD version ");
   GLCD.print(GLCD_VERSION, DEC);
-  GLCD.DrawRoundRect(8,0,GLCD.Width-9,17, 5);  // rounded rectangle around text area   
+  GLCD.DrawRoundRect(8,0,GLCD.Width-19,17, 5);  // rounded rectangle around text area   
   countdown(3);  
   GLCD.ClearScreen(); 
   scribble(5000);  // run for 5 seconds
