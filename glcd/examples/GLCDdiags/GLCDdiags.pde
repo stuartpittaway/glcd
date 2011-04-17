@@ -948,8 +948,16 @@ void showGLCDconfig(void)
    */
 
 #ifdef GLCD_NO_SCROLLDOWN
-  SerialPrintQ("NO Down Scroll");
+  SerialPrintQ("NO Down Scroll\n");
 #endif
+
+  /*
+   * show READ CACHE if enabled
+   */
+#ifdef GLCD_READ_CACHE
+  SerialPrintQ("READ CACHE enabled\n");
+#endif
+
 
 }
 
