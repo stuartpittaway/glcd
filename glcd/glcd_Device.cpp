@@ -367,14 +367,16 @@ void glcd_Device::Init(uint8_t invert)
 	
 	this->Inverted = invert;
 
+#ifdef glcdRES
 	/*
 	 * Reset the glcd module if there is a reset pin defined
 	 */ 
-#ifdef glcdRES
 	lcdReset();
 	lcdDelayMilliseconds(2);  
 	lcdUnReset();
 	lcdDelayMilliseconds(10);
+#else
+	lcdDelayMilliseconds(50); // extra blind delay for *very* slow rising external reset signals
 #endif
 
 #if defined(GLCD_TEENSY_PCB_RESET_WAIT) && defined(CORE_TEENSY) && !defined(GLCD_POLL_RESET)
@@ -399,6 +401,7 @@ void glcd_Device::Init(uint8_t invert)
 #ifdef GLCD_POLL_RESET
 		/*
 		 * Wait to make sure reset is really complete
+		 * Unfortunately, this does not work if the signal is *very* slow rising.
 		 */
 		this->WaitReset(chip);
 		lcdDelayMilliseconds(50); // extra delay for *very* slow rising reset signals
