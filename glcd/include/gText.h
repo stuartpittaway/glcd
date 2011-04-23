@@ -27,6 +27,7 @@
 #include <inttypes.h>
 #include <avr/pgmspace.h>
 
+#include "WString.h"
 #include "include/Streaming.h" 
 #include "include/glcd_Device.h"
 
@@ -236,8 +237,10 @@ class gText : public glcd_Device
 	void SetFontColor(uint8_t color); // new method
 	int PutChar(uint8_t c);
 	void Puts(char *str);
+	void Puts(const String &str); // for Arduino String Class
 	void Puts_P(PGM_P str);
 	void DrawString(char *str, uint8_t x, uint8_t y);
+	void DrawString(String &str, uint8_t x, uint8_t y); // for Arduino String class
 	void DrawString_P(PGM_P str, uint8_t x, uint8_t y);
 
 	void write(uint8_t c);  // character output for print base class

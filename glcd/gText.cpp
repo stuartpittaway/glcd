@@ -1118,6 +1118,29 @@ void gText::Puts(char *str)
 }
 
 /**
+ * output a String class string
+ *
+ * @param str String class string
+ *
+ * Outputs all the characters in the string to the text area. 
+ * See PutChar() for a full description of how characters are
+ * written to the text area.
+ *
+ * @see PutChar()
+ * @see Puts_P()
+ * @see DrawString()
+ * @see DrawString_P()
+ * @see write()
+ */
+void gText::Puts(const String &str)
+{
+	for (int i = 0; i < str.length(); i++)
+	{
+		write(str[i]);
+	}
+}
+
+/**
  * output a program memory character string
  *
  * @param str pointer to a null terminated character string stored in program memory
@@ -1147,7 +1170,7 @@ uint8_t c;
 /**
  * output a character string at x,y coordinate
  *
- * @param str pointer to a null terminated character string
+ * @param str String class string
  * @param x specifies the horizontal location
  * @param y specifies the vertical location
  *
@@ -1168,6 +1191,34 @@ uint8_t c;
  */
 
 void gText::DrawString(char *str, uint8_t x, uint8_t y)
+{
+	this->CursorToXY(x,y);
+	this->Puts(str);
+}
+
+/**
+ * output a String class string at x,y coordinate
+ *
+ * @param str pointer to a null terminated character string
+ * @param x specifies the horizontal location
+ * @param y specifies the vertical location
+ *
+ *
+ * Outputs all the characters in the string to the text area. 
+ * X & Y are zero based pixel coordinates and are relative to 
+ * the upper left corner of the text area.
+ *
+ * See PutChar() for a full description of how characters are
+ * written to the text area.
+ *
+ *
+ * @see PutChar()
+ * @see Puts()
+ * @see Puts_P()
+ * @see DrawString_P()
+ * @see write()
+ */
+void gText::DrawString(String &str, uint8_t x, uint8_t y)
 {
 	this->CursorToXY(x,y);
 	this->Puts(str);
