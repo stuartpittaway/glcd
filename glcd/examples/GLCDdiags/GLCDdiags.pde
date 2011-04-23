@@ -344,9 +344,9 @@ uint8_t lcdmemtest(void)
     GLCD.print((int)ecol);
     delay(500);
 
-//  SerialPrintf("Horizonal Page Test Chip: %d Pixels %d-%d\n", chip, col, ecol);
+//  SerialPrintf("Horizontal Page Test Chip: %d Pixels %d-%d\n", chip, col, ecol);
 
-    SerialPrintQ("Horizonal Page Test Chip: ");
+    SerialPrintQ("Horizontal Page Test Chip: ");
     Serial.print((int)chip);
     SerialPrintQ(" Pixels ");
     Serial.print((int)col);
