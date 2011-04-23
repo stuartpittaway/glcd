@@ -1592,6 +1592,30 @@ uint16_t gText::StringWidth_P(PGM_P str)
 	return width;
 }
 
+/**
+ * Returns the pixel width of a character
+ *
+		 * @param str String class string
+ *
+ * @return the width in pixels of the sum of all the characters in the
+ * the string pointed to by str. 
+ *
+ * @see CharWidth()
+ * @see StringWidth()
+ */
+
+uint16_t gText::StringWidth_P(String &str)
+{
+	uint16_t width = 0;
+
+	for (int i = 0; i < str.length(); i++)
+	{
+		width += this->CharWidth(str[i]);
+	}
+	
+	return width;
+}
+
 
 /**
  * Legacy function to print a number

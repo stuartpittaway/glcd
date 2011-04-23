@@ -251,6 +251,7 @@ class gText : public glcd_Device
 	uint8_t CharWidth(uint8_t c);
 	uint16_t StringWidth(const char* str);
 	uint16_t StringWidth_P(PGM_P str);
+	uint16_t StringWidth_P(String &str);
 
 	void EraseTextLine( eraseLine_t type=eraseTO_EOL); //ansi like line erase function 
 	void EraseTextLine( uint8_t row); // erase the entire text line in the given row and move cursor to left position
