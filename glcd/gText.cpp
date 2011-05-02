@@ -1488,7 +1488,7 @@ void gText::SetFontColor(uint8_t color)
 }
 
 /**
- * Select a font color
+ * Set TextArea mode
  *
  * @param mode  text area mode
  *
@@ -1498,6 +1498,7 @@ void gText::SetFontColor(uint8_t color)
  *
  * @see SelectFont()
  * @see SetFontColor()
+ * @see DefineArea()
  */
 /*
  */
