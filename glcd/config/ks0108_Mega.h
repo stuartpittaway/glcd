@@ -50,6 +50,6 @@
 #define glcdData7Pin    29
 
 // Reset Bit  - uncomment the next line if reset is connected to an output pin
-//#define glcdRES         32    // Reset Bit
+//#define glcdRES         30    // Reset Bit
 
 #endif //GLCD_PIN_CONFIG_H
