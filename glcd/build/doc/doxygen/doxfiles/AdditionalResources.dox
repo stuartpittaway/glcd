@@ -1,0 +1,11 @@
+/**
+@page page_AdditionalResources Additional Resources
+Here are some additional resources that are related to or are known to work with
+with the glcd library.
+
+GLCD Font Creator: <a href="http://code.google.com/p/glcd-arduino/downloads/detail?name=GLCDFontCreator2.zip">FontCreator2</a>\n
+Pixel/Bitmap fonts: <a href="http://www.1001freefonts.com/bitmap-pixel-fonts.php">1001 Free Fonts</a>\n
+Pixel/Bitmap as well as Dingbat fonts: <a href="http://www.dafont.com/bitmap.php">dafonts</a>\n
+m2tklib - Mini Interative Interface Toolkit Library: <a href="http://code.google.com/p/m2tklib/">mtklib</a>
+
+*/

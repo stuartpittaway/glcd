@@ -28,7 +28,7 @@ while GLCD FontCreator 1.1 is a Windows based font tool for use with microElectr
 The mikroElektronica Edition s/w encodes the font data differently and the free
 version of the software does not allow saving a full character set.
 
-Here is a link to a zip image for FontCreator2: <a href="http://www.mikrocontroller.net/attachment/22095/GLCDFontCreator2.zip">FontCreator2 Zip Image</a>
+Here is a link to a zip image for FontCreator2: <a href="http://code.google.com/p/glcd-arduino/downloads/detail?name=GLCDFontCreator2.zip">FontCreator2 Zip Image</a>
 
 The font header files created should be placed in the directory named fonts and included in your sketch.
 For example, if you create a font named myfont in a header named myfont.h then copy myfont.h

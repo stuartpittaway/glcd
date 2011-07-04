@@ -107,7 +107,7 @@ Below is an example of the coordinate system which also includes the libraries p
 
 @ref glcd::Width "GLCD.Width" is the width of the display in pixels
 
-@ref glcd::Height "GLCD.height" is the height of the display in pixels
+@ref glcd::Height "GLCD.Height" is the height of the display in pixels
 
 @ref glcd::Right "GLCD.Right" is the right-most pixel (equals GLCD.Width-1)
 

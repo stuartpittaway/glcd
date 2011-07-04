@@ -69,7 +69,7 @@ The numbers in the Panel A/B/C columns are the pin numbers of the GLCD display p
 	<td> n/a </td>
 	<td> n/a </td>
 	<td> n/a </td>
-	<td> Contrast in </td>
+	<td> (VO) Contrast in </td>
 	<td> 3 </td>
 	<td> 3 </td>
 	<td> 12 </td>
@@ -249,11 +249,11 @@ The numbers in the Panel A/B/C columns are the pin numbers of the GLCD display p
 	<td> n/a </td>
 	<td> n/a </td>
 	<td> n/a </td>
-	<td> Contrast out </td>
+	<td> (VEE) Contrast out </td>
 	<td> 18 </td>
 	<td> 18 </td>
 	<td> 17 </td>
-	<td> 10k or 20k preset </td>
+	<td> 1 leg of Contrast POT </td>
 </tr>
 <tr>
 	<td> n/a </td>
