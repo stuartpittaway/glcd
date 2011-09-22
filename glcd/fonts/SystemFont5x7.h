@@ -50,7 +50,7 @@ static uint8_t System5x7[] PROGMEM = {
     0x05, // width
     0x07, // height
     0x20, // first char
-    0x7f, // char count
+    0x60, // char count
     
     // Fixed width; char width table not used !!!!
     
