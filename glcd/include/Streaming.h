@@ -21,7 +21,11 @@ Copyright (c) 2009 Mikal Hart.  All rights reserved.
 #ifndef ARDUINO_STREAMING
 #define ARDUINO_STREAMING
 
+#if ARDUINO < 100
 #include <WProgram.h>
+#else
+#include <Arduino.h>
+#endif
 
 #define STREAMING_LIBRARY_VERSION 3
 

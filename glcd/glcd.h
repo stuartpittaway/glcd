@@ -56,7 +56,11 @@ typedef const uint8_t* Image_t;
 class glcd : public gText  
 {
   private:
+#if ARDUINO < 100
 	void write(uint8_t c);  // character output for print base class
+#else
+	size_t write(uint8_t c);  // character output for print base class
+#endif
   public:
 	glcd();
 	
@@ -94,7 +98,7 @@ class glcd : public gText
 	void SetDot(uint8_t x, uint8_t y, uint8_t color);
 	void SetPixels(uint8_t x, uint8_t y,uint8_t x1, uint8_t y1, uint8_t color);
 	uint8_t ReadData(void);        // now public
-    void WriteData(uint8_t data); 
+    void WriteData(uint8_t data);
 #else
 	using glcd_Device::SetDot;
 	using glcd_Device::SetPixels;

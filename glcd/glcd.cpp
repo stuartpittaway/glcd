@@ -642,10 +642,17 @@ uint8_t ReadPgmData(const uint8_t* ptr) {  // note this is a static function
 
 /// @cond hide_from_doxygen
 
+#if ARDUINO < 100
 void glcd::write(uint8_t c)  // method needed for Print base class
 {
   gText::PutChar(c);
 } 
+#else
+size_t glcd::write(uint8_t c)  // method needed for Print base class
+{
+  return(gText::PutChar(c));
+} 
+#endif
 
 /// @endcond
 

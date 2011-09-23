@@ -115,7 +115,7 @@ void showCharacters(char * title, Font_t font) {
   textArea.DefineArea(GLCD.CenterX + 5, 3, GLCD.Right-2, GLCD.Bottom-4, SCROLL_UP); 
   textArea.SelectFont(font, BLACK);
   textArea.CursorTo(0,0);
-  for(byte c = 32; c <=127; c++){
+  for(char c = 32; c < 127; c++){
     textArea.print(c);  
     delay(20);
   }

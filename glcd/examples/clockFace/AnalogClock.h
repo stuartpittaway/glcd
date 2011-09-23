@@ -4,7 +4,11 @@
 #ifndef AnalogClock_h
 #define AnalogClock_h
 
+#if ARDUINO < 0
 #include <WProgram.h>
+#else
+#include <Arduino.h>
+#endif
 
 class AnalogClock
 {

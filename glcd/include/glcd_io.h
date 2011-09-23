@@ -28,7 +28,11 @@
 #ifndef	GLCD_IO_H
 #define GLCD_IO_H
 
+#if ARDUINO < 100
 #include "wiring.h"
+#else
+#include "Arduino.h"
+#endif
 #include "include/arduino_io.h"    // these macros map arduino pins
 
 /*

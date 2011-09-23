@@ -1654,10 +1654,17 @@ void gText::PrintNumber(long n)
  * @see PutChar()
  */
 
+#if ARDUINO < 0
 void gText::write(uint8_t c) 
 {
 	this->PutChar(c);
 } 
+#else
+size_t gText::write(uint8_t c) 
+{
+	return(this->PutChar(c));
+} 
+#endif
 
 #ifndef USE_ARDUINO_FLASHSTR
 // functions to store and print strings in Progmem

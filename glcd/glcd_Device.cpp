@@ -768,7 +768,10 @@ void glcd_Device::WriteData(uint8_t data) {
 /*
  * needed to resolve virtual print functions
  */
+#if ARDUINO < 100
 void glcd_Device::write(uint8_t) // for Print base class
-{
-
-}
+{}
+#else
+size_t glcd_Device::write(uint8_t) // for Print base class
+{ return(0); }
+#endif

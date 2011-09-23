@@ -243,7 +243,11 @@ class gText : public glcd_Device
 	void DrawString(String &str, uint8_t x, uint8_t y); // for Arduino String class
 	void DrawString_P(PGM_P str, uint8_t x, uint8_t y);
 
+#if ARDUINO < 100
 	void write(uint8_t c);  // character output for print base class
+#else
+	size_t write(uint8_t c);  // character output for print base class
+#endif
 
 	void CursorTo( uint8_t column, uint8_t row); // 0 based coordinates for character columns and rows
 	void CursorTo( int8_t column); // move cursor on the current row
