@@ -4,7 +4,7 @@
 #ifndef AnalogClock_h
 #define AnalogClock_h
 
-#if ARDUINO < 0
+#if ARDUINO < 100
 #include <WProgram.h>
 #else
 #include <Arduino.h>
