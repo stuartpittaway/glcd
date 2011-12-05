@@ -81,7 +81,7 @@ class glcd_Device : public Print
 	inline void Enable(void);
 	inline void SelectChip(uint8_t chip); 
 	void WaitReady(uint8_t chip);
-	void WaitReset(uint8_t chip); // doesnt always exist, depends on ifdefs in code
+	uint8_t GetStatus(uint8_t chip);
 #if ARDUINO < 100
 	void write(uint8_t); // for Print base class
 #else
@@ -91,7 +91,7 @@ class glcd_Device : public Print
   public:
     glcd_Device();
 	protected: 
-    void Init(uint8_t invert = false);      // now public, default is non-inverted
+    int Init(uint8_t invert = false);      // now public, default is non-inverted
 	void SetDot(uint8_t x, uint8_t y, uint8_t color);
 	void SetPixels(uint8_t x, uint8_t y,uint8_t x1, uint8_t y1, uint8_t color);
     uint8_t ReadData(void);        // now public
