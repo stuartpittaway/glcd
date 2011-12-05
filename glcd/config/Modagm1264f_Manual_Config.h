@@ -80,9 +80,9 @@
 #define GLCD_PANEL_CONFIG_H
 
 /*
- * define name for panel configuration
+ * define name for configuration file
  */
-#define glcd_PanelConfigName "AGM1264F-Manual"
+#define glcd_ConfigName "AGM1264F-Manual"
 
 /*********************************************************/
 /*  Configuration for LCD panel specific configuration   */
@@ -97,11 +97,6 @@
 /*********************************************************/
 /*  Configuration for assigning LCD bits to Arduino Pins */
 /*********************************************************/
-
-/*
- * define name for pin configuration
- */
-#define glcd_PinConfigName "AGM1264F-Manual"
 
 /*
  * Pins can be assigned using arduino pin numbers 0-n

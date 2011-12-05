@@ -18,10 +18,10 @@
 /**********************************************************/
 
 /*
- * Pins can be assigned using arduino pin numbers 0-n
+ * Pins can be assigned using Arduino pin numbers 0-n
  * Pins can also be assigned using PIN_Pb 
  *    where P is port A-L and b is bit 0-7
- *    Example: port D pin 3 is PIN_D3
+ *    Example: port D bit 3 is PIN_D3
  *
  */
 

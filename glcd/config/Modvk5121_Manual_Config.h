@@ -83,7 +83,7 @@
 /*
  * define name for panel configuration
  */
-#define glcd_PanelConfigName "vk5121-Manual"
+#define glcd_ConfigName "vk5121-Manual"
 
 /*********************************************************/
 /*  Configuration for LCD panel specific configuration   */
@@ -98,12 +98,6 @@
 /*********************************************************/
 /*  Configuration for assigning LCD bits to Arduino Pins */
 /*********************************************************/
-
-/*
- * define name for pin configuration
- */
-#define glcd_PinConfigName "vk5121-Manual"
-
 
 /*
  * Pins can be assigned using arduino pin numbers 0-n
@@ -127,7 +121,7 @@
 
 #define glcdE1         15
 
-#define glcdDI         16    // A0 line
+#define glcdDI         16    // Ao glcd pin
 
 #define glcdE2         17
 
