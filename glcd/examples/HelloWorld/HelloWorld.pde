@@ -2,7 +2,7 @@
   GLCD Library - Hello World
  
  This sketch prints "Hello World!" to the LCD
- and shows the time.
+ and shows the time in seconds since reset.
  
   The circuit:
   See the inlcuded documentation in glcd/doc directory for how to wire
@@ -11,11 +11,10 @@
  
  */
 
-// include the library code:
+// include the library header
 #include <glcd.h>
 
 // include the Fonts
-
 #include <fonts/allFonts.h>
 
 void setup() {
@@ -36,4 +35,3 @@ void loop() {
   // print the number of seconds since reset:
   GLCD.print(millis()/1000);
 }
-
