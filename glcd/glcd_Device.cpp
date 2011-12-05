@@ -26,6 +26,7 @@
 
 #include "include/glcd_Device.h"
 #include "include/glcd_io.h"
+#include "include/glcd_errno.h"
 
 
 /*
@@ -62,6 +63,10 @@ lcdCoord  glcd_Device::Coord;
 							// to give the Teensy PCB reset circuit time to clear.
 							//
 
+// NOTE: There used to be code to poll the RESET status. This code has been
+// removed since it was not reliable on some modules and was larger than a blind wait.
+// The comment about it was left here as historical information.
+
 //#define GLCD_POLL_RESET	// turns on code to poll glcd module RESET signal
 							// While this would be optimal, it turns out that on slow
 							// rising reset signals to the GLCD the reset bit will clear
@@ -72,17 +77,14 @@ lcdCoord  glcd_Device::Coord;
 							// only has a busy bit, commands appear to work as busy will not be
 							// asserted during this reset "grey area". 
 							//
-							// If you turn this on, additional code will be created to poll reset.
-							// and to work with the Teensy GLCD adapter, the blind delay for teensy is disabled
-							// and after reset goes away an additional 50ms will be added to work with the
-							// Teensy PCB. 
+							// When enabled the code is 50+ bytes larger than a dumb/blind wait and it 
+							// also isn't clear if reset polling works the same across all glcds as 
+							// the datasheets don't fully document how it works.
 							//
-							// When enabled the code is 50+ bytes larger than a dumb/blind wait and it isn't
-							// clear if reset polling works the same across all glcds as the datasheets don't
-							// fully document how it works.
-							//
-							// So for now, this is disabled, and the teensy code will get a blind delay 
-							// if the RESET_WAIT define above is turned on.
+							// For now, RESET polling is disabled, and the teensy code 
+							// will get a longer blind delay to allow the code to operate on the 
+							// teensy GLCD adapter board which has a very slow rising reset pulse.
+
 
 //#define GLCD_XCOL_SUPPORT	//turns on code to track the hardware X/column to minimize set column commands.
 							// Believe it or not, the code on the ks0108s runs slower with this
@@ -296,17 +298,19 @@ void glcd_Device::GotoXY(uint8_t x, uint8_t y)
  * To specify dark pixels use the define @b NON-INVERTED and to use light pixels use
  * the define @b INVERTED
  *
- * Upon completion of the initialization, the entire display will be cleared
+ * @returns 0 when successful or non zero error code when unsucessful
+ *
+ * Upon successful completion of the initialization, the entire display will be cleared
  * and the x,y postion will be set to 0,0
+ *
+ * @note
+ * This function can be called more than once 
+ * to re-initliaze the hardware.
  *
  */
 
-/*
- * Note: This Initilization code can be called more than once as the user
- * is free to re-initliaze the hardware.
- */
 
-void glcd_Device::Init(uint8_t invert)
+int glcd_Device::Init(uint8_t invert)
 {  
 
 	/*
@@ -374,12 +378,15 @@ void glcd_Device::Init(uint8_t invert)
 	lcdReset();
 	lcdDelayMilliseconds(2);  
 	lcdUnReset();
-	lcdDelayMilliseconds(10);
-#else
-	lcdDelayMilliseconds(50); // extra blind delay for *very* slow rising external reset signals
 #endif
 
-#if defined(GLCD_TEENSY_PCB_RESET_WAIT) && defined(CORE_TEENSY) && !defined(GLCD_POLL_RESET)
+	/*
+	 *  extra blind delay for slow rising external reset signals
+	 *  and to give time for glcd to get up and running
+	 */
+	lcdDelayMilliseconds(50); 
+
+#if defined(GLCD_TEENSY_PCB_RESET_WAIT) && defined(CORE_TEENSY)
 	/*
 	 * Delay for Teensy ks0108 PCB adapter reset signal
 	 * Reset polling is not realiable by itself so this is easier and much less code
@@ -387,9 +394,28 @@ void glcd_Device::Init(uint8_t invert)
 	 */
 	lcdDelayMilliseconds(250);
 #endif
-	
+
+
+	/*
+	 * Each chip on the module must be initliazed
+	 */
+
 	for(uint8_t chip=0; chip < glcd_CHIP_COUNT; chip++)
 	{
+	uint8_t status;
+
+		/*
+		 * At this point RESET better be complete and the glcd better have
+		 * cleared BUSY status for the chip and be ready to go.
+		 * So we check them and if the GLCD chip is not ready to go, we fail the init.
+		 */
+
+		status = this->GetStatus(chip);
+		if(lcdIsResetStatus(status))
+			return(GLCD_ERESET);
+		if(lcdIsBusyStatus(status))
+			return(GLCD_EBUSY);
+			
 		/*
 		 * flush out internal state to force first GotoXY() to talk to GLCD hardware
 		 */
@@ -398,17 +424,11 @@ void glcd_Device::Init(uint8_t invert)
 		this->Coord.chip[chip].col = -1;
 #endif
 
-#ifdef GLCD_POLL_RESET
-		/*
-		 * Wait to make sure reset is really complete
-		 * Unfortunately, this does not work if the signal is *very* slow rising.
-		 */
-		this->WaitReset(chip);
-		lcdDelayMilliseconds(50); // extra delay for *very* slow rising reset signals
-#endif
+#ifdef glcd_DeviceInit // this provides custom chip specific init 
 
-#ifdef glcd_DeviceInit // this provides override for chip specific init -  mem 8 Dec 09
-        glcd_DeviceInit(chip);  // call device specific initialization if defined    
+		status = glcd_DeviceInit(chip);	// call device specific initialization if defined    
+		if(status)
+			return(status);
 #else
 		this->WriteCommand(LCD_ON, chip);			// display on
 		this->WriteCommand(LCD_DISP_START, chip);	// display start line = 0
@@ -431,6 +451,8 @@ void glcd_Device::Init(uint8_t invert)
 
 	this->SetPixels(0,0, DISPLAY_WIDTH-1,DISPLAY_HEIGHT-1, WHITE);
 	this->GotoXY(0,0);
+
+	return(GLCD_ENOERR);
 }
 
 #ifdef glcd_CHIP0  // if at least one chip select string
@@ -450,9 +472,30 @@ __inline__ void glcd_Device::SelectChip(uint8_t chip)
 }
 #endif
 
+// return lcd status bits
+uint8_t glcd_Device::GetStatus(uint8_t chip)
+{
+uint8_t status;
+
+	glcd_DevSelectChip(chip);
+	lcdDataDir(0x00);			// input mode
+	lcdDataOut(0xff);			// turn on pullups
+	lcdfastWrite(glcdDI, LOW);	
+	lcdfastWrite(glcdRW, HIGH);	
+//	lcdDelayNanoseconds(GLCD_tAS);
+	glcd_DevENstrobeHi(chip);
+	lcdDelayNanoseconds(GLCD_tDDR);
+
+	status = lcdDataIn();	// Read status bits
+
+	glcd_DevENstrobeLo(chip);
+	return(status);
+}
+
+
+// wait until LCD busy bit goes to zero
 void glcd_Device::WaitReady( uint8_t chip)
 {
-	// wait until LCD busy bit goes to zero
 	glcd_DevSelectChip(chip);
 	lcdDataDir(0x00);
 	lcdfastWrite(glcdDI, LOW);	
@@ -461,33 +504,12 @@ void glcd_Device::WaitReady( uint8_t chip)
 	glcd_DevENstrobeHi(chip);
 	lcdDelayNanoseconds(GLCD_tDDR);
 
-	while(lcdIsBusy())
+	while(lcdRdBusystatus())
 	{
        ;
 	}
 	glcd_DevENstrobeLo(chip);
 }
-
-#ifdef GLCD_POLL_RESET
-void glcd_Device::WaitReset( uint8_t chip)
-{
-	// wait until LCD busy bit goes to zero
-	glcd_DevSelectChip(chip);
-	lcdDataDir(0x00);
-	lcdfastWrite(glcdDI, LOW);	
-	lcdfastWrite(glcdRW, HIGH);	
-//	lcdDelayNanoseconds(GLCD_tAS);
-	glcd_DevENstrobeHi(chip);
-	lcdDelayNanoseconds(GLCD_tDDR);
-
-	while(lcdIsReset())
-	{
-       ;
-	}
-	glcd_DevENstrobeLo(chip);
-}
-#endif
-
 
 /*
  * read a single data byte from chip
@@ -586,6 +608,7 @@ void glcd_Device::WriteCommand(uint8_t cmd, uint8_t chip)
 	lcdDelayNanoseconds(GLCD_tWH);
 	glcd_DevENstrobeLo(chip);
 }
+
 
 /**
  * Write a byte to display device memory

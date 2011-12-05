@@ -6,6 +6,10 @@ directory. If you already have a folder called libraries in your Arduino
 sketchbook directory, unzip the glcd files there. If not, create a
 folder called libraries in the sketchbook folder, and drop the library
 folder here.
+Alternatively you can install it directly in the arduino distribution
+by placing it in the libraries directory where the arduino distribution
+was installed. For arduino release 0018 and later that would be:
+{installdir}/libraries
 Then re-start the Arduino programming environment, and you should see the glcd 
 library in the Sketch > Import LIbrary menu. 
 

@@ -56,7 +56,7 @@
 
 #elif defined(__AVR_ATmega644P__) || defined(__AVR_ATmega644__)  
 // Sanguino or other ATmega644 controller
-#define digitalPinToPortReg(P) \   
+#define digitalPinToPortReg(P) \
     (((P) >= 0 && (P) <= 7)   ? &PORTB : \
 	(((P) >= 8 && (P) <= 15)  ? &PORTD : \
  	(((P) >= 16 && (P) <= 23) ? &PORTC : &PORTA)))

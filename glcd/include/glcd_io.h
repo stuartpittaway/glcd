@@ -61,7 +61,9 @@
 // lcdfastWrite Macro may be replaced by Paul's new Arduino macro 
 #define lcdfastWrite(pin, pinval) avrio_WritePin(pin, pinval)
 
+#ifndef OUTPUT
 #define OUTPUT 1
+#endif
 
 #ifndef LOW
 #define LOW 0
@@ -118,8 +120,18 @@
  */
 #define lcdDataIn()		lcd_avrReadByte()
 
-#define lcdIsBusy()		(avrio_ReadPin(GLCD_STATUS_BIT2PIN(LCD_BUSY_BIT)))
-#define lcdIsReset()		(avrio_ReadPin(GLCD_STATUS_BIT2PIN(LCD_RESET_BIT)))
+/*
+ * alias to read status bits
+ */
+#define lcdRdBusystatus()		(avrio_ReadPin(GLCD_STATUS_BIT2PIN(LCD_BUSY_BIT)))
+#define lcdRdResetstatus()		(avrio_ReadPin(GLCD_STATUS_BIT2PIN(LCD_RESET_BIT)))
+
+/*
+ * alias to check status bits
+ */
+
+#define lcdIsBusyStatus(status) (status & LCD_BUSY_FLAG)
+#define lcdIsResetStatus(status) (status & LCD_RESET_FLAG)
 
 #ifdef glcdRES
 #define lcdReset()		avrio_WritePin(glcdRES, 0)
