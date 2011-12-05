@@ -243,6 +243,8 @@ int status;
 
     SerialPrintQ("Initializing GLCD\n");
     status = GLCD.Init();   // initialise the library, non inverted writes pixels onto a clear screen
+
+#ifndef GLCD_NOINIT_CHECKS
     if(status) // did the initialization fail?
     {
 	SerialPrintQ("GLCD initialization Failed: ");
@@ -260,6 +262,7 @@ int status;
 	Serial.println(')');
     	goto finished;
     }
+#endif
 
 
     GLCD.SelectFont(System5x7, BLACK);

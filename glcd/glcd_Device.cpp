@@ -404,6 +404,7 @@ int glcd_Device::Init(uint8_t invert)
 	{
 	uint8_t status;
 
+#ifndef GLCD_NOINIT_CHECKS
 		/*
 		 * At this point RESET better be complete and the glcd better have
 		 * cleared BUSY status for the chip and be ready to go.
@@ -415,6 +416,7 @@ int glcd_Device::Init(uint8_t invert)
 			return(GLCD_ERESET);
 		if(lcdIsBusyStatus(status))
 			return(GLCD_EBUSY);
+#endif
 			
 		/*
 		 * flush out internal state to force first GotoXY() to talk to GLCD hardware

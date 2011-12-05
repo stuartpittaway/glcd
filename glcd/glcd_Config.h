@@ -92,11 +92,6 @@
 //#define GLCD_NO_SCROLLDOWN    // disable reverse scrolling (saves ~600 bytes of code)
                                 // This will allow those tight on FLASH space to save a bit of code space
 
-/*
- * BETA TEST NOTE:
- * Should the default be "atomic" even though it will be a bit slower on standard Arduino boards?
- */
-
 //#define GLCD_ATOMIC_IO        // Generate code that ensures all pin i/o operations are atomic
                                 // including any potential nibble operations.
                                 // Without this option enabled, nibble operations will be slightly faster but
@@ -106,6 +101,13 @@
 
 //#define GLCD_NODEFER_SCROLL    // uncomment to disable deferred newline processing
 
+//#define GLCD_NOINIT_CHECKS	// uncommont to remove initialization busy status checks
+				// this turns off the code in the low level init code that
+				// checks for a module stuck BUSY or stuck in RESET.
+				// This will save about 100 bytes of code space in normal sketches.
+				// and an additional 220 bytes in the diag sketch. This will cause
+				// diags to hang if wires are not correct vs return an error.
+
 //#define GLCD_READ_CACHE       // Turns on code that uses a frame buffer for a read cache
 				// This adds only ~52 bytes of code but...
 				// will use DISPLAY_HEIGHT/8 * DISPLAY_WIDTH bytes of RAM
@@ -113,7 +115,4 @@
 				// performance increase is quite noticeable (double or so on FPS test)
 				// This will not work on smaller AVRs like the mega168 that only
 				// have 1k of RAM total.
-
-
-
 #endif
