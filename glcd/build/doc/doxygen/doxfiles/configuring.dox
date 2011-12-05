@@ -70,13 +70,10 @@ that in turn includes a board specific pin mapping file based on arduino board t
 Pins can be specified by Arduino pin number or by AVR port and pin/bit number.
 The syntax used for avr port and pin number is @em PIN_Pb where Pb represents a PORT and a bit#.
 For example, to specify port D bit 3 you would use PIN_D3
-The following sets glcdCSEL1 (the first chip select) to port D pin 3
+The following sets glcdCSEL1 (the first chip select) to port D bit 3
 @code
 #define glcdCSEL1	    PIN_D3 //example of using AVR Port and bit number
 @endcode
-
-@note
-See the avrio.h file for more details.
 
 There are no restristions as to which Arduino/AVR pins are used.
 Any Arduino/AVR pin on any port can be used for any glcd function.
@@ -93,6 +90,10 @@ in the data byte.
 While the code does support any Arduino/AVR pin for any glcd function, if
 pins are grouped appropriately on the AVR ports, the code can take advantage of
 byte or nibble mode to offer a potential performance increase.
+
+@note
+See the avrio.h file for more details.
+
 
 */
 

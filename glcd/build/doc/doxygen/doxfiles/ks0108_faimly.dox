@@ -16,12 +16,26 @@ Particular care should be taken with the power leads as wiring these incorrectly
 Most GLCD panels require an external preset pot to set the LCD working voltage (contrast)
 and a fixed resistor to limit the current in the backlight.
 The datasheet for your panel should provide specific information on the wiring
-and choice of components for this.
+and choice of components for this. It is important to note that ks0108 modules do not wire up
+their contrast pot the same way as a typical hd44780 character lcd.
+A hd44780 typically hooks its contrast pot legs to +5v and GND.
+In most cases, on a ks0108, the pot, which is typically between 10-20k,
+is used to create a varying negative voltage from Vee up to GND that is used to feed
+to the Vo input signal. In order to do this, one leg of the pot needs to hook to ground,
+one leg needs to hook to the Vee negative voltage output pin and then the wiper,
+which is the middle pin of the pot, will have the variable voltage output that
+can be fed to the Vo contrast control input pin. 
+
 
 The table below shows  common pinouts for KS0108 panels. 
+@note
+Additional panel pinout information can be found on the
+Arduino playground page: <a href="http://www.arduino.cc/playground/Code/GLCDks0108">GLCDks0108</a>\n
+
+
 The numbers under the Arduino column are the Arduino pins used in the configuration file provided in the download, if you alter the wiring to Arduino pins then you must change the pin assignments in the configuration file.
 
-The numbers in the Panel A/B/C columns are the pin numbers of the GLCD display panel 
+The numbers in the Panel A/B columns are the pin numbers of the GLCD display panel 
 
 <center>
 <table>
@@ -35,7 +49,6 @@ The numbers in the Panel A/B/C columns are the pin numbers of the GLCD display p
 	<th> GLCD Function </th>
 	<th> Panel A </th>
 	<th> Panel B </th>
-	<th> Panel C </th>
 	<th> Comments </th>
 </tr>
 <tr>
@@ -48,7 +61,6 @@ The numbers in the Panel A/B/C columns are the pin numbers of the GLCD display p
 	<td> +5 volts </td>
 	<td> 1 </td>
 	<td> 2 </td>
-	<td> 13 </td>
 	<td> </td>
 </tr>
 <tr>
@@ -60,7 +72,6 @@ The numbers in the Panel A/B/C columns are the pin numbers of the GLCD display p
 	<td> GND </td>
 	<td> 2 </td>
 	<td> 1 </td>
-	<td> 14 </td>
 	<td> </td>
 </tr>
 <tr>
@@ -72,8 +83,7 @@ The numbers in the Panel A/B/C columns are the pin numbers of the GLCD display p
 	<td> (VO) Contrast in </td>
 	<td> 3 </td>
 	<td> 3 </td>
-	<td> 12 </td>
-	<td> Wiper of contrast pot </td>
+	<td> Wiper (middle pin) of contrast pot </td>
 </tr>
 <tr>
 	<td> 8 </td>
@@ -84,7 +94,6 @@ The numbers in the Panel A/B/C columns are the pin numbers of the GLCD display p
 	<td> D0 </td>
 	<td> 4 </td>
 	<td> 7 </td>
-	<td> 1 </td>
 	<td> </td>
 </tr>
 <tr>
@@ -96,7 +105,6 @@ The numbers in the Panel A/B/C columns are the pin numbers of the GLCD display p
 	<td> D1 </td>
 	<td> 5 </td>
 	<td> 8 </td>
-	<td> 2 </td>
 	<td> </td>
 </tr>
 <tr>
@@ -108,7 +116,6 @@ The numbers in the Panel A/B/C columns are the pin numbers of the GLCD display p
 	<td> D2 </td>
 	<td> 6 </td>
 	<td> 9 </td>
-	<td> 3 </td>
 	<td> </td>
 </tr>
 <tr>
@@ -120,7 +127,6 @@ The numbers in the Panel A/B/C columns are the pin numbers of the GLCD display p
 	<td> D3 </td>
 	<td> 7 </td>
 	<td> 10 </td>
-	<td> 4 </td>
 	<td> </td>
 </tr>
 <tr>
@@ -132,7 +138,6 @@ The numbers in the Panel A/B/C columns are the pin numbers of the GLCD display p
 	<td> D4 </td>
 	<td> 8 </td>
 	<td> 11 </td>
-	<td> 5 </td>
 	<td> </td>
 </tr>
 <tr>
@@ -144,7 +149,6 @@ The numbers in the Panel A/B/C columns are the pin numbers of the GLCD display p
 	<td> D5 </td>
 	<td> 9 </td>
 	<td> 12 </td>
-	<td> 6 </td>
 	<td> </td>
 </tr>
 <tr>
@@ -156,7 +160,6 @@ The numbers in the Panel A/B/C columns are the pin numbers of the GLCD display p
 	<td> D6 </td>
 	<td> 10 </td>
 	<td> 13 </td>
-	<td> 7 </td>
 	<td> </td>
 </tr>
 <tr>
@@ -168,7 +171,6 @@ The numbers in the Panel A/B/C columns are the pin numbers of the GLCD display p
 	<td> D7 </td>
 	<td> 11 </td>
 	<td> 14 </td>
-	<td> 8 </td>
 	<td> </td>
 </tr>
 <tr>
@@ -179,7 +181,6 @@ The numbers in the Panel A/B/C columns are the pin numbers of the GLCD display p
 	<td> 18 </td>
 	<td> CSEL1 </td>
 	<td> 12 </td>
-	<td> 15 </td>
 	<td> 15 </td>
 	<td> Chip 1 select </td>
 </tr>
@@ -192,7 +193,6 @@ The numbers in the Panel A/B/C columns are the pin numbers of the GLCD display p
 	<td> CSEL2 </td>
 	<td> 13 </td>
 	<td> 16 </td>
-	<td> 16 </td>
 	<td> Chip 2 select </td>
 </tr>
 <tr>
@@ -204,7 +204,6 @@ The numbers in the Panel A/B/C columns are the pin numbers of the GLCD display p
 	<td> Reset </td>
 	<td> 14 </td>
 	<td> 17 </td>
-	<td> 18 </td>
 	<td> Connect to reset  </td>
 </tr>
 <tr>
@@ -216,7 +215,6 @@ The numbers in the Panel A/B/C columns are the pin numbers of the GLCD display p
 	<td> R_W </td>
 	<td> 15 </td>
 	<td> 5 </td>
-	<td> 10 </td>
 	<td> Read/write </td>
 </tr>
 <tr>
@@ -228,7 +226,6 @@ The numbers in the Panel A/B/C columns are the pin numbers of the GLCD display p
 	<td> D_I </td>
 	<td> 16 </td>
 	<td> 4 </td>
-	<td> 11 </td>
 	<td> Data/Instruction (RS) </td>
 </tr>
 <tr>
@@ -240,7 +237,6 @@ The numbers in the Panel A/B/C columns are the pin numbers of the GLCD display p
 	<td> EN </td>
 	<td> 17 </td>
 	<td> 6 </td>
-	<td> 9 </td>
 	<td> Enable </td>
 </tr>
 <tr>
@@ -252,8 +248,7 @@ The numbers in the Panel A/B/C columns are the pin numbers of the GLCD display p
 	<td> (VEE) Contrast out </td>
 	<td> 18 </td>
 	<td> 18 </td>
-	<td> 17 </td>
-	<td> 1 leg of Contrast POT </td>
+	<td> 1 leg of Contrast pot </td>
 </tr>
 <tr>
 	<td> n/a </td>
@@ -262,7 +257,6 @@ The numbers in the Panel A/B/C columns are the pin numbers of the GLCD display p
 	<td> n/a </td>
 	<td> n/a </td>
 	<td> Backlight +5 </td>
-	<td> 19 </td>
 	<td> 19 </td>
 	<td> 19 </td>
 	<td> See datasheet  </td>
@@ -276,9 +270,20 @@ The numbers in the Panel A/B/C columns are the pin numbers of the GLCD display p
 	<td> Backlight Gnd </td>
 	<td> 20 </td>
 	<td> 20 </td>
-	<td> 20 </td>
 	<td> See datasheet  </td>
 </tr>
+<tr>
+	<td> Gnd </td>
+	<td> n/a </td>
+	<td> n/a </td>
+	<td> n/a </td>
+	<td> n/a </td>
+	<td> n/a </td>
+	<td> n/a </td>
+	<td> n/a </td>
+	<td> other leg of contrast pot </td>
+</tr>
+
 
 </table>
 </center>
@@ -300,15 +305,14 @@ The diagrams that follow are for standard Arduino boards (ATmega 168/328).
 If you have a different board then you should follow the pin assignments
 in the Pin Connections Table  above.
 
+<center>
 <table boarder = "0">
 <tr>
 	<td> @image html ks0108_Panel_A.gif </td>
 	<td> @image html ks0108_Panel_B.gif </td>
 </tr>
-<tr>
-	<td> @image html ks0108_Panel_C.gif </td>
-</tr>
 </table>
+</center>
 
 A tip for making the physical connections is use a small piece of stripboard
 with header pins for 5V, ground and Reset providing connection to the Arduino. 
