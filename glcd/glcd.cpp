@@ -63,8 +63,8 @@ glcd::glcd(){
 
  
 
-void glcd::Init(uint8_t invert){
-	glcd_Device::Init(invert);  
+int glcd::Init(uint8_t invert){
+	return(glcd_Device::Init(invert));  
 }		
 
 /**
@@ -86,6 +86,7 @@ void glcd::Init(uint8_t invert){
 
 void glcd::ClearScreen(uint8_t color){
 	this->SetPixels(0,0,GLCD.Width-1,GLCD.Height-1, color);
+ 	CursorToXY(0,0);  // home text position
 }
 
 /*
@@ -405,7 +406,7 @@ void glcd::SetDisplayMode(uint8_t invert) {  // was named SetInverted
 }
 
 /**
- * Draw a bitmap image
+ * Draw a glcd bitmap image
  *
  * @param bitmap a ponter to the bitmap data
  * @param x the x coordinate of the upper left corner of the bitmap
@@ -417,6 +418,9 @@ void glcd::SetDisplayMode(uint8_t invert) {  // was named SetInverted
  *
  * Color is optional and defaults to BLACK.
  *
+#ifdef NOTYET
+ * @see DrawBitmapXBM()
+#endif
  */
 
 void glcd::DrawBitmap(Image_t bitmap, uint8_t x, uint8_t y, uint8_t color){
@@ -465,6 +469,96 @@ uint8_t i, j;
 	 }
   }
 }
+
+#ifdef NOTYET
+
+/**
+ * Draw a glcd bitmap image in x11 XBM bitmap data format
+ *
+ * @param bitmapxbm a ponter to the glcd XBM bitmap data
+ * @param x the x coordinate of the upper left corner of the bitmap
+ * @param y the y coordinate of the upper left corner of the bitmap
+ * @param color BLACK or WHITE
+ *
+ * Draws a x11 XBM bitmap image with the upper left corner at location x,y
+ * The glcd xbm bitmap data format consists of 1 byte of width followed by 1 byte of height followed
+ * by the x11 xbm pixel data bytes.
+ * The bitmap data is assumed to be in program memory.
+ *
+ * Color is optional and defaults to BLACK.
+ *
+ * @see DrawBitmapXBM_P()
+ * @see DrawBitmap()
+ */
+
+void glcd::DrawBitmapXBM(ImageXBM_t bitmapxbm, uint8_t x, uint8_t y, uint8_t color)
+{
+uint8_t width, height;
+uint8_t bg_color;
+uint8_t *xbmbits;
+
+	
+	xbmbits = (uint8_t *) bitmapxbm;
+
+	width = ReadPgmData(xbmbits++); 
+	height = ReadPgmData(xbmbits++);
+
+	if(color == BLACK)
+		bg_color = WHITE;
+	else
+		bg_color = BLACK;
+	DrawBitmapXBM_P(width, height, xbmbits, x, y, color, bg_color);
+}
+
+/**
+ * Draw a x11 XBM bitmap image
+ *
+ * @param width pixel width of the image
+ * @param height pixel height of the image
+ * @param xbmbits a ponter to the XBM bitmap pixel data
+ * @param x the x coordinate of the upper left corner of the bitmap
+ * @param y the y coordinate of the upper left corner of the bitmap
+ * @param fg_color foreground color
+ * @param bg_color background color
+ *
+ * Draws a x11 XBM bitmap image with the upper left corner at location x,y
+ * The xbm bitmap pixel data format is the same as the X11 bitmap pixel data.
+ * The bitmap data is assumed to be in program memory.
+ *
+ * @note All parameters are mandatory
+ *
+ * @see DrawBitmapXBM_P()
+ * @see DrawBitmap()
+ */
+
+
+void glcd::DrawBitmapXBM_P(uint8_t width, uint8_t height, uint8_t *xbmbits, 
+			uint8_t x, uint8_t y, uint8_t fg_color, uint8_t bg_color)
+{
+uint8_t xbmx, xbmy;
+uint8_t xbmdata;
+
+	/*
+	 * Traverse through the XBM data byte by byte and plot pixel by pixel
+	 */
+	for(xbmy = 0; xbmy < height; xbmy++)
+	{
+		for(xbmx = 0; xbmx < width; xbmx++)
+		{
+			if(!(xbmx & 7))	// read the flash data only once per byte
+				xbmdata = ReadPgmData(xbmbits++);
+
+			if(xbmdata & _BV((xbmx & 7)))
+				this->SetDot(x+xbmx, y+xbmy, fg_color); // XBM 1 bits are fg color
+			else
+				this->SetDot(x+xbmx, y+xbmy, bg_color); // XBM 0 bits are bg color
+		}
+	}
+
+}
+
+#endif // NOTYET
+
 // the following inline functions were added 2 Dec 2009 to replace macros
 
 /**
@@ -557,7 +651,7 @@ void glcd::DrawCircle(uint8_t xCenter, uint8_t yCenter, uint8_t radius, uint8_t 
  *
  */
 
-void glcd::FillCircle(uint8_t x0, uint8_t y0, uint8_t radius, uint8_t color)
+void glcd::FillCircle(uint8_t xCenter, uint8_t yCenter, uint8_t radius, uint8_t color)
 {
 /*
  * Circle fill Code is merely a modification of the midpoint
@@ -596,7 +690,7 @@ uint8_t y = radius;
 	/*
 	 * Fill in the center between the two halves
 	 */
-	DrawLine(x0, y0-radius, x0, y0+radius, color);
+	DrawLine(xCenter, yCenter-radius, xCenter, yCenter+radius, color);
  
 	while(x < y)
 	{
@@ -619,10 +713,10 @@ uint8_t y = radius;
 		 * perimeter points on the upper and lower quadrants of the 2 halves of the circle.
 		 */
 
-		DrawLine(x0+x, y0+y, x0+x, y0-y, color);
-		DrawLine(x0-x, y0+y, x0-x, y0-y, color);
-		DrawLine(x0+y, y0+x, y+x0, y0-x, color);
-		DrawLine(x0-y, y0+x, x0-y, y0-x, color);
+		DrawLine(xCenter+x, yCenter+y, xCenter+x, yCenter-y, color);
+		DrawLine(xCenter-x, yCenter+y, xCenter-x, yCenter-y, color);
+		DrawLine(xCenter+y, yCenter+x, y+xCenter, yCenter-x, color);
+		DrawLine(xCenter-y, yCenter+x, xCenter-y, yCenter-x, color);
   	}
 }
 
@@ -632,7 +726,8 @@ uint8_t y = radius;
 // Font Functions
 //
 
-uint8_t ReadPgmData(const uint8_t* ptr) {  // note this is a static function
+uint8_t ReadPgmData(const uint8_t* ptr)  // note this is a static function
+{  // note this is a static function
 	return pgm_read_byte(ptr);
 }
 
@@ -640,24 +735,9 @@ uint8_t ReadPgmData(const uint8_t* ptr) {  // note this is a static function
  * Below here are text wrapper functions
  */
 
-/// @cond hide_from_doxygen
-
-#if ARDUINO < 100
-void glcd::write(uint8_t c)  // method needed for Print base class
-{
-  gText::PutChar(c);
-} 
-#else
-size_t glcd::write(uint8_t c)  // method needed for Print base class
-{
-  return(gText::PutChar(c));
-} 
-#endif
-
-/// @endcond
-
-
-// override GotoXY to call CursorToxy
+// override GotoXY to also call CursorToxy for backward compability 
+// with older v2 ks0108 library
+// (older library didn't have seperate x & y for hardware/graphics vs text )
 void glcd::GotoXY(uint8_t x, uint8_t y)
 {
 	glcd_Device::GotoXY(x, y);

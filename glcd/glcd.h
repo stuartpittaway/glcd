@@ -42,7 +42,12 @@
 #define GLCD_VERSION 3 // software version of this library
 
 
-typedef const uint8_t* Image_t;
+/*
+ * Note that while for now all these typedefs are the same they
+ * may not be in the future since each is used to point to a different type of data
+ */
+typedef const uint8_t* Image_t; // a glcd format bitmap (includes width & height)
+typedef const uint8_t* ImageXBM_t; // a "xbm" format bitmap (includes width & height)
 
 // the first two bytes of bitmap data are the width and height
 #define bitmapWidth(bitmap)  (*bitmap)  
@@ -56,11 +61,6 @@ typedef const uint8_t* Image_t;
 class glcd : public gText  
 {
   private:
-#if ARDUINO < 100
-	void write(uint8_t c);  // character output for print base class
-#else
-	size_t write(uint8_t c);  // character output for print base class
-#endif
   public:
 	glcd();
 	
@@ -69,7 +69,7 @@ class glcd : public gText
  */
 /*@{*/
 	// Control functions
-	void Init(uint8_t invert = NON_INVERTED);
+	int Init(uint8_t invert = NON_INVERTED);
 	void SetDisplayMode(uint8_t mode); //NON_INVERTED or INVERTED,   was SetInverted(uint8_t invert);
 /*@}*/
 	
@@ -89,6 +89,9 @@ class glcd : public gText
 	void DrawCircle(uint8_t xCenter, uint8_t yCenter, uint8_t radius, uint8_t color= BLACK);	
 	void FillCircle(uint8_t xCenter, uint8_t yCenter, uint8_t radius, uint8_t color= BLACK);	
 	void DrawBitmap(Image_t bitmap, uint8_t x, uint8_t y, uint8_t color= BLACK);
+	void DrawBitmapXBM(ImageXBM_t bitmapxbm, uint8_t x, uint8_t y, uint8_t color= BLACK);
+	void DrawBitmapXBM_P(uint8_t width, uint8_t height, uint8_t *xbmbits, uint8_t x, uint8_t y, 
+		uint8_t fg_color, uint8_t bg_color);
 
 #ifdef DOXYGEN
 	/*
@@ -98,7 +101,7 @@ class glcd : public gText
 	void SetDot(uint8_t x, uint8_t y, uint8_t color);
 	void SetPixels(uint8_t x, uint8_t y,uint8_t x1, uint8_t y1, uint8_t color);
 	uint8_t ReadData(void);        // now public
-    void WriteData(uint8_t data);
+    void WriteData(uint8_t data); 
 #else
 	using glcd_Device::SetDot;
 	using glcd_Device::SetPixels;
