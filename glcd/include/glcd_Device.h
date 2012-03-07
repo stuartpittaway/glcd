@@ -38,6 +38,9 @@
 
 #define GLCD_Device 1 // software version of this class
 
+#ifdef GLCD_BITSHIFT_COMMS
+void bitShiftByte(uint8_t data);
+#endif
 
 // useful user constants
 #define NON_INVERTED false

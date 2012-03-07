@@ -63,8 +63,9 @@
  /*
   * autoconfig includes - (comment this out if using manual configurations, see below)
   */
-#include "config/ks0108_Panel.h"          // automatically configure library for a ks0108 panel
-//#include "config/ks0108-192x64_Panel.h"   // automatically configure library for a ks0108 192x64 panel
+//#include "config/ks0108_Panel.h"          // automatically configure library for a ks0108 panel
+#include "config/ks0108-192x64_Panel.h"   // automatically configure library for a ks0108 192x64 panel
+
 
 /*
  * If you want to explicitly select a manual configuration, you can edit the desired manual configuration
@@ -84,10 +85,10 @@
 
 /*========================== Optional User Defines ==================================*/
 
-//#define GLCD_NO_SCROLLDOWN    // disable reverse scrolling (saves ~600 bytes of code)
+#define GLCD_NO_SCROLLDOWN    // disable reverse scrolling (saves ~600 bytes of code)
                                 // This will allow those tight on FLASH space to save a bit of code space
 
-//#define GLCD_ATOMIC_IO        // Generate code that ensures all pin i/o operations are atomic
+#define GLCD_ATOMIC_IO        // Generate code that ensures all pin i/o operations are atomic
                                 // including any potential nibble operations.
                                 // Without this option enabled, nibble operations will be slightly faster but
                                 // might have issues if a pin used shares a processor i/o port with an
@@ -110,4 +111,7 @@
 				// performance increase is quite noticeable (double or so on FPS test)
 				// This will not work on smaller AVRs like the mega168 that only
 				// have 1k of RAM total.
+
+#define GLCD_BITSHIFT_COMMS
+
 #endif

@@ -75,7 +75,15 @@
 
 #define lcdPinMode(pin, mode)  avrio_PinMode(pin, mode) 
 
+#ifdef GLCD_BITSHIFT_COMMS
 
+//#define lcd_avrReadByte() bitShiftInputByte()
+#define lcd_avrWriteByte(data)
+#define lcdDataDir(dirbits)		
+#define lcdDataOut(data)	bitShiftByte(data)
+#define lcdDataIn()		bitShiftInputByte()
+
+#else
 /*
  * Set up the configured LCD data lines 
  */
@@ -114,11 +122,15 @@
  * alias to setup LCD data lines.
  */
 #define lcdDataOut(data)	lcd_avrWriteByte(data)
+#define lcdDataIn()		lcd_avrReadByte()
+
+#endif
+
+
 
 /*
  * alias to Read LCD data lines.
  */
-#define lcdDataIn()		lcd_avrReadByte()
 
 /*
  * alias to read status bits
@@ -197,6 +209,10 @@
 #if (glcd_CHIP_COUNT > 4)
 #error GLCD chip count beyond max of 4
 #endif
+
+
+#define setDI_RW(di,rw)  do {lcdfastWrite(glcdDI, di);lcdfastWrite(glcdRW, rw);}while(0)
+
 
 #if defined(glcdCSEL4)
 #define lcdChipSelect(cselstr) lcdChipSelect4(cselstr)

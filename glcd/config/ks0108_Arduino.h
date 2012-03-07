@@ -20,6 +20,9 @@
 /*********************************************************/
 /* Data pin definitions
  */
+
+#ifndef GLCD_BITSHIFT_COMMS
+
 #define glcdData0Pin        8
 #define glcdData1Pin        9
 #define glcdData2Pin        10
@@ -33,9 +36,6 @@
  * default assignment uses the first five analog pins
  */
 
-#define glcdCSEL1        14
-#define glcdCSEL2        15
-
 #if NBR_CHIP_SELECT_PINS > 2
 #define glcdCSEL3         3   // third chip select if needed
 #endif
@@ -44,9 +44,15 @@
 #define glcdCSEL4         2   // fourth chip select if needed
 #endif
 
-#define glcdRW           16
-#define glcdDI           17
-#define glcdEN           18
+#endif
+
+#define glcdEN			 18
+#define glcdRW           17
+#define glcdDI           16
+#define glcdCSEL2        15
+#define glcdCSEL1        14
+
+
 // Reset Bit  - uncomment the next line if reset is connected to an output pin
 //#define glcdRES          19    // Reset Bit
 
