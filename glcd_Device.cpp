@@ -102,55 +102,44 @@ uint8_t glcd_rdcache[DISPLAY_HEIGHT/8][DISPLAY_WIDTH];
 
 #ifdef GLCD_BITSHIFT_COMMS
 
-#define stu_clockPin 2	//pin 11 on HC595
-#define stu_latchPin 3 //pin 12 on HC595
-#define stu_hc595outputenable 4	//pin 13  on HC595
-#define stu_dataPin 5	//pin 14 on HC595
-
-#define PULSE_WIDTH_USEC   1
-#define POLL_DELAY_MSEC   1
-
-	
-#define stu_ploadPin        19	// Connects to Parallel load pin the 165
-#define stu_clockEnablePin  6   // Connects to Clock Enable pin the 165
 
 
 uint8_t bitShiftInputByte() {
-	lcdPinMode(stu_dataPin, INPUT);
-    //lcdfastWrite(stu_dataPin,HIGH);	//pullup on
+	lcdPinMode(glcddataPin, INPUT);
+    //lcdfastWrite(glcddataPin,HIGH);	//pullup on
 
-	lcdfastWrite(stu_hc595outputenable,HIGH);	//output disable
+	lcdfastWrite(glcdhc595outputenable,HIGH);	//output disable
 
 
     // Trigger a parallel Load to latch the state of the data lines
-    lcdfastWrite(stu_clockEnablePin, HIGH);
-    lcdfastWrite(stu_ploadPin, LOW);
+    lcdfastWrite(glcdclockEnablePin, HIGH);
+    lcdfastWrite(glcdploadPin, LOW);
     delayMicroseconds(PULSE_WIDTH_USEC);
-    lcdfastWrite(stu_ploadPin, HIGH);
-	lcdfastWrite(stu_clockEnablePin, LOW);
+    lcdfastWrite(glcdploadPin, HIGH);
+	lcdfastWrite(glcdclockEnablePin, LOW);
     
 
-	//lcdfastWrite(stu_clockPin, HIGH);delayMicroseconds(PULSE_WIDTH_USEC);lcdfastWrite(stu_clockPin, LOW);
+	//lcdfastWrite(glcdclockPin, HIGH);delayMicroseconds(PULSE_WIDTH_USEC);lcdfastWrite(glcdclockPin, LOW);
 
 	// read each bit value from the serial out line of the SN74HC165N.
 	byte bytesVal = 0;
 
-    bytesVal |= (digitalRead(stu_dataPin) << (7 - 0));lcdfastWrite(stu_clockPin, HIGH);delayMicroseconds(PULSE_WIDTH_USEC);lcdfastWrite(stu_clockPin, LOW);
-    bytesVal |= (digitalRead(stu_dataPin) << (7 - 1));lcdfastWrite(stu_clockPin, HIGH);delayMicroseconds(PULSE_WIDTH_USEC);lcdfastWrite(stu_clockPin, LOW);
-    bytesVal |= (digitalRead(stu_dataPin) << (7 - 2));lcdfastWrite(stu_clockPin, HIGH);delayMicroseconds(PULSE_WIDTH_USEC);lcdfastWrite(stu_clockPin, LOW);
-    bytesVal |= (digitalRead(stu_dataPin) << (7 - 3));lcdfastWrite(stu_clockPin, HIGH);delayMicroseconds(PULSE_WIDTH_USEC);lcdfastWrite(stu_clockPin, LOW);
-    bytesVal |= (digitalRead(stu_dataPin) << (7 - 4));lcdfastWrite(stu_clockPin, HIGH);delayMicroseconds(PULSE_WIDTH_USEC);lcdfastWrite(stu_clockPin, LOW);
-    bytesVal |= (digitalRead(stu_dataPin) << (7 - 5));lcdfastWrite(stu_clockPin, HIGH);delayMicroseconds(PULSE_WIDTH_USEC);lcdfastWrite(stu_clockPin, LOW);
-    bytesVal |= (digitalRead(stu_dataPin) << (7 - 6));lcdfastWrite(stu_clockPin, HIGH);delayMicroseconds(PULSE_WIDTH_USEC);lcdfastWrite(stu_clockPin, LOW);
-    bytesVal |= (digitalRead(stu_dataPin) << (7 - 7));lcdfastWrite(stu_clockPin, HIGH);delayMicroseconds(PULSE_WIDTH_USEC);lcdfastWrite(stu_clockPin, LOW);
+    bytesVal |= (digitalRead(glcddataPin) << (7 - 0));lcdfastWrite(glcdclockPin, HIGH);delayMicroseconds(PULSE_WIDTH_USEC);lcdfastWrite(glcdclockPin, LOW);
+    bytesVal |= (digitalRead(glcddataPin) << (7 - 1));lcdfastWrite(glcdclockPin, HIGH);delayMicroseconds(PULSE_WIDTH_USEC);lcdfastWrite(glcdclockPin, LOW);
+    bytesVal |= (digitalRead(glcddataPin) << (7 - 2));lcdfastWrite(glcdclockPin, HIGH);delayMicroseconds(PULSE_WIDTH_USEC);lcdfastWrite(glcdclockPin, LOW);
+    bytesVal |= (digitalRead(glcddataPin) << (7 - 3));lcdfastWrite(glcdclockPin, HIGH);delayMicroseconds(PULSE_WIDTH_USEC);lcdfastWrite(glcdclockPin, LOW);
+    bytesVal |= (digitalRead(glcddataPin) << (7 - 4));lcdfastWrite(glcdclockPin, HIGH);delayMicroseconds(PULSE_WIDTH_USEC);lcdfastWrite(glcdclockPin, LOW);
+    bytesVal |= (digitalRead(glcddataPin) << (7 - 5));lcdfastWrite(glcdclockPin, HIGH);delayMicroseconds(PULSE_WIDTH_USEC);lcdfastWrite(glcdclockPin, LOW);
+    bytesVal |= (digitalRead(glcddataPin) << (7 - 6));lcdfastWrite(glcdclockPin, HIGH);delayMicroseconds(PULSE_WIDTH_USEC);lcdfastWrite(glcdclockPin, LOW);
+    bytesVal |= (digitalRead(glcddataPin) << (7 - 7));lcdfastWrite(glcdclockPin, HIGH);delayMicroseconds(PULSE_WIDTH_USEC);lcdfastWrite(glcdclockPin, LOW);
 
 	/*byte bitVal;
 	for(int i = 0; i < 8; i++)
     {
-        bytesVal |= (digitalRead(stu_dataPin) << ((8-1) - i));
-        digitalWrite(stu_clockPin, HIGH);
+        bytesVal |= (digitalRead(glcddataPin) << ((8-1) - i));
+        digitalWrite(glcdclockPin, HIGH);
         delayMicroseconds(PULSE_WIDTH_USEC);
-        digitalWrite(stu_clockPin, LOW);
+        digitalWrite(glcdclockPin, LOW);
     }*/
 
  
@@ -161,33 +150,33 @@ uint8_t bitShiftInputByte() {
 
 
 void bitShiftByte(uint8_t data) {
-	lcdPinMode(stu_dataPin, OUTPUT);
-	lcdfastWrite(stu_hc595outputenable, LOW);	//output enable when LOW
+	lcdPinMode(glcddataPin, OUTPUT);
+	lcdfastWrite(glcdhc595outputenable, LOW);	//output enable when LOW
 
-  	lcdfastWrite(stu_latchPin, LOW);
+  	lcdfastWrite(glcdlatchPin, LOW);
 
-	lcdfastWrite(stu_dataPin, !!(data & (1 << 7)));lcdfastWrite(stu_clockPin, HIGH);lcdfastWrite(stu_clockPin, LOW);
-	lcdfastWrite(stu_dataPin, !!(data & (1 << 6)));lcdfastWrite(stu_clockPin, HIGH);lcdfastWrite(stu_clockPin, LOW);
-	lcdfastWrite(stu_dataPin, !!(data & (1 << 5)));lcdfastWrite(stu_clockPin, HIGH);lcdfastWrite(stu_clockPin, LOW);
-	lcdfastWrite(stu_dataPin, !!(data & (1 << 4)));lcdfastWrite(stu_clockPin, HIGH);lcdfastWrite(stu_clockPin, LOW);
-	lcdfastWrite(stu_dataPin, !!(data & (1 << 3)));lcdfastWrite(stu_clockPin, HIGH);lcdfastWrite(stu_clockPin, LOW);
-	lcdfastWrite(stu_dataPin, !!(data & (1 << 2)));lcdfastWrite(stu_clockPin, HIGH);lcdfastWrite(stu_clockPin, LOW);
-	lcdfastWrite(stu_dataPin, !!(data & (1 << 1)));lcdfastWrite(stu_clockPin, HIGH);lcdfastWrite(stu_clockPin, LOW);
-	lcdfastWrite(stu_dataPin, !!(data & (1 << 0)));lcdfastWrite(stu_clockPin, HIGH);lcdfastWrite(stu_clockPin, LOW);
+	lcdfastWrite(glcddataPin, !!(data & (1 << 7)));lcdfastWrite(glcdclockPin, HIGH);lcdfastWrite(glcdclockPin, LOW);
+	lcdfastWrite(glcddataPin, !!(data & (1 << 6)));lcdfastWrite(glcdclockPin, HIGH);lcdfastWrite(glcdclockPin, LOW);
+	lcdfastWrite(glcddataPin, !!(data & (1 << 5)));lcdfastWrite(glcdclockPin, HIGH);lcdfastWrite(glcdclockPin, LOW);
+	lcdfastWrite(glcddataPin, !!(data & (1 << 4)));lcdfastWrite(glcdclockPin, HIGH);lcdfastWrite(glcdclockPin, LOW);
+	lcdfastWrite(glcddataPin, !!(data & (1 << 3)));lcdfastWrite(glcdclockPin, HIGH);lcdfastWrite(glcdclockPin, LOW);
+	lcdfastWrite(glcddataPin, !!(data & (1 << 2)));lcdfastWrite(glcdclockPin, HIGH);lcdfastWrite(glcdclockPin, LOW);
+	lcdfastWrite(glcddataPin, !!(data & (1 << 1)));lcdfastWrite(glcdclockPin, HIGH);lcdfastWrite(glcdclockPin, LOW);
+	lcdfastWrite(glcddataPin, !!(data & (1 << 0)));lcdfastWrite(glcdclockPin, HIGH);lcdfastWrite(glcdclockPin, LOW);
 
-	//	lcdfastWrite(stu_dataPin, 0);lcdfastWrite(stu_clockPin, HIGH);lcdfastWrite(stu_clockPin, LOW);//pin 0
-	//lcdfastWrite(stu_dataPin, 0);lcdfastWrite(stu_clockPin, HIGH);lcdfastWrite(stu_clockPin, LOW);//pin 0
-	//lcdfastWrite(stu_dataPin, 0);lcdfastWrite(stu_clockPin, HIGH);lcdfastWrite(stu_clockPin, LOW);//pin 0
-	//lcdfastWrite(stu_dataPin, 0);lcdfastWrite(stu_clockPin, HIGH);lcdfastWrite(stu_clockPin, LOW);//pin 0
+	//	lcdfastWrite(glcddataPin, 0);lcdfastWrite(glcdclockPin, HIGH);lcdfastWrite(glcdclockPin, LOW);//pin 0
+	//lcdfastWrite(glcddataPin, 0);lcdfastWrite(glcdclockPin, HIGH);lcdfastWrite(glcdclockPin, LOW);//pin 0
+	//lcdfastWrite(glcddataPin, 0);lcdfastWrite(glcdclockPin, HIGH);lcdfastWrite(glcdclockPin, LOW);//pin 0
+	//lcdfastWrite(glcddataPin, 0);lcdfastWrite(glcdclockPin, HIGH);lcdfastWrite(glcdclockPin, LOW);//pin 0
 
 	////As above in bitShiftControlBits... 
- //   lcdfastWrite(stu_dataPin, stu_rw);lcdfastWrite(stu_clockPin, HIGH);lcdfastWrite(stu_clockPin, LOW);//pin 3	
-	//lcdfastWrite(stu_dataPin, stu_di);lcdfastWrite(stu_clockPin, HIGH);lcdfastWrite(stu_clockPin, LOW);//pin 2	
-	//lcdfastWrite(stu_dataPin, stu_csp1);lcdfastWrite(stu_clockPin, HIGH);lcdfastWrite(stu_clockPin, LOW);//pin 1
-	//lcdfastWrite(stu_dataPin, stu_csp2);lcdfastWrite(stu_clockPin, HIGH);lcdfastWrite(stu_clockPin, LOW);//pin 0
+ //   lcdfastWrite(glcddataPin, glcdrw);lcdfastWrite(glcdclockPin, HIGH);lcdfastWrite(glcdclockPin, LOW);//pin 3	
+	//lcdfastWrite(glcddataPin, glcddi);lcdfastWrite(glcdclockPin, HIGH);lcdfastWrite(glcdclockPin, LOW);//pin 2	
+	//lcdfastWrite(glcddataPin, glcdcsp1);lcdfastWrite(glcdclockPin, HIGH);lcdfastWrite(glcdclockPin, LOW);//pin 1
+	//lcdfastWrite(glcddataPin, glcdcsp2);lcdfastWrite(glcdclockPin, HIGH);lcdfastWrite(glcdclockPin, LOW);//pin 0
 
 
-	lcdfastWrite(stu_latchPin, HIGH);
+	lcdfastWrite(glcdlatchPin, HIGH);
 }
 #endif
 
@@ -415,23 +404,23 @@ int glcd_Device::Init(uint8_t invert)
 
 	//Serial.begin(115200);
 
-  lcdPinMode(stu_latchPin, OUTPUT);
-  lcdfastWrite(stu_latchPin,LOW); 
+  lcdPinMode(glcdlatchPin, OUTPUT);
+  lcdfastWrite(glcdlatchPin,LOW); 
 
-  lcdPinMode(stu_clockPin, OUTPUT);
-  lcdfastWrite(stu_clockPin,LOW); 	
+  lcdPinMode(glcdclockPin, OUTPUT);
+  lcdfastWrite(glcdclockPin,LOW); 	
 
-  lcdPinMode(stu_dataPin, OUTPUT);
-  lcdfastWrite(stu_dataPin,LOW);
+  lcdPinMode(glcddataPin, OUTPUT);
+  lcdfastWrite(glcddataPin,LOW);
 
-  lcdPinMode(stu_hc595outputenable, OUTPUT);
-  lcdfastWrite(stu_hc595outputenable,HIGH);
+  lcdPinMode(glcdhc595outputenable, OUTPUT);
+  lcdfastWrite(glcdhc595outputenable,HIGH);
 
-	lcdPinMode(stu_ploadPin, OUTPUT);
-	lcdPinMode(stu_clockEnablePin, OUTPUT);
+	lcdPinMode(glcdploadPin, OUTPUT);
+	lcdPinMode(glcdclockEnablePin, OUTPUT);
 
-	lcdfastWrite(stu_ploadPin, HIGH);
-	lcdfastWrite(stu_clockEnablePin, LOW);
+	lcdfastWrite(glcdploadPin, HIGH);
+	lcdfastWrite(glcdclockEnablePin, LOW);
 
 
 #endif
@@ -448,6 +437,7 @@ int glcd_Device::Init(uint8_t invert)
 	lcdPinMode(glcdE1,OUTPUT);	
 	lcdfastWrite(glcdE1,LOW); 	
 #endif
+
 #ifdef glcdE2
 	lcdPinMode(glcdE2,OUTPUT);	
 	lcdfastWrite(glcdE2,LOW); 	
