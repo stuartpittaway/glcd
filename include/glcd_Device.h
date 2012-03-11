@@ -80,6 +80,8 @@ class glcd_Device : public Print
   private:
   // Control functions
 	uint8_t DoReadData(void);
+	void DoFakeReadData();
+
 	void WriteCommand(uint8_t cmd, uint8_t chip);
 	inline void Enable(void);
 	inline void SelectChip(uint8_t chip); 

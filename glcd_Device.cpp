@@ -632,6 +632,32 @@ uint8_t glcd_Device::DoReadData()
 #endif
 	return data;
 }
+
+/*
+ * read a single data byte from chip
+ */
+void glcd_Device::DoFakeReadData()
+{
+	uint8_t data, chip;
+
+	chip = glcd_DevXYval2Chip(this->Coord.x, this->Coord.y);
+
+	this->WaitReady(chip);
+
+	setDI_RW(HIGH,HIGH);
+	
+	lcdDelayNanoseconds(GLCD_tAS);
+	glcd_DevENstrobeHi(chip);
+	lcdDelayNanoseconds(GLCD_tDDR);
+
+	//data = lcdDataIn();	// Read the data bits from the LCD
+
+	glcd_DevENstrobeLo(chip);
+#ifdef GLCD_XCOL_SUPPORT
+	this->Coord.chip[chip].col++;
+#endif
+	//return 0;
+}
 /**
  * read a data byte from display device memory
  *
@@ -680,8 +706,7 @@ inline uint8_t glcd_Device::ReadData()
 	i2cOutputByte(0xff);	//Force chip into READ MODE (put pins high)
 #endif
 
-
-	this->DoReadData();				// dummy read
+	this->DoFakeReadData();				// dummy read fake, but without the lcdDatain call to save cycle times on i2c/spi
 
 	data = this->DoReadData();			// "real" read
 
