@@ -46,7 +46,7 @@
 
 #endif
 
-#define glcdEN			 18
+#define glcdEN			 5
 #define glcdRW           17
 #define glcdDI           16
 #define glcdCSEL2        15
@@ -56,12 +56,12 @@
 #define PULSE_WIDTH_USEC   1
 #define POLL_DELAY_MSEC   1
 
-#define glcdclockPin 2	//pin 11 on HC595
-#define glcdlatchPin 3 //pin 12 on HC595
-#define glcdhc595outputenable 4	//pin 13  on HC595
-#define glcddataPin 5	//pin 14 on HC595
-#define glcdploadPin        19	// Connects to Parallel load pin the 165
-#define glcdclockEnablePin  6   // Connects to Clock Enable pin the 165
+//#define glcdclockPin 2	//pin 11 on HC595
+//#define glcdlatchPin 3 //pin 12 on HC595
+//#define glcdhc595outputenable 4	//pin 13  on HC595
+//#define glcddataPin 5	//pin 14 on HC595
+//#define glcdploadPin        19	// Connects to Parallel load pin the 165
+//#define glcdclockEnablePin  6   // Connects to Clock Enable pin the 165
 
 
 // Reset Bit  - uncomment the next line if reset is connected to an output pin

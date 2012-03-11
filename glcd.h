@@ -34,6 +34,8 @@
 #ifndef	GLCD_H
 #define GLCD_H
 
+#include <Wire.h>
+
 #include <inttypes.h>
 #include <avr/pgmspace.h>
 

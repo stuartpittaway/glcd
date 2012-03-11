@@ -80,8 +80,8 @@
 //#define lcd_avrReadByte() bitShiftInputByte()
 #define lcd_avrWriteByte(data)
 #define lcdDataDir(dirbits)		
-#define lcdDataOut(data)	bitShiftByte(data)
-#define lcdDataIn()		bitShiftInputByte()
+#define lcdDataOut(data)	i2cOutputByte(data)
+#define lcdDataIn()		i2cInputByte()
 
 #else
 /*
