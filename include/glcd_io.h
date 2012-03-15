@@ -77,11 +77,13 @@
 
 #ifdef GLCD_BITSHIFT_COMMS
 
-//#define lcd_avrReadByte() bitShiftInputByte()
+#define lcd_avrReadByte() 
 #define lcd_avrWriteByte(data)
-#define lcdDataDir(dirbits)		
-#define lcdDataOut(data)	i2cOutputByte(data)
-#define lcdDataIn()		i2cInputByte()
+
+//#define lcdDataDir(dirbits)	;chip23s17one.byteWrite(IODIRA, ~dirbits);	//0=output ff=input
+#define lcdDataDir(dirbits)
+//#define lcdDataOut(data)	OutputByte(data)
+//#define lcdDataIn()		InputByte()
 
 #else
 /*

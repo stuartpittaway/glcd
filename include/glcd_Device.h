@@ -39,7 +39,8 @@
 #define GLCD_Device 1 // software version of this class
 
 #ifdef GLCD_BITSHIFT_COMMS
-void bitShiftByte(uint8_t data);
+void OutputByte(uint8_t data);
+uint8_t InputByte();
 #endif
 
 // useful user constants
@@ -80,7 +81,7 @@ class glcd_Device : public Print
   private:
   // Control functions
 	uint8_t DoReadData(void);
-	void DoFakeReadData();
+	//void DoFakeReadData();
 
 	void WriteCommand(uint8_t cmd, uint8_t chip);
 	inline void Enable(void);

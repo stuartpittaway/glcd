@@ -55,7 +55,7 @@ lcdCoord  glcd_Device::Coord;
 						//
 						// current RECOMMENDED setting: OFF
 
-#define GLCD_TEENSY_PCB_RESET_WAIT	// turns on code to deal with slow rising reset on Teensy PCB ADAPTER
+//#define GLCD_TEENSY_PCB_RESET_WAIT	// turns on code to deal with slow rising reset on Teensy PCB ADAPTER
 								// this code is only turned on when library is compiled for teensy boards.
 							// The reason for this was to support a ks0108 GLCD adapter PCB for the Teensy.
 							// The reset signal created on that board is 250ms long 
@@ -103,82 +103,24 @@ uint8_t glcd_rdcache[DISPLAY_HEIGHT/8][DISPLAY_WIDTH];
 
 #ifdef GLCD_BITSHIFT_COMMS
 
-#define expander B0111000 //pcf8574 with all address pins grounded
-#include <Wire.h>
+#include <SPI.h>              // We use this library, so it must be called here.
+#include <MCP23S17.h>         // Here is the new class to make using the MCP23S17 easy.
 
+MCP chip23s17one(1);             // Instantiate MCP23S17 device at address 1
 
-void i2cOutputByte(uint8_t data) {
-  Wire.beginTransmission(expander);
-  Wire.write(data);
-  Wire.endTransmission();
+void lcdDataOut(uint8_t data) {
+  chip23s17one.byteWrite(IODIRA, 0x00);	//0=output
+	chip23s17one.byteWrite(GPIOA,data);
+}
+
+uint8_t lcdDataIn() {
+	//Read from GPIOA
+  chip23s17one.byteWrite(IODIRA, 0xFF);	//FF=input
+  uint8_t data= chip23s17one.byteRead(GPIOA);
+	return data;
 }
 
 
-uint8_t i2cInputByte() {
-
-  Wire.requestFrom(expander, 1);  
-  uint8_t data;
-while(Wire.available())
-{
-    data = Wire.read();
-}
-  return data;
-
-}
-
-/*
-uint8_t bitShiftInputByte() {
-	lcdPinMode(glcddataPin, INPUT);
-    //lcdfastWrite(glcddataPin,HIGH);	//pullup on
-
-	lcdfastWrite(glcdhc595outputenable,HIGH);	//output disable
-
-
-    // Trigger a parallel Load to latch the state of the data lines
-    lcdfastWrite(glcdclockEnablePin, HIGH);
-    lcdfastWrite(glcdploadPin, LOW);
-    delayMicroseconds(PULSE_WIDTH_USEC);
-    lcdfastWrite(glcdploadPin, HIGH);
-	lcdfastWrite(glcdclockEnablePin, LOW);
-    
-
-	// read each bit value from the serial out line of the SN74HC165N.
-	byte bytesVal = 0;
-
-    bytesVal |= (digitalRead(glcddataPin) << (7 - 0));lcdfastWrite(glcdclockPin, HIGH);delayMicroseconds(PULSE_WIDTH_USEC);lcdfastWrite(glcdclockPin, LOW);
-    bytesVal |= (digitalRead(glcddataPin) << (7 - 1));lcdfastWrite(glcdclockPin, HIGH);delayMicroseconds(PULSE_WIDTH_USEC);lcdfastWrite(glcdclockPin, LOW);
-    bytesVal |= (digitalRead(glcddataPin) << (7 - 2));lcdfastWrite(glcdclockPin, HIGH);delayMicroseconds(PULSE_WIDTH_USEC);lcdfastWrite(glcdclockPin, LOW);
-    bytesVal |= (digitalRead(glcddataPin) << (7 - 3));lcdfastWrite(glcdclockPin, HIGH);delayMicroseconds(PULSE_WIDTH_USEC);lcdfastWrite(glcdclockPin, LOW);
-    bytesVal |= (digitalRead(glcddataPin) << (7 - 4));lcdfastWrite(glcdclockPin, HIGH);delayMicroseconds(PULSE_WIDTH_USEC);lcdfastWrite(glcdclockPin, LOW);
-    bytesVal |= (digitalRead(glcddataPin) << (7 - 5));lcdfastWrite(glcdclockPin, HIGH);delayMicroseconds(PULSE_WIDTH_USEC);lcdfastWrite(glcdclockPin, LOW);
-    bytesVal |= (digitalRead(glcddataPin) << (7 - 6));lcdfastWrite(glcdclockPin, HIGH);delayMicroseconds(PULSE_WIDTH_USEC);lcdfastWrite(glcdclockPin, LOW);
-    bytesVal |= (digitalRead(glcddataPin) << (7 - 7));lcdfastWrite(glcdclockPin, HIGH);delayMicroseconds(PULSE_WIDTH_USEC);lcdfastWrite(glcdclockPin, LOW);
-
-	
-	return bytesVal;
-}
-
-
-
-void bitShiftByte(uint8_t data) {
-	lcdPinMode(glcddataPin, OUTPUT);
-	lcdfastWrite(glcdhc595outputenable, LOW);	//output enable when LOW
-
-  	lcdfastWrite(glcdlatchPin, LOW);
-
-	lcdfastWrite(glcddataPin, !!(data & (1 << 7)));lcdfastWrite(glcdclockPin, HIGH);lcdfastWrite(glcdclockPin, LOW);
-	lcdfastWrite(glcddataPin, !!(data & (1 << 6)));lcdfastWrite(glcdclockPin, HIGH);lcdfastWrite(glcdclockPin, LOW);
-	lcdfastWrite(glcddataPin, !!(data & (1 << 5)));lcdfastWrite(glcdclockPin, HIGH);lcdfastWrite(glcdclockPin, LOW);
-	lcdfastWrite(glcddataPin, !!(data & (1 << 4)));lcdfastWrite(glcdclockPin, HIGH);lcdfastWrite(glcdclockPin, LOW);
-	lcdfastWrite(glcddataPin, !!(data & (1 << 3)));lcdfastWrite(glcdclockPin, HIGH);lcdfastWrite(glcdclockPin, LOW);
-	lcdfastWrite(glcddataPin, !!(data & (1 << 2)));lcdfastWrite(glcdclockPin, HIGH);lcdfastWrite(glcdclockPin, LOW);
-	lcdfastWrite(glcddataPin, !!(data & (1 << 1)));lcdfastWrite(glcdclockPin, HIGH);lcdfastWrite(glcdclockPin, LOW);
-	lcdfastWrite(glcddataPin, !!(data & (1 << 0)));lcdfastWrite(glcdclockPin, HIGH);lcdfastWrite(glcdclockPin, LOW);
-
-
-	lcdfastWrite(glcdlatchPin, HIGH);
-}
-*/
 #endif
 
 
@@ -402,9 +344,9 @@ int glcd_Device::Init(uint8_t invert)
 	 */
 
 #ifdef GLCD_BITSHIFT_COMMS
-
-  Wire.begin();
-  i2cOutputByte(0);
+  chip23s17one.byteWrite(IODIRA, 0xFF);
+  chip23s17one.byteWrite(IPOLA, 0); 
+  chip23s17one.byteWrite(GPPUA, 0xFF);
 #endif
 
 #ifdef glcdDI
@@ -574,7 +516,10 @@ uint8_t glcd_Device::GetStatus(uint8_t chip)
 
 	glcd_DevSelectChip(chip);
 	lcdDataDir(0x00);			// input mode
+
+#ifdef GLCD_BITSHIFT_COMMS
 	lcdDataOut(0xff);			// turn on pullups
+#endif
 
 	setDI_RW(LOW,HIGH);
 	//lcdfastWrite(glcdDI, LOW);	
@@ -607,6 +552,9 @@ void glcd_Device::WaitReady( uint8_t chip)
 	glcd_DevENstrobeLo(chip);
 }
 
+
+#ifndef GLCD_BITSHIFT_COMMS
+
 /*
  * read a single data byte from chip
  */
@@ -615,7 +563,6 @@ uint8_t glcd_Device::DoReadData()
 	uint8_t data, chip;
 
 	chip = glcd_DevXYval2Chip(this->Coord.x, this->Coord.y);
-
 	this->WaitReady(chip);
 
 	setDI_RW(HIGH,HIGH);
@@ -632,32 +579,9 @@ uint8_t glcd_Device::DoReadData()
 #endif
 	return data;
 }
-
-/*
- * read a single data byte from chip
- */
-void glcd_Device::DoFakeReadData()
-{
-	uint8_t data, chip;
-
-	chip = glcd_DevXYval2Chip(this->Coord.x, this->Coord.y);
-
-	this->WaitReady(chip);
-
-	setDI_RW(HIGH,HIGH);
-	
-	lcdDelayNanoseconds(GLCD_tAS);
-	glcd_DevENstrobeHi(chip);
-	lcdDelayNanoseconds(GLCD_tDDR);
-
-	//data = lcdDataIn();	// Read the data bits from the LCD
-
-	glcd_DevENstrobeLo(chip);
-#ifdef GLCD_XCOL_SUPPORT
-	this->Coord.chip[chip].col++;
 #endif
-	//return 0;
-}
+
+
 /**
  * read a data byte from display device memory
  *
@@ -701,14 +625,37 @@ inline uint8_t glcd_Device::ReadData()
 		return(0);
 	}
 
+	uint8_t chip;
 
-#ifdef GLCD_BITSHIFT_COMMS
-	i2cOutputByte(0xff);	//Force chip into READ MODE (put pins high)
+	chip = glcd_DevXYval2Chip(this->Coord.x, this->Coord.y);
+	this->WaitReady(chip);
+
+	setDI_RW(HIGH,HIGH);
+	
+	lcdDelayNanoseconds(GLCD_tAS);
+	glcd_DevENstrobeHi(chip);
+	lcdDelayNanoseconds(GLCD_tDDR);
+
+    chip23s17one.byteWrite(IODIRA, 0xFF);	//FF=input
+
+  //	data = lcdDataIn();	// Read the data bits from the LCD
+
+	glcd_DevENstrobeLo(chip);
+
+#ifdef GLCD_XCOL_SUPPORT
+	this->Coord.chip[chip].col++;
 #endif
 
-	this->DoFakeReadData();				// dummy read fake, but without the lcdDatain call to save cycle times on i2c/spi
+	//lcdDelayNanoseconds(GLCD_tAS);
+	glcd_DevENstrobeHi(chip);
+	lcdDelayNanoseconds(GLCD_tDDR);
 
-	data = this->DoReadData();			// "real" read
+	data = lcdDataIn();	// Read the data bits from the LCD
+
+	glcd_DevENstrobeLo(chip);
+#ifdef GLCD_XCOL_SUPPORT
+	this->Coord.chip[chip].col++;
+#endif
 
 	if(this->Inverted)
 	{
@@ -726,16 +673,14 @@ void glcd_Device::WriteCommand(uint8_t cmd, uint8_t chip)
 {
 	this->WaitReady(chip);
 	setDI_RW(LOW,LOW)
-	//lcdfastWrite(glcdDI, LOW);					// D/I = 0
-	//lcdfastWrite(glcdRW, LOW);					// R/W = 0	
 	lcdDataDir(0xFF);
 
 	lcdDataOut(cmd);		/* This could be done before or after raising E */
 
-//#ifndef GLCD_BITSHIFT_COMMS
+#ifndef GLCD_BITSHIFT_COMMS
 	//if we are bitshifting, thats plenty slow enough!
 	lcdDelayNanoseconds(GLCD_tAS);
-//#endif
+#endif
 
 	glcd_DevENstrobeHi(chip);
 	lcdDelayNanoseconds(GLCD_tWH);
@@ -790,8 +735,7 @@ void glcd_Device::WriteData(uint8_t data) {
 		displayData = this->ReadData();
 		this->WaitReady(chip);
 		setDI_RW(HIGH,LOW)
-   	    //lcdfastWrite(glcdDI, HIGH);				// D/I = 1
-	    //lcdfastWrite(glcdRW, LOW);				// R/W = 0
+
 		lcdDataDir(0xFF);						// data port is output
 		lcdDelayNanoseconds(GLCD_tAS);
 		glcd_DevENstrobeHi(chip);
@@ -809,7 +753,11 @@ void glcd_Device::WriteData(uint8_t data) {
 			displayData = ~displayData;
 		}
 		lcdDataOut( displayData);					// write data
+#ifndef GLCD_BITSHIFT_COMMS
+	//if we are bitshifting, thats plenty slow enough!
 		lcdDelayNanoseconds(GLCD_tWH);
+#endif
+
 		glcd_DevENstrobeLo(chip);
 #ifdef GLCD_READ_CACHE
 		glcd_rdcache[this->Coord.y/8][this->Coord.x] = displayData; // save to read cache
@@ -834,8 +782,7 @@ void glcd_Device::WriteData(uint8_t data) {
 		this->WaitReady(chip);
 
 		setDI_RW(HIGH,LOW);
-   	    //lcdfastWrite(glcdDI, HIGH);					// D/I = 1
-	    //lcdfastWrite(glcdRW, LOW); 					// R/W = 0	
+
 		lcdDataDir(0xFF);				// data port is output
 		lcdDelayNanoseconds(GLCD_tAS);
 		glcd_DevENstrobeHi(chip);
@@ -845,8 +792,8 @@ void glcd_Device::WriteData(uint8_t data) {
 		 * Strip out bits we need to update.
 		 */
 		displayData &= ~(_BV(yOffset)-1);
-
 #endif
+
 		displayData |= data >> (8-yOffset);
 		if(this->Inverted){
 			displayData = ~displayData;
@@ -863,8 +810,7 @@ void glcd_Device::WriteData(uint8_t data) {
     	this->WaitReady(chip);
 
 		setDI_RW(HIGH,LOW);
-		//lcdfastWrite(glcdDI, HIGH);				// D/I = 1
-		//lcdfastWrite(glcdRW, LOW);  				// R/W = 0	
+
 		lcdDataDir(0xFF);						// data port is output
 
 		// just this code gets executed if the write is on a single page
@@ -879,6 +825,7 @@ void glcd_Device::WriteData(uint8_t data) {
 		lcdDelayNanoseconds(GLCD_tWH);
 
 		glcd_DevENstrobeLo(chip);
+
 #ifdef GLCD_READ_CACHE
 		glcd_rdcache[this->Coord.y/8][this->Coord.x] = data; // save to read cache
 #endif

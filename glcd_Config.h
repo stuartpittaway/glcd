@@ -88,7 +88,7 @@
 #define GLCD_NO_SCROLLDOWN    // disable reverse scrolling (saves ~600 bytes of code)
                                 // This will allow those tight on FLASH space to save a bit of code space
 
-#define GLCD_ATOMIC_IO        // Generate code that ensures all pin i/o operations are atomic
+//#define GLCD_ATOMIC_IO        // Generate code that ensures all pin i/o operations are atomic
                                 // including any potential nibble operations.
                                 // Without this option enabled, nibble operations will be slightly faster but
                                 // might have issues if a pin used shares a processor i/o port with an

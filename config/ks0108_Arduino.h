@@ -46,7 +46,7 @@
 
 #endif
 
-#define glcdEN			 5
+#define glcdEN			 18
 #define glcdRW           17
 #define glcdDI           16
 #define glcdCSEL2        15
